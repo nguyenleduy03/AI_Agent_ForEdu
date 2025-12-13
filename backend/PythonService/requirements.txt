@@ -1,0 +1,16 @@
+fastapi
+uvicorn[standard]
+google-generativeai
+python-dotenv
+requests==2.31.0
+beautifulsoup4==4.12.2
+cryptography==41.0.7
+chromadb
+sentence-transformers
+
+# Google Cloud Services (Optional - for advanced features)
+google-cloud-vision
+google-cloud-translate
+google-cloud-speech
+google-cloud-texttospeech
+google-cloud-language

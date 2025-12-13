@@ -1,0 +1,186 @@
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                    DATABASE ENTITY RELATIONSHIP DIAGRAM                       ║
+║                         AI LEARNING SYSTEM - Agent_Db                         ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              BẢNG USERS (Trung tâm)                         │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ • id (PK)                                                                   │
+│ • username (UNIQUE)                                                         │
+│ • password                                                                  │
+│ • email (UNIQUE)                                                            │
+│ • role (USER/ADMIN/TEACHER/STUDENT)                                        │
+│ • full_name                                                                 │
+│ • avatar_url                                                                │
+│ • created_at                                                                │
+│ • updated_at                                                                │
+└─────────────────────────────────────────────────────────────────────────────┘
+         │
+         │ created_by (1:N)
+         ├──────────────────────────────────────────────────────────────┐
+         │                                                              │
+         ▼                                                              ▼
+┌──────────────────────────┐                              ┌──────────────────────────┐
+│   BẢNG COURSES           │                              │   BẢNG CHAT_SESSIONS     │
+├──────────────────────────┤                              ├──────────────────────────┤
+│ • id (PK)                │                              │ • id (PK)                │
+│ • title                  │                              │ • user_id (FK)           │
+│ • description            │                              │ • title                  │
+│ • created_by (FK)        │                              │ • created_at             │
+│ • created_at             │                              └──────────────────────────┘
+│ • updated_at             │                                       │
+└──────────────────────────┘                                       │ session_id (1:N)
+         │                                                         │
+         │ course_id (1:N)                                        ▼
+         ├────────────────────────────────────┐      ┌──────────────────────────┐
+         │                                    │      │   BẢNG CHAT_MESSAGES     │
+         ▼                                    ▼      ├──────────────────────────┤
+┌──────────────────────────┐    ┌──────────────────────────┐ │ • id (PK)                │
+│   BẢNG LESSONS           │    │   BẢNG MATERIALS         │ │ • session_id (FK)        │
+├──────────────────────────┤    ├──────────────────────────┤ │ • sender (USER/AI)       │
+│ • id (PK)                │    │ • id (PK)                │ │ • message                │
+│ • course_id (FK)         │    │ • course_id (FK)         │ │ • timestamp              │
+│ • title                  │    │ • title                  │ └──────────────────────────┘
+│ • content                │    │ • description            │
+│ • order_index            │    │ • file_url               │
+│ • created_at             │    │ • type (PDF/DOC/...)     │
+└──────────────────────────┘    │ • uploaded_by (FK)       │
+                                │ • uploaded_at            │
+                                └──────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           QUIZ SYSTEM (Từ USERS)                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+         USERS
+           │ created_by (1:N)
+           ▼
+┌──────────────────────────┐
+│   BẢNG QUIZZES           │
+├──────────────────────────┤
+│ • id (PK)                │
+│ • course_id              │
+│ • lesson_id              │
+│ • created_by (FK)        │
+│ • difficulty             │
+│ • created_at             │
+└──────────────────────────┘
+         │
+         │ quiz_id (1:N)
+         ├────────────────────────────────────┐
+         │                                    │
+         ▼                                    ▼
+┌──────────────────────────┐    ┌──────────────────────────┐
+│ BẢNG QUIZ_QUESTIONS      │    │   BẢNG QUIZ_RESULTS      │
+├──────────────────────────┤    ├──────────────────────────┤
+│ • id (PK)                │    │ • id (PK)                │
+│ • quiz_id (FK)           │    │ • quiz_id (FK)           │
+│ • question               │    │ • user_id (FK)           │
+│ • option_a               │    │ • score                  │
+│ • option_b               │    │ • created_at             │
+│ • option_c               │    └──────────────────────────┘
+│ • option_d               │
+│ • correct_answer         │
+└──────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      RAG & SYSTEM (Độc lập/Liên kết)                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────┐              ┌──────────────────────────┐
+│  BẢNG RAG_DOCUMENTS      │              │   BẢNG SYSTEM_LOGS       │
+├──────────────────────────┤              ├──────────────────────────┤
+│ • id (PK)                │              │ • id (PK)                │
+│ • external_id            │              │ • user_id (FK)           │
+│ • course_id              │              │ • action                 │
+│ • lesson_id              │              │ • detail                 │
+│ • title                  │              │ • timestamp              │
+│ • category               │              └──────────────────────────┘
+│ • tags                   │                       ▲
+│ • created_at             │                       │
+└──────────────────────────┘                       │ user_id (N:1)
+         ▲                                         │
+         │                                    ┌────┴────┐
+         │ Đồng bộ metadata                   │  USERS  │
+         │                                    └─────────┘
+         │
+┌────────┴─────────────────────────────────────────────────────────────────┐
+│  VECTOR DATABASE (knowledge_base.json) - FastAPI                         │
+│  • Lưu embeddings (768 dimensions)                                       │
+│  • Cosine similarity search                                              │
+│  • Metadata: category, tags, type                                        │
+└──────────────────────────────────────────────────────────────────────────┘
+
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                              QUAN HỆ CHÍNH                                    ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  1. USERS (1) ──< (N) COURSES                                                ║
+║     → Một user tạo nhiều khóa học                                            ║
+║                                                                               ║
+║  2. COURSES (1) ──< (N) LESSONS                                              ║
+║     → Một khóa học có nhiều bài học                                          ║
+║                                                                               ║
+║  3. COURSES (1) ──< (N) MATERIALS                                            ║
+║     → Một khóa học có nhiều tài liệu                                         ║
+║                                                                               ║
+║  4. USERS (1) ──< (N) CHAT_SESSIONS                                          ║
+║     → Một user có nhiều phiên chat                                           ║
+║                                                                               ║
+║  5. CHAT_SESSIONS (1) ──< (N) CHAT_MESSAGES                                  ║
+║     → Một phiên chat có nhiều tin nhắn                                       ║
+║                                                                               ║
+║  6. USERS (1) ──< (N) QUIZZES                                                ║
+║     → Một user tạo nhiều quiz                                                ║
+║                                                                               ║
+║  7. QUIZZES (1) ──< (N) QUIZ_QUESTIONS                                       ║
+║     → Một quiz có nhiều câu hỏi                                              ║
+║                                                                               ║
+║  8. QUIZZES (1) ──< (N) QUIZ_RESULTS                                         ║
+║     → Một quiz có nhiều kết quả từ nhiều user                                ║
+║                                                                               ║
+║  9. USERS (1) ──< (N) QUIZ_RESULTS                                           ║
+║     → Một user có nhiều kết quả quiz                                         ║
+║                                                                               ║
+║  10. USERS (1) ──< (N) SYSTEM_LOGS                                           ║
+║      → Một user có nhiều log hành động                                       ║
+║                                                                               ║
+║  11. RAG_DOCUMENTS ↔ knowledge_base.json                                     ║
+║      → Đồng bộ metadata giữa MySQL và Vector DB                              ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                            CASCADE DELETE RULES                               ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  • Xóa USER → Xóa tất cả COURSES, CHAT_SESSIONS, QUIZZES, QUIZ_RESULTS      ║
+║  • Xóa COURSE → Xóa tất cả LESSONS, MATERIALS                                ║
+║  • Xóa CHAT_SESSION → Xóa tất cả CHAT_MESSAGES                               ║
+║  • Xóa QUIZ → Xóa tất cả QUIZ_QUESTIONS, QUIZ_RESULTS                        ║
+║  • Xóa USER trong SYSTEM_LOGS → SET NULL (giữ log)                           ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                              INDEXES (Tối ưu)                                 ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  USERS:          username, email, role                                        ║
+║  COURSES:        created_by, created_at                                       ║
+║  LESSONS:        course_id, (course_id + order_index)                         ║
+║  MATERIALS:      course_id, type                                              ║
+║  RAG_DOCUMENTS:  external_id, course_id, lesson_id, category                 ║
+║  CHAT_SESSIONS:  user_id, created_at                                          ║
+║  CHAT_MESSAGES:  session_id, timestamp                                        ║
+║  QUIZZES:        course_id, lesson_id, difficulty                             ║
+║  QUIZ_QUESTIONS: quiz_id                                                      ║
+║  QUIZ_RESULTS:   quiz_id, user_id, score                                      ║
+║  SYSTEM_LOGS:    user_id, action, timestamp                                   ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════════════════════
+                            TỔNG SỐ: 11 BẢNG
+═══════════════════════════════════════════════════════════════════════════════

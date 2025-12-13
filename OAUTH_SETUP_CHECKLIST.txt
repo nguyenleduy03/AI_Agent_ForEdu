@@ -1,0 +1,198 @@
+╔════════════════════════════════════════════════════════════════╗
+║           GOOGLE OAUTH SETUP CHECKLIST                         ║
+╚════════════════════════════════════════════════════════════════╝
+
+📋 GOOGLE CLOUD CONSOLE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ OAuth Client Created
+   Client ID: 477173705324-j441dqvann275pkv6tnv8omt2kdg0rsu.apps.googleusercontent.com
+   Client Secret: GOCSPX-****6KWz
+
+⬜ Redirect URIs Added
+   → http://localhost:8080/api/auth/google/callback
+   → http://localhost:3000/auth/google/callback
+   
+   How: https://console.cloud.google.com/apis/credentials
+        Click your OAuth client → Add URIs → Save
+
+⬜ APIs Enabled
+   → Cloud Vision API
+   → Cloud Translation API
+   → Cloud Speech-to-Text API
+   → Cloud Text-to-Speech API
+   → Cloud Natural Language API
+   
+   How: https://console.cloud.google.com/apis/library
+
+⬜ OAuth Consent Screen Configured
+   → App name: AgentForEdu
+   → User support email: your-email@example.com
+   → Test users added (your email)
+   
+   How: https://console.cloud.google.com/apis/credentials/consent
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔧 BACKEND CONFIGURATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⬜ Generate Encryption Key
+   Command: python generate-encryption-key.py
+   Copy the key shown
+
+⬜ Update .env File
+   File: backend/PythonService/.env
+   
+   Update these lines:
+   GOOGLE_OAUTH_CLIENT_SECRET=YOUR_ACTUAL_SECRET_HERE
+   ENCRYPTION_KEY=YOUR_GENERATED_KEY_HERE
+
+⬜ Run Database Migration
+   File: backend/SpringService/agentforedu/database_migration_google_oauth.sql
+   
+   Option A: pgAdmin/DBeaver
+   - Open file
+   - Copy content
+   - Execute in SQL editor
+   
+   Option B: Command line
+   psql -U postgres -d agentforedu -f database_migration_google_oauth.sql
+
+⬜ Install Python Dependencies
+   cd backend/PythonService
+   pip install cryptography requests
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎨 FRONTEND INTEGRATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⬜ GoogleConnectButton Component Created
+   File: fronend_web/src/components/GoogleConnectButton.tsx
+   Status: ✅ Already created
+
+⬜ Add to Settings Page
+   File: fronend_web/src/pages/SettingsPage.tsx
+   
+   Add this code:
+   
+   import GoogleConnectButton from '../components/GoogleConnectButton';
+   
+   // Inside component:
+   <GoogleConnectButton 
+     userId={currentUser.id}
+     onConnectionChange={(connected) => {
+       console.log('Google connected:', connected);
+     }}
+   />
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚀 START SERVICES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⬜ Start All Services
+   Command: .\start-with-oauth.ps1
+   
+   Or manually:
+   Terminal 1: cd backend/SpringService/agentforedu && .\mvnw.cmd spring-boot:run
+   Terminal 2: cd backend/PythonService && python main.py
+   Terminal 3: cd backend/PythonService && python google_oauth_service.py
+   Terminal 4: cd backend/PythonService && python google_cloud_service_oauth.py
+   Terminal 5: cd fronend_web && npm run dev
+
+⬜ Verify Services Running
+   → Spring Boot:        http://localhost:8080
+   → Python AI:          http://localhost:8000
+   → OAuth Service:      http://localhost:8003
+   → Google Cloud OAuth: http://localhost:8004
+   → Frontend:           http://localhost:3000
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🧪 TESTING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⬜ Test OAuth Flow
+   1. Open: http://localhost:3000
+   2. Login to app
+   3. Go to Settings page
+   4. Click "Connect Google Account"
+   5. Popup opens → Select Google account
+   6. Click "Allow"
+   7. Popup closes → Status shows "Connected" ✅
+
+⬜ Test Google Cloud Features
+   In chat, try:
+   → "Dịch sang tiếng Anh: Xin chào"
+   → "Phân tích cảm xúc: Tôi rất vui"
+   
+   Response should show: ✅ Using your OAuth token
+
+⬜ Test Swagger UI
+   → http://localhost:8003/docs
+   → Try: GET /api/oauth/google/status/{user_id}
+
+⬜ Check Database
+   SELECT username, google_connected, google_email 
+   FROM users 
+   WHERE google_connected = TRUE;
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📊 VERIFICATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⬜ User can connect Google account
+⬜ User can disconnect Google account
+⬜ Token auto-refreshes when expired
+⬜ Google Cloud APIs work with user's token
+⬜ Fallback to server API key if user not connected
+⬜ No errors in console logs
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎉 COMPLETION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+When all boxes are checked:
+✅ OAuth is fully functional
+✅ Users can use their own Google Cloud quota
+✅ No cost for you
+✅ Unlimited scalability
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📚 DOCUMENTATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Quick Guide:    QUICK_OAUTH_SETUP.md
+Detailed Guide: SETUP_GOOGLE_OAUTH.md
+Overview:       GOOGLE_OAUTH_SETUP_GUIDE.md
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🆘 TROUBLESHOOTING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Problem: "OAuth not configured"
+→ Check .env has GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET
+
+Problem: "Redirect URI mismatch"
+→ Check redirect URIs in Google Console match .env
+
+Problem: "Invalid client"
+→ Check Client ID and Client Secret are correct
+
+Problem: Popup blocked
+→ Allow popups for localhost:3000
+
+Problem: Token expired
+→ Should auto-refresh. If not, disconnect and reconnect.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💡 NEXT STEPS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+After OAuth is working:
+1. Test with multiple users
+2. Monitor usage in database
+3. Add usage analytics
+4. Prepare for production deployment
+5. Publish OAuth consent screen
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Last Updated: 2024-12-09
