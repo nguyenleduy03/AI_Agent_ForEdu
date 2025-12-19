@@ -150,6 +150,52 @@ PythonService/
 └── quick-setup-chromadb.cmd        # Setup nhanh
 ```
 
+## 🧪 Testing
+
+### Test ChatBot
+Use the `/api/chat` endpoint with a message:
+```bash
+curl -X POST http://localhost:8000/api/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Xin chào! Bạn là ai?", "model": "gemini-2.0-flash-exp"}'
+```
+
+### Test Password Reset
+```bash
+cd backend/PythonService
+python password_reset.py
+# Follow prompts to reset user password
+```
+
+### Test ChromaDB
+```cmd
+py -3.11 -c "import chromadb; import torch; print('✅ OK')"
+```
+
+## 📧 Email Configuration
+
+Gmail SMTP setup for password reset emails:
+
+1. Enable 2-Step Verification on your Gmail account
+2. Create App Password (Mail app)
+3. Add to `.env`:
+```env
+GMAIL_SMTP_USER=your-email@gmail.com
+GMAIL_SMTP_PASSWORD=your-app-password-16-char
+```
+
+## 🔐 Google OAuth Configuration
+
+For OAuth authentication:
+
+1. Get credentials from Google Cloud Console
+2. Add to `.env`:
+```env
+GOOGLE_OAUTH_CLIENT_ID=YOUR_CLIENT_ID
+GOOGLE_OAUTH_CLIENT_SECRET=YOUR_CLIENT_SECRET
+GOOGLE_OAUTH_REDIRECT_URI=http://localhost:8003/api/oauth/google/callback
+```
+
 ## 🔧 Troubleshooting
 
 ### ChromaDB DLL Error
@@ -164,10 +210,27 @@ ChromaDB chỉ hoạt động với Python 3.11:
 py -3.11 --version
 ```
 
-### Test Import
-```cmd
-py -3.11 -c "import chromadb; import torch; print('✅ OK')"
+### Port Already in Use
+Change the port in the relevant file:
+```bash
+# For main.py (default 8000)
+python main.py --port 8001
+
+# For main_with_rag.py (default 8001)
+py -3.11 main_with_rag.py --port 8002
 ```
+
+### Memory Issues with ChromaDB
+If you experience memory issues:
+1. Reduce batch size in `chroma_vector_service.py`
+2. Clear ChromaDB cache: `rm -rf chroma_db/`
+3. Restart the service
+
+### GEMINI_API_KEY not recognized
+Make sure `.env` file:
+1. Exists in the PythonService directory
+2. Contains: `GEMINI_API_KEY=your_actual_key`
+3. Is not in .gitignore (but don't commit it!)
 
 ## 📊 Performance
 
