@@ -29,6 +29,28 @@ public class UserCredentialController {
 
     private final UserCredentialService credentialService;
 
+    // ========== PUBLIC ENDPOINT (không cần auth) ==========
+    @GetMapping("/user/{userId}")
+    @Operation(summary = "Get credentials by user ID", description = "Get all credentials for a specific user (internal use)")
+    public ResponseEntity<?> getCredentialsByUserId(@PathVariable Long userId) {
+        List<UserCredential> credentials = credentialService.getUserCredentials(userId);
+        
+        List<CredentialResponse> responses = credentials.stream()
+                .map(c -> CredentialResponse.fromEntity(c, true)) // Include decrypted for internal use
+                .collect(Collectors.toList());
+        
+        return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/{id}/decrypt")
+    @Operation(summary = "Get decrypted credential", description = "Get credential with decrypted password (internal use)")
+    public ResponseEntity<?> getDecryptedCredential(@PathVariable Long id) {
+        return credentialService.getCredentialByIdOnly(id, true)
+                .map(c -> ResponseEntity.ok(CredentialResponse.fromEntity(c, true)))
+                .orElse(ResponseEntity.notFound().build());
+    }
+    // ========== END PUBLIC ENDPOINTS ==========
+
     @PostMapping
     @Operation(summary = "Create new credential", description = "Create a new credential for any service")
     public ResponseEntity<?> createCredential(

@@ -1,0 +1,67 @@
+feat: Add Auto Sync TKB to Google Calendar feature
+
+🔄 Implemented automatic schedule synchronization from TVU Portal to Google Calendar
+
+## Features Added:
+- Auto sync schedule to Google Calendar with 1 command
+- Support sync by week and semester
+- Full event details (subject, teacher, room, time)
+- Chat interface support (AI intent detection)
+- REST API endpoint for programmatic access
+
+## Files Modified:
+- backend/PythonService/agent_features.py
+  + Added sync_schedule_to_calendar() - Main sync logic
+  + Added detect_calendar_sync_intent() - Intent detection
+
+- backend/PythonService/main.py
+  + Added POST /api/calendar/sync-schedule endpoint
+  + Added calendar sync intent detection in chat handler
+
+## Files Created:
+- backend/PythonService/test_calendar_sync.py - Test script
+- CALENDAR_SYNC_FEATURE.md - Full documentation
+- CALENDAR_SYNC_QUICK_START.md - Quick start guide
+- 00_CALENDAR_SYNC_DONE.md - Implementation summary
+
+## Usage:
+### Via Chat:
+User: "Đồng bộ TKB lên Calendar"
+AI: ✅ Đã thêm 15 lớp học vào Google Calendar
+
+### Via API:
+POST /api/calendar/sync-schedule
+Authorization: Bearer TOKEN
+{
+  "week": null,
+  "hoc_ky": null
+}
+
+## Technical Details:
+- Auto login to TVU Portal
+- Parse schedule data from TVU API
+- Calculate dates from day_of_week
+- Format ISO 8601 datetime with timezone
+- Batch create events on Google Calendar API
+- Error handling with events_created/events_failed counters
+
+## Benefits:
+✅ No manual schedule entry
+✅ Automatic notifications
+✅ Cross-platform sync (phone, web, desktop)
+✅ Always synced with TVU Portal
+✅ One command to sync entire schedule
+
+## Requirements:
+- Google Account connected (OAuth)
+- TVU credentials configured in Settings
+
+## Testing:
+python backend/PythonService/test_calendar_sync.py
+
+## Documentation:
+See CALENDAR_SYNC_QUICK_START.md for 5-minute guide
+See CALENDAR_SYNC_FEATURE.md for full documentation
+
+Implementation time: ~30 minutes
+Status: ✅ DONE and ready for production

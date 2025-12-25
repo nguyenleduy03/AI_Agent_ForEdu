@@ -154,4 +154,27 @@ public class UserCredentialService {
     public List<CredentialUsageLog> getUsageLogs(Long credentialId) {
         return usageLogRepository.findByCredentialIdOrderByCreatedAtDesc(credentialId);
     }
+
+    /**
+     * Get credential by ID only (không check userId) - dùng cho internal API
+     */
+    public Optional<UserCredential> getCredentialByIdOnly(Long credentialId, boolean decrypt) {
+        Optional<UserCredential> credentialOpt = credentialRepository.findById(credentialId);
+        
+        if (credentialOpt.isEmpty()) {
+            return Optional.empty();
+        }
+        
+        UserCredential credential = credentialOpt.get();
+        
+        if (decrypt) {
+            credential.setUsername(encryptionService.decrypt(credential.getEncryptedUsername()));
+            credential.setPassword(encryptionService.decrypt(credential.getEncryptedPassword()));
+        } else {
+            credential.setUsername(credential.getEncryptedUsername().substring(0, Math.min(10, credential.getEncryptedUsername().length())) + "...");
+            credential.setPassword("****");
+        }
+        
+        return Optional.of(credential);
+    }
 }

@@ -5,10 +5,17 @@ import aiagent.dacn.agentforedu.dto.CourseResponse;
 import aiagent.dacn.agentforedu.dto.EnrollCourseRequest;
 import aiagent.dacn.agentforedu.entity.Course;
 import aiagent.dacn.agentforedu.entity.CourseEnrollment;
+import aiagent.dacn.agentforedu.entity.Lesson;
+import aiagent.dacn.agentforedu.entity.Quiz;
 import aiagent.dacn.agentforedu.entity.User;
 import aiagent.dacn.agentforedu.repository.CourseEnrollmentRepository;
+import aiagent.dacn.agentforedu.repository.CourseProgressRepository;
 import aiagent.dacn.agentforedu.repository.CourseRepository;
+import aiagent.dacn.agentforedu.repository.LessonProgressRepository;
 import aiagent.dacn.agentforedu.repository.LessonRepository;
+import aiagent.dacn.agentforedu.repository.QuizQuestionRepository;
+import aiagent.dacn.agentforedu.repository.QuizRepository;
+import aiagent.dacn.agentforedu.repository.QuizResultRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +29,12 @@ public class CourseService {
     
     private final CourseRepository courseRepository;
     private final CourseEnrollmentRepository enrollmentRepository;
+    private final CourseProgressRepository courseProgressRepository;
     private final LessonRepository lessonRepository;
+    private final LessonProgressRepository lessonProgressRepository;
+    private final QuizRepository quizRepository;
+    private final QuizQuestionRepository quizQuestionRepository;
+    private final QuizResultRepository quizResultRepository;
     
     @Transactional(readOnly = true)
     public List<CourseResponse> getAllCourses(User currentUser) {
@@ -72,6 +84,35 @@ public class CourseService {
         if (!courseRepository.existsById(id)) {
             throw new RuntimeException("Không tìm thấy khóa học");
         }
+        
+        // 1. Get all lessons in this course
+        List<Lesson> lessons = lessonRepository.findByCourseIdOrderByOrderIndexAsc(id);
+        
+        // 2. For each lesson, delete quizzes and related data
+        for (Lesson lesson : lessons) {
+            List<Quiz> quizzes = quizRepository.findByLessonId(lesson.getId());
+            for (Quiz quiz : quizzes) {
+                // Delete quiz results
+                quizResultRepository.deleteByQuizId(quiz.getId());
+                // Delete quiz questions
+                quizQuestionRepository.deleteByQuizId(quiz.getId());
+                // Delete quiz
+                quizRepository.delete(quiz);
+            }
+            // Delete lesson (lesson progress will be deleted by courseId below)
+            lessonRepository.delete(lesson);
+        }
+        
+        // 3. Delete all lesson progress for this course
+        lessonProgressRepository.deleteByCourseId(id);
+        
+        // 4. Delete course progress
+        courseProgressRepository.deleteByCourseId(id);
+        
+        // 5. Delete all enrollments
+        enrollmentRepository.deleteByCourseId(id);
+        
+        // 6. Finally delete the course
         courseRepository.deleteById(id);
     }
     
@@ -130,6 +171,21 @@ public class CourseService {
         
         // If student: return enrolled courses
         return getMyEnrolledCourses(user);
+    }
+    
+    @Transactional
+    public void unenrollCourse(Long courseId, User user) {
+        // Check if course exists
+        if (!courseRepository.existsById(courseId)) {
+            throw new RuntimeException("Không tìm thấy khóa học");
+        }
+        
+        // Find enrollment
+        CourseEnrollment enrollment = enrollmentRepository.findByUserIdAndCourseId(user.getId(), courseId)
+                .orElseThrow(() -> new RuntimeException("Bạn chưa đăng ký khóa học này"));
+        
+        // Delete enrollment
+        enrollmentRepository.delete(enrollment);
     }
     
     private CourseResponse toResponse(Course course, User currentUser) {

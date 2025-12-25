@@ -49,6 +49,16 @@ export const calendarService = {
     return data.success ? data.events : [];
   },
 
+  // Alias for getEvents
+  listEvents: async (
+    userId: number,
+    timeMin: string,
+    timeMax: string,
+    maxResults: number = 100
+  ): Promise<CalendarEvent[]> => {
+    return calendarService.getEvents(userId, timeMin, timeMax, maxResults);
+  },
+
   // Create new event
   createEvent: async (request: CreateEventRequest): Promise<CalendarEvent | null> => {
     const response = await fetch(`${CALENDAR_URL}/create-event`, {

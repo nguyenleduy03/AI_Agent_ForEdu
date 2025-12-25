@@ -87,4 +87,13 @@ public class CourseController {
     public ResponseEntity<List<CourseResponse>> getMyCourses(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok(courseService.getMyCourses(user));
     }
+    
+    @DeleteMapping("/{id}/unenroll")
+    @Operation(summary = "Hủy đăng ký khóa học")
+    public ResponseEntity<Map<String, String>> unenrollCourse(
+            @PathVariable Long id,
+            @AuthenticationPrincipal User user) {
+        courseService.unenrollCourse(id, user);
+        return ResponseEntity.ok(Map.of("message", "Đã hủy đăng ký khóa học"));
+    }
 }

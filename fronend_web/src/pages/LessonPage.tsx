@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Sparkles, BookOpen, Clock, CheckCircle, Target, Brain, Zap, Plus, ClipboardCheck } from 'lucide-react';
+import { ArrowLeft, Sparkles, BookOpen, Clock, CheckCircle, Target, Brain, Zap, Plus, ClipboardCheck, Edit, Trash2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import Layout from '../components/Layout';
@@ -19,6 +19,9 @@ const LessonPage = () => {
   const [generatingQuiz, setGeneratingQuiz] = useState(false);
   const [timeSpent, setTimeSpent] = useState(0);
   const [startTime] = useState(Date.now());
+  const [deleting, setDeleting] = useState(false);
+
+  const isTeacher = user?.role === 'TEACHER' || user?.role === 'ADMIN';
 
   const { data: lesson, isLoading } = useQuery({
     queryKey: ['lesson', lessonId],
@@ -98,6 +101,22 @@ const LessonPage = () => {
     }
   };
 
+  const handleDeleteLesson = async () => {
+    if (!window.confirm('Bạn có chắc chắn muốn xóa bài học này? Hành động này không thể hoàn tác!')) {
+      return;
+    }
+    setDeleting(true);
+    try {
+      await courseService.deleteLesson(lessonId);
+      toast.success('Đã xóa bài học!');
+      navigate(`/courses/${lesson?.courseId}`);
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Không thể xóa bài học!');
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <Layout>
@@ -140,14 +159,41 @@ const LessonPage = () => {
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" />
           
           <div className="relative z-10">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center border-2 border-white/30">
-                <BookOpen className="w-7 h-7 text-white" />
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center border-2 border-white/30">
+                  <BookOpen className="w-7 h-7 text-white" />
+                </div>
+                <div className="flex items-center gap-2 text-white/90 text-sm font-semibold">
+                  <Sparkles className="w-4 h-4" />
+                  <span>Lesson Content</span>
+                </div>
               </div>
-              <div className="flex items-center gap-2 text-white/90 text-sm font-semibold">
-                <Sparkles className="w-4 h-4" />
-                <span>Lesson Content</span>
-              </div>
+              
+              {/* Teacher Actions */}
+              {isTeacher && (
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => navigate(`/lessons/${lessonId}/edit`)}
+                    className="flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm text-white rounded-lg hover:bg-white/30 transition-all"
+                  >
+                    <Edit className="w-4 h-4" />
+                    <span className="hidden md:inline">Chỉnh sửa</span>
+                  </button>
+                  <button
+                    onClick={handleDeleteLesson}
+                    disabled={deleting}
+                    className="flex items-center gap-2 px-4 py-2 bg-red-500/80 backdrop-blur-sm text-white rounded-lg hover:bg-red-600 transition-all disabled:opacity-50"
+                  >
+                    {deleting ? (
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <Trash2 className="w-4 h-4" />
+                    )}
+                    <span className="hidden md:inline">Xóa</span>
+                  </button>
+                </div>
+              )}
             </div>
             <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">{lesson?.title}</h1>
             <div className="flex items-center gap-6 text-white/90 text-sm">

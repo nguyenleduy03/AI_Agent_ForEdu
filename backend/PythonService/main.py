@@ -258,22 +258,10 @@ else:
     google_cloud_agent = None
     print("⚠️  Google Cloud Agent not initialized")
 
-# Initialize LangChain Agent
+# Initialize LangChain Agent - DISABLED (không cần thiết cho dự án này)
+# Kết luận: LangChain phức tạp 8/10, giá trị thực tế thấp
 langchain_agent = None
-if LANGCHAIN_AGENT_AVAILABLE and GEMINI_API_KEY:
-    try:
-        langchain_agent = create_simple_langchain_agent(
-            gemini_api_key=GEMINI_API_KEY
-        )
-        if langchain_agent:
-            print("✅ LangChain Agent initialized")
-        else:
-            print("⚠️  LangChain Agent initialization failed")
-    except Exception as e:
-        print(f"⚠️  LangChain Agent error: {e}")
-        langchain_agent = None
-else:
-    print("⚠️  LangChain Agent not initialized")
+print("ℹ️  LangChain Agent disabled - using direct Gemini API instead")
 
 # Initialize Image Analysis models (lazy loading)
 # No longer using EasyOCR or BLIP - using pytesseract instead
@@ -500,6 +488,11 @@ class EmailDraft(BaseModel):
     subject: str
     body: str
     user_id: Optional[int] = None
+    
+    model_config = ConfigDict(
+        populate_by_name=True,
+        # Ensure snake_case in JSON output
+    )
 
 class ChatResponse(BaseModel):
     response: str
@@ -509,6 +502,11 @@ class ChatResponse(BaseModel):
     suggested_actions: Optional[List[ActionLink]] = None  # Links gợi ý
     tool_action: Optional[ToolAction] = None  # Action tự động thực thi
     email_draft: Optional[EmailDraft] = None  # Email draft for preview
+    
+    model_config = ConfigDict(
+        populate_by_name=True,
+        # Ensure snake_case in JSON output
+    )
 
 class DocumentRequest(BaseModel):
     documents: List[str]
@@ -808,7 +806,7 @@ async def test_tvu_schedule(request: TVUTestRequest):
         return {"success": False, "message": f"❌ Lỗi: {str(e)}"}
 
 
-@app.post("/api/chat", response_model=ChatResponse, tags=["Chat"])
+@app.post("/api/chat", tags=["Chat"])
 async def chat(request: ChatRequest, authorization: Optional[str] = Header(None)):
     """
     Chat với Gemini AI (có hỗ trợ RAG + Agent Features)
@@ -887,7 +885,7 @@ async def chat(request: ChatRequest, authorization: Optional[str] = Header(None)
                     response=response_text,
                     model=request.model,
                     rag_enabled=False
-                )
+                ).model_dump()
         
         # AGENT FEATURES - Check intents (schedule, grades, email)
         # ONLY run if we haven't returned yet (no Google Cloud intent) AND no image
@@ -899,33 +897,25 @@ async def chat(request: ChatRequest, authorization: Optional[str] = Header(None)
                 print(f"✅ 📧 Detected email intent in: {request.message}")
                 print(f"Token: {token is not None}, User ID: {user_id}")
                 
-                # Check if it's a Gmail API request (read/send/search) - CẦN token
-                if token and user_id and (agent_features.detect_gmail_read_intent(request.message) or 
-                    agent_features.detect_gmail_send_intent(request.message) or
-                    agent_features.detect_gmail_search_intent(request.message)):
-                    # Use OAuth Gmail API - requires authentication
-                    print(f"📧 Using Gmail OAuth API (authenticated) - User ID: {user_id}")
-                    result = agent_features.handle_gmail_request(request.message, token, user_id=user_id)
-                else:
-                    # Email draft generation - NO authentication required
-                    # Check if user provided email address
-                    print(f"📧 Generating email draft (no auth or no token)")
-                    print(f"Will call handle_gmail_send with user_id: {user_id}")
-                    
-                    # Try to use Gmail handler which has better logic
-                    if agent_features.detect_gmail_send_intent(request.message):
-                        # This will auto-generate draft even without OAuth
-                        result = agent_features.handle_gmail_send(request.message, "", user_id=None)
+                # Always use handle_gmail_send for send intent - it handles both auth and no-auth cases
+                if agent_features.detect_gmail_send_intent(request.message):
+                    print(f"📧 Detected SEND intent - calling handle_gmail_send with user_id: {user_id}")
+                    result = agent_features.handle_gmail_send(request.message, token or "", user_id=user_id)
+                elif token and user_id:
+                    # For read/search - need authentication
+                    if agent_features.detect_gmail_read_intent(request.message):
+                        print(f"📧 Using Gmail OAuth API for READ - User ID: {user_id}")
+                        result = agent_features.handle_gmail_read(request.message, token, user_id=user_id)
+                    elif agent_features.detect_gmail_search_intent(request.message):
+                        print(f"📧 Using Gmail OAuth API for SEARCH - User ID: {user_id}")
+                        result = agent_features.handle_gmail_search(request.message, token, user_id=user_id)
                     else:
-                        # Fallback to legacy method if available
-                        if token:
-                            gemini_model = genai.GenerativeModel(request.model)
-                            result = agent_features.handle_email_request(request.message, token, gemini_model)
-                        else:
-                            result = {
-                                "success": False,
-                                "message": "📧 Vui lòng cung cấp địa chỉ email người nhận trong câu lệnh.\n\nVí dụ: 'gửi mail xin nghỉ học đến teacher@tvu.edu.vn'"
-                            }
+                        result = agent_features.handle_gmail_request(request.message, token, user_id=user_id)
+                else:
+                    result = {
+                        "success": False,
+                        "message": "📧 Vui lòng cung cấp địa chỉ email người nhận trong câu lệnh.\n\nVí dụ: 'gửi mail xin nghỉ học đến teacher@tvu.edu.vn'"
+                    }
                 
                 # Safely convert result['message'] to string
                 response_text = result.get('message', '')
@@ -941,17 +931,30 @@ async def chat(request: ChatRequest, authorization: Optional[str] = Header(None)
                 if email_draft_data:
                     print(f"✅ Email draft found: {email_draft_data}")
                     email_draft = EmailDraft(**email_draft_data)
+                    print(f"✅ EmailDraft object created: {email_draft}")
+                    print(f"✅ EmailDraft dict: {email_draft.model_dump()}")
                 else:
                     print(f"⚠️ No email_draft in result. Result keys: {result.keys()}")
                 
-                print(f"📧 Returning ChatResponse with email_draft: {email_draft is not None}")
-                
-                return ChatResponse(
+                chat_response = ChatResponse(
                     response=response_text,
                     model=request.model,
                     rag_enabled=False,
                     email_draft=email_draft
                 )
+                print(f"📧 ChatResponse created with email_draft: {chat_response.email_draft is not None}")
+                
+                # Serialize to dict to ensure email_draft is included
+                response_dict = chat_response.model_dump()
+                print(f"📧 ChatResponse dict: {response_dict}")
+                print(f"📧 email_draft in dict: {response_dict.get('email_draft')}")
+                
+                # Ensure email_draft is in response even if None
+                if 'email_draft' not in response_dict:
+                    response_dict['email_draft'] = None
+                    print(f"⚠️ Added email_draft=None to response_dict")
+                
+                return response_dict
             
             # ===== CHECK SCHEDULE INTENT ===== (CẦN token)
             # Check for schedule intent
@@ -968,7 +971,29 @@ async def chat(request: ChatRequest, authorization: Optional[str] = Header(None)
                     response=response_text,
                     model=request.model,
                     rag_enabled=False
+                ).model_dump()
+            
+            # ===== CHECK CALENDAR SYNC INTENT ===== (CẦN token + user_id)
+            # Check for calendar sync intent
+            if token and user_id and agent_features.detect_calendar_sync_intent(request.message):
+                print(f"🔄 Detected calendar sync intent in: {request.message}")
+                result = agent_features.sync_schedule_to_calendar(
+                    token=token,
+                    user_id=user_id,
+                    week=None,  # Use current week
+                    hoc_ky=None  # Use current semester
                 )
+                
+                # Safely convert to string
+                response_text = result.get('message', '')
+                if not isinstance(response_text, str):
+                    response_text = str(response_text) if not isinstance(response_text, list) else '\n'.join(str(x) for x in response_text)
+                
+                return ChatResponse(
+                    response=response_text,
+                    model=request.model,
+                    rag_enabled=False
+                ).model_dump()
             
             # ===== CHECK GRADE INTENT ===== (CẦN token)
             # Check for grade intent
@@ -985,7 +1010,7 @@ async def chat(request: ChatRequest, authorization: Optional[str] = Header(None)
                     response=response_text,
                     model=request.model,
                     rag_enabled=False
-                )
+                ).model_dump()
         
         # Detect tool action (YouTube, Google, Wikipedia) - ONLY if NO image
         tool_action = None
@@ -1008,7 +1033,7 @@ async def chat(request: ChatRequest, authorization: Optional[str] = Header(None)
                 model=request.model,
                 tool_action=tool_action,
                 rag_enabled=False
-            )
+            ).model_dump()
         
         # System prompt - Personality của AI
         system_prompt = """🎓 Bạn là AI Learning Assistant - Trợ lý học tập thông minh và thân thiện!
@@ -1293,7 +1318,7 @@ Xin lỗi! API key của Gemini đã vượt quá giới hạn sử dụng miễ
             context_used=context_docs if request.use_rag else None,
             rag_enabled=request.use_rag,
             suggested_actions=suggested_actions
-        )
+        ).model_dump()
     
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Lỗi: {str(e)}")
@@ -2390,6 +2415,106 @@ async def get_langchain_status():
         "memory_enabled": True,
         "llm_model": "gemini-2.0-flash-exp"
     }
+
+# ============================================================================
+# CALENDAR SYNC ENDPOINTS
+# ============================================================================
+
+class CalendarSyncRequest(BaseModel):
+    """Request model for syncing schedule to calendar"""
+    week: Optional[int] = None
+    hoc_ky: Optional[str] = None
+    user_id: Optional[int] = None  # User ID để lấy credentials và tạo events
+    reminder_email: Optional[int] = None  # Phút trước để gửi email (vd: 30, 60, 1440)
+    reminder_popup: Optional[int] = None  # Phút trước để hiện popup
+    notification_email: Optional[str] = None  # Email tùy chỉnh để nhận thông báo
+    
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "week": 5,
+                "hoc_ky": "20251",
+                "user_id": 1,
+                "reminder_email": 30,
+                "reminder_popup": 15,
+                "notification_email": "myemail@gmail.com"
+            }
+        }
+    )
+
+@app.post("/api/calendar/sync-schedule", tags=["Calendar Sync"])
+async def sync_schedule_to_calendar(
+    request: CalendarSyncRequest,
+    authorization: Optional[str] = Header(None)
+):
+    """
+    🔄 Đồng bộ Thời Khóa Biểu lên Google Calendar
+    
+    Tự động lấy TKB từ TVU Portal và tạo events trên Google Calendar
+    
+    **Yêu cầu:**
+    - Đã kết nối Google Account (OAuth)
+    - Đã cấu hình tài khoản TVU trong Settings
+    
+    **Parameters:**
+    - week: Tuần học (optional, mặc định tuần hiện tại)
+    - hoc_ky: Học kỳ (optional, mặc định học kỳ hiện tại)
+    - user_id: User ID (optional, nếu không có sẽ lấy từ token)
+    
+    **Returns:**
+    - success: True/False
+    - message: Thông báo kết quả
+    - events_created: Số events đã tạo
+    """
+    if not AGENT_FEATURES_AVAILABLE or not agent_features:
+        raise HTTPException(
+            status_code=503,
+            detail="Agent features not available"
+        )
+    
+    try:
+        # Get user_id - từ request body hoặc từ token
+        user_id = request.user_id
+        token = None
+        
+        # Nếu có authorization header, lấy token và user_id từ đó
+        if authorization and authorization.startswith("Bearer "):
+            token = authorization.replace("Bearer ", "")
+            if not user_id:
+                user_id = get_user_id_from_token(token)
+        
+        # Nếu vẫn không có user_id, báo lỗi
+        if not user_id:
+            raise HTTPException(
+                status_code=400,
+                detail="user_id is required - please provide in request body or login"
+            )
+        
+        print(f"🔄 Syncing schedule for user_id: {user_id}")
+        
+        # Call sync function - truyền user_id để lấy credentials
+        result = agent_features.sync_schedule_to_calendar(
+            token=token or "",  # Token có thể rỗng, function sẽ dùng user_id
+            user_id=user_id,
+            week=request.week,
+            hoc_ky=request.hoc_ky,
+            reminder_email=request.reminder_email,
+            reminder_popup=request.reminder_popup,
+            notification_email=request.notification_email
+        )
+        
+        if result.get("success"):
+            return result
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail=result.get("message", "Sync failed")
+            )
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
 
 # ============================================================================
 # MAIN

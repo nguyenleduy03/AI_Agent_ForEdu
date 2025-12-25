@@ -97,6 +97,9 @@ class CalendarEventRequest(BaseModel):
     location: Optional[str] = None
     attendees: Optional[List[str]] = None
     user_id: int
+    # Reminder settings
+    reminder_email: Optional[int] = None  # Minutes before event to send email reminder (e.g., 30, 60, 1440 for 1 day)
+    reminder_popup: Optional[int] = None  # Minutes before event for popup notification
 
 class CalendarListRequest(BaseModel):
     time_min: Optional[str] = None  # ISO 8601
@@ -470,6 +473,25 @@ async def create_calendar_event(request: CalendarEventRequest):
         
         if request.attendees:
             event_data["attendees"] = [{"email": email} for email in request.attendees]
+        
+        # Add reminders if specified
+        if request.reminder_email is not None or request.reminder_popup is not None:
+            reminders = []
+            if request.reminder_email is not None:
+                reminders.append({
+                    "method": "email",
+                    "minutes": request.reminder_email
+                })
+            if request.reminder_popup is not None:
+                reminders.append({
+                    "method": "popup", 
+                    "minutes": request.reminder_popup
+                })
+            
+            event_data["reminders"] = {
+                "useDefault": False,
+                "overrides": reminders
+            }
         
         # Call Calendar API
         api_url = "https://www.googleapis.com/calendar/v3/calendars/primary/events"

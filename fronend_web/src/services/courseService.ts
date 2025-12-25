@@ -49,7 +49,7 @@ export const courseService = {
     return response.data;
   },
 
-  updateLesson: async (id: number, data: Partial<Lesson>): Promise<Lesson> => {
+  updateLesson: async (id: number, data: { title: string; content: string; orderIndex: number }): Promise<Lesson> => {
     const response = await springApi.put(ENDPOINTS.LESSONS.UPDATE(id), data);
     return response.data;
   },
@@ -79,6 +79,10 @@ export const courseService = {
   enrollCourse: async (courseId: number, password?: string): Promise<Course> => {
     const response = await springApi.post(`/api/courses/${courseId}/enroll`, { password });
     return response.data;
+  },
+
+  unenrollCourse: async (courseId: number): Promise<void> => {
+    await springApi.delete(`/api/courses/${courseId}/unenroll`);
   },
 
   getMyEnrolledCourses: async (): Promise<Course[]> => {

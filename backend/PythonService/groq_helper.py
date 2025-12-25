@@ -163,7 +163,8 @@ class GroqClient:
         model: str = "llama-3.1-70b-versatile",
         temperature: float = 0.7,
         max_tokens: int = 2048,
-        stream: bool = False
+        stream: bool = False,
+        timeout: int = 60  # ← ADDED timeout parameter
     ) -> Dict:
         """
         Create chat completion with Groq
@@ -178,6 +179,7 @@ class GroqClient:
             temperature: Sampling temperature (0-2)
             max_tokens: Maximum tokens to generate
             stream: Whether to stream response
+            timeout: Request timeout in seconds
             
         Returns:
             Response dict with 'choices' containing generated text
@@ -192,7 +194,7 @@ class GroqClient:
             "stream": stream
         }
         
-        response = requests.post(url, json=payload, headers=self.headers, timeout=30)
+        response = requests.post(url, json=payload, headers=self.headers, timeout=timeout)
         response.raise_for_status()
         
         return response.json()
@@ -201,15 +203,19 @@ class GroqClient:
         self,
         prompt: str,
         system_prompt: Optional[str] = None,
-        model: str = "llama-3.1-70b-versatile"
+        model: str = "llama-3.1-70b-versatile",
+        timeout: int = 60,  # ← INCREASED from 30
+        max_retries: int = 3  # ← ADDED retry
     ) -> str:
         """
-        Simple text generation
+        Simple text generation with retry mechanism
         
         Args:
             prompt: User prompt
             system_prompt: Optional system instruction
             model: Groq model name
+            timeout: Request timeout in seconds
+            max_retries: Maximum number of retries
             
         Returns:
             Generated text string
@@ -227,9 +233,41 @@ class GroqClient:
             "content": prompt
         })
         
-        response = self.chat_completion(messages, model=model)
+        # Retry logic with exponential backoff
+        import time
+        last_error = None
         
-        return response['choices'][0]['message']['content']
+        for attempt in range(max_retries):
+            try:
+                response = self.chat_completion(
+                    messages, 
+                    model=model,
+                    timeout=timeout
+                )
+                return response['choices'][0]['message']['content']
+                
+            except requests.exceptions.Timeout as e:
+                last_error = e
+                if attempt < max_retries - 1:
+                    wait_time = 2 ** attempt  # Exponential backoff: 1s, 2s, 4s
+                    print(f"⚠️ Groq timeout, retry {attempt + 1}/{max_retries} after {wait_time}s...")
+                    time.sleep(wait_time)
+                    continue
+                    
+            except requests.exceptions.ConnectionError as e:
+                last_error = e
+                if attempt < max_retries - 1:
+                    wait_time = 2 ** attempt
+                    print(f"⚠️ Groq connection error, retry {attempt + 1}/{max_retries} after {wait_time}s...")
+                    time.sleep(wait_time)
+                    continue
+                    
+            except Exception as e:
+                # Other errors - don't retry
+                raise
+        
+        # All retries failed
+        raise last_error if last_error else Exception("Groq API failed after retries")
     
     def generate_with_vision(
         self,

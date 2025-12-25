@@ -117,11 +117,29 @@ public class QuizService {
         List<QuizQuestion> questions = questionRepository.findByQuizId(quizId);
         
         int correctCount = 0;
+        List<QuizResultResponse.QuestionResult> questionResults = new ArrayList<>();
+        
         for (QuizQuestion q : questions) {
             String userAnswer = request.getAnswers().get(q.getId());
-            if (userAnswer != null && userAnswer.equalsIgnoreCase(q.getCorrectAnswer())) {
+            boolean isCorrect = userAnswer != null && userAnswer.equalsIgnoreCase(q.getCorrectAnswer());
+            if (isCorrect) {
                 correctCount++;
             }
+            
+            // Build question result with answer details
+            QuizResultResponse.QuestionResult qr = new QuizResultResponse.QuestionResult();
+            qr.setQuestionId(q.getId());
+            qr.setQuestion(q.getQuestion());
+            qr.setOptionA(q.getOptionA());
+            qr.setOptionB(q.getOptionB());
+            qr.setOptionC(q.getOptionC());
+            qr.setOptionD(q.getOptionD());
+            qr.setUserAnswer(userAnswer != null ? userAnswer.toUpperCase() : null);
+            qr.setCorrectAnswer(q.getCorrectAnswer());
+            qr.setIsCorrect(isCorrect);
+            qr.setExplanation(q.getExplanation());
+            
+            questionResults.add(qr);
         }
         
         double score = (double) correctCount / questions.size() * 100;
@@ -139,6 +157,7 @@ public class QuizService {
         response.setCorrectAnswers(correctCount);
         response.setScore(score);
         response.setMessage(getScoreMessage(score));
+        response.setQuestionResults(questionResults);
         
         return response;
     }

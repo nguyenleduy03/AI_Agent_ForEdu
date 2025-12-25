@@ -7,7 +7,7 @@ import Layout from '../components/Layout';
 import VoiceChatButton from '../components/VoiceChatButton';
 import QuotaWarningBanner from '../components/QuotaWarningBanner';
 import ErrorBoundary from '../components/ErrorBoundary';
-import { EmailDraftPreview } from '../components/EmailDraftPreview';
+import { EmailDraftOverlay } from '../components/EmailDraftOverlay';
 import { chatService } from '../services/chatService';
 import { springApi } from '../services/api';
 import { useVoiceChat } from '../hooks/useVoiceChat';
@@ -85,6 +85,7 @@ const ChatPage = () => {
   const [useRag, setUseRag] = useState(true);
   const [autoSpeak, setAutoSpeak] = useState(true); // Auto-read AI responses
   const [showQuotaWarning, setShowQuotaWarning] = useState(false);
+  const [emailDraftOverlay, setEmailDraftOverlay] = useState<EmailDraft | null>(null); // Overlay state
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const isMountedRef = useRef(true); // Track if component is mounted
   const timeoutsRef = useRef<NodeJS.Timeout[]>([]); // Track all timeouts for cleanup
@@ -426,26 +427,89 @@ const ChatPage = () => {
       }
 
       console.log('AI response received:', responseText.substring(0, 100) + '...');
-      console.log('🔍 Email draft from API:', aiResponse.email_draft);
+      console.log('🔍 FULL API RESPONSE:', JSON.stringify(aiResponse, null, 2));
+      console.log('🔍 Email draft from API (snake_case):', aiResponse.email_draft);
+      console.log('🔍 Email draft from API (camelCase):', aiResponse.emailDraft);
+      console.log('🔍 Full API response keys:', Object.keys(aiResponse));
+
+      // Check both snake_case and camelCase (Pydantic v2 may use either)
+      let emailDraft = aiResponse.email_draft || aiResponse.emailDraft;
+      
+      // Fallback: Parse email draft from response text if API didn't return email_draft
+      if (!emailDraft && responseText.includes('**Người nhận:**') && responseText.includes('**Chủ đề:**')) {
+        console.log('📧 Parsing email draft from response text...');
+        try {
+          const toMatch = responseText.match(/\*\*Người nhận:\*\*\s*([^\n*]+)/);
+          const subjectMatch = responseText.match(/\*\*Chủ đề:\*\*\s*([^\n*]+)/);
+          const bodyMatch = responseText.match(/\*\*(?:📄\s*)?Nội dung:\*\*\s*([\s\S]*?)(?:---|💡|$)/);
+          
+          if (toMatch && subjectMatch) {
+            emailDraft = {
+              to: toMatch[1].trim(),
+              subject: subjectMatch[1].trim(),
+              body: bodyMatch ? bodyMatch[1].trim() : '',
+              user_id: user?.id
+            };
+            console.log('📧 Parsed email draft:', emailDraft);
+          }
+        } catch (e) {
+          console.error('Failed to parse email draft from text:', e);
+        }
+      }
+
+      console.log('📧 Final emailDraft:', emailDraft);
+      
+      // ===== DEBUG: Check emailDraft structure =====
+      if (emailDraft) {
+        console.log('✅ emailDraft EXISTS!');
+        console.log('   - Type:', typeof emailDraft);
+        console.log('   - Keys:', Object.keys(emailDraft));
+        console.log('   - to:', emailDraft.to);
+        console.log('   - subject:', emailDraft.subject);
+        console.log('   - body length:', emailDraft.body?.length);
+      } else {
+        console.log('❌ emailDraft is NULL/UNDEFINED');
+      }
 
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         sender: 'ai',
-        text: responseText,
+        text: emailDraft ? '📧 Email draft đã được tạo. Vui lòng kiểm tra và gửi.' : responseText,
         timestamp: new Date(),
         actions: aiResponse.suggested_actions || [],
         toolAction: aiResponse.tool_action,
-        emailDraft: aiResponse.email_draft, // Add email draft if present
+        emailDraft: emailDraft, // Add email draft if present
       };
 
       console.log('📧 Message created with emailDraft:', aiMessage.emailDraft);
+      console.log('📧 Message.emailDraft exists?', !!aiMessage.emailDraft);
 
       // Add AI message to UI - simplified without RAF to reduce complexity
       if (isMountedRef.current) {
         setMessages((prev) => {
-          console.log('Adding AI message to UI');
-          return [...prev, aiMessage];
+          console.log('📝 Adding AI message to UI');
+          console.log('📝 Current messages count:', prev.length);
+          console.log('📝 New message has emailDraft?', !!aiMessage.emailDraft);
+          const newMessages = [...prev, aiMessage];
+          console.log('📝 New messages count:', newMessages.length);
+          console.log('📝 Last message emailDraft?', !!newMessages[newMessages.length - 1].emailDraft);
+          return newMessages;
         });
+        
+        // Auto-open overlay if email draft exists
+        console.log('🔍 Checking emailDraft:', emailDraft);
+        console.log('🔍 emailDraft type:', typeof emailDraft);
+        console.log('🔍 emailDraft is null?', emailDraft === null);
+        console.log('🔍 emailDraft is undefined?', emailDraft === undefined);
+        
+        if (emailDraft) {
+          console.log('🚀 Auto-opening email draft overlay');
+          console.log('🚀 emailDraft data:', JSON.stringify(emailDraft));
+          setEmailDraftOverlay(emailDraft);
+          console.log('🚀 setEmailDraftOverlay called!');
+        } else {
+          console.log('❌ emailDraft is falsy, not opening overlay');
+        }
 
         // TEMPORARILY DISABLED to prevent DOM conflicts
         // Will re-enable after confirming core messaging works
@@ -817,7 +881,13 @@ const ChatPage = () => {
             {/* Messages */}
             <div className="flex-1 overflow-y-auto space-y-4 mb-4">
               <AnimatePresence initial={false}>
-                {messages.map((message) => (
+                {messages.map((message) => {
+                  // Debug log for each message
+                  if (message.sender === 'ai' && message.emailDraft) {
+                    console.log('🎨 Rendering AI message with emailDraft:', message.id, message.emailDraft);
+                  }
+                  
+                  return (
                   <motion.div
                     key={`${message.id}-${message.sender}`}
                     initial={{ opacity: 0, y: 10 }}
@@ -986,30 +1056,11 @@ const ChatPage = () => {
                             )}
                           </div>
                         </div> {/* Close rounded-2xl div */}
-
-                        {/* Email Draft Preview - Inside flex-1 div to avoid DOM conflicts */}
-                        {message.sender === 'ai' && message.emailDraft && (
-                          <div className="mt-2">
-                            <ErrorBoundary fallback={
-                              <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-                                <p className="text-sm text-red-600">⚠️ Không thể hiển thị email draft</p>
-                              </div>
-                            }>
-                              <EmailDraftPreview
-                                draft={message.emailDraft}
-                                userId={user?.id}
-                                onSent={() => {
-                                  toast.success('Email đã được gửi!');
-                                }}
-                              />
-                            </ErrorBoundary>
-                          </div>
-                        )}
                       </div> {/* Close flex-1 div */}
-
                     </div> {/* Close flex items-start div */}
                   </motion.div>
-                ))}
+                  );
+                })}
               </AnimatePresence>
               {loading && (
                 <motion.div
@@ -1187,6 +1238,14 @@ const ChatPage = () => {
           </div>
         </div>
       </Layout>
+      
+      {/* Email Draft Overlay - Auto-open when draft exists */}
+      {console.log('🎨 Rendering EmailDraftOverlay, draft:', emailDraftOverlay)}
+      <EmailDraftOverlay
+        draft={emailDraftOverlay}
+        userId={user?.id}
+        onClose={() => setEmailDraftOverlay(null)}
+      />
     </ErrorBoundary>
   );
 };

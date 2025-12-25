@@ -3,7 +3,12 @@ package aiagent.dacn.agentforedu.service;
 import aiagent.dacn.agentforedu.dto.LessonRequest;
 import aiagent.dacn.agentforedu.dto.LessonResponse;
 import aiagent.dacn.agentforedu.entity.Lesson;
+import aiagent.dacn.agentforedu.entity.Quiz;
 import aiagent.dacn.agentforedu.repository.LessonRepository;
+import aiagent.dacn.agentforedu.repository.LessonProgressRepository;
+import aiagent.dacn.agentforedu.repository.QuizRepository;
+import aiagent.dacn.agentforedu.repository.QuizQuestionRepository;
+import aiagent.dacn.agentforedu.repository.QuizResultRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +21,10 @@ import java.util.stream.Collectors;
 public class LessonService {
     
     private final LessonRepository lessonRepository;
+    private final LessonProgressRepository lessonProgressRepository;
+    private final QuizRepository quizRepository;
+    private final QuizQuestionRepository quizQuestionRepository;
+    private final QuizResultRepository quizResultRepository;
     
     @Transactional(readOnly = true)
     public List<LessonResponse> getLessonsByCourse(Long courseId) {
@@ -61,6 +70,22 @@ public class LessonService {
         if (!lessonRepository.existsById(id)) {
             throw new RuntimeException("Không tìm thấy bài học");
         }
+        
+        // 1. Delete all quizzes and related data for this lesson
+        List<Quiz> quizzes = quizRepository.findByLessonId(id);
+        for (Quiz quiz : quizzes) {
+            // Delete quiz results first
+            quizResultRepository.deleteByQuizId(quiz.getId());
+            // Delete quiz questions
+            quizQuestionRepository.deleteByQuizId(quiz.getId());
+            // Delete quiz
+            quizRepository.delete(quiz);
+        }
+        
+        // 2. Delete lesson progress
+        lessonProgressRepository.deleteByLessonId(id);
+        
+        // 3. Finally delete the lesson
         lessonRepository.deleteById(id);
     }
     

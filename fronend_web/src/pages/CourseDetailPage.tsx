@@ -1,7 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
-import { useParams, Link } from 'react-router-dom';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { BookOpen, FileText, Play, ArrowLeft, Plus, CheckCircle, Clock, Award, Users, GraduationCap, Target, Sparkles } from 'lucide-react';
+import { BookOpen, FileText, Play, ArrowLeft, Plus, CheckCircle, Clock, Award, Users, GraduationCap, Target, Sparkles, Edit, LogOut } from 'lucide-react';
+import toast from 'react-hot-toast';
 import Layout from '../components/Layout';
 import { courseService } from '../services/courseService';
 import { progressService } from '../services/progressService';
@@ -11,8 +12,10 @@ const CourseDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const courseId = parseInt(id || '0');
   const user = useAuthStore((state) => state.user);
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-  const { data: course, isLoading: courseLoading } = useQuery({
+  const { data: course, isLoading: courseLoading, refetch: refetchCourse } = useQuery({
     queryKey: ['course', courseId],
     queryFn: () => courseService.getCourse(courseId),
   });
@@ -55,6 +58,27 @@ const CourseDetailPage = () => {
     },
     enabled: !!user && user.role === 'STUDENT' && lessons.length > 0,
   });
+
+  // Unenroll mutation
+  const unenrollMutation = useMutation({
+    mutationFn: () => courseService.unenrollCourse(courseId),
+    onSuccess: () => {
+      toast.success('Đã hủy đăng ký khóa học');
+      queryClient.invalidateQueries({ queryKey: ['courses'] });
+      queryClient.invalidateQueries({ queryKey: ['my-courses'] });
+      navigate('/courses');
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Không thể hủy đăng ký');
+    },
+  });
+
+  const handleUnenroll = () => {
+    if (!window.confirm('Bạn có chắc chắn muốn hủy đăng ký khóa học này?\n\nTiến độ học tập của bạn sẽ được giữ lại nếu bạn đăng ký lại sau.')) {
+      return;
+    }
+    unenrollMutation.mutate();
+  };
 
   if (courseLoading || lessonsLoading) {
     return (
@@ -179,18 +203,58 @@ const CourseDetailPage = () => {
           {/* Teacher Actions */}
           {course?.isCreator && (
             <div className="px-8 md:px-12 py-4 bg-gradient-to-r from-green-50 to-blue-50 border-t border-gray-100">
-              <div className="flex items-center gap-4">
+              <div className="flex flex-wrap items-center gap-4">
                 <div className="flex items-center gap-2 text-green-700">
                   <GraduationCap className="w-5 h-5" />
                   <span className="font-semibold">Bạn là giáo viên của khóa học này</span>
                 </div>
-                <Link 
-                  to={`/courses/${courseId}/students`}
-                  className="ml-auto flex items-center gap-2 px-4 py-2 bg-white border border-green-200 text-green-700 rounded-lg hover:bg-green-50 transition-colors"
+                <div className="ml-auto flex gap-2">
+                  <Link 
+                    to={`/courses/${courseId}/edit`}
+                    className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    <Edit className="w-4 h-4" />
+                    Chỉnh sửa
+                  </Link>
+                  <Link 
+                    to={`/teacher/courses/${courseId}`}
+                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    <Award className="w-4 h-4" />
+                    Báo cáo & Thống kê
+                  </Link>
+                  <Link 
+                    to={`/courses/${courseId}/students`}
+                    className="flex items-center gap-2 px-4 py-2 bg-white border border-green-200 text-green-700 rounded-lg hover:bg-green-50 transition-colors"
+                  >
+                    <Users className="w-4 h-4" />
+                    Quản lý sinh viên
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Student Actions - Show unenroll button for enrolled students */}
+          {user?.role === 'STUDENT' && course?.isEnrolled && !course?.isCreator && (
+            <div className="px-8 md:px-12 py-4 bg-gradient-to-r from-blue-50 to-purple-50 border-t border-gray-100">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div className="flex items-center gap-2 text-blue-700">
+                  <CheckCircle className="w-5 h-5" />
+                  <span className="font-semibold">Bạn đã đăng ký khóa học này</span>
+                </div>
+                <button
+                  onClick={handleUnenroll}
+                  disabled={unenrollMutation.isPending}
+                  className="flex items-center gap-2 px-4 py-2 bg-white border border-red-200 text-red-600 rounded-lg hover:bg-red-50 transition-colors disabled:opacity-50"
                 >
-                  <Users className="w-4 h-4" />
-                  Quản lý sinh viên
-                </Link>
+                  {unenrollMutation.isPending ? (
+                    <div className="w-4 h-4 border-2 border-red-600 border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <LogOut className="w-4 h-4" />
+                  )}
+                  <span>Hủy đăng ký</span>
+                </button>
               </div>
             </div>
           )}

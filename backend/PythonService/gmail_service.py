@@ -792,7 +792,7 @@ def ai_get_contacts(user_id: int, max_results: int = 10) -> Dict:
         return {"success": False, "error": str(e)}
 
 
-def ai_create_draft_email(subject_keyword: str, recipient_name: str = None) -> Dict:
+def ai_create_draft_email(subject_keyword: str, recipient_name: str = None, full_message: str = None) -> Dict:
     """
     Tạo draft email bằng AI
     Sử dụng Groq/Gemini để generate nội dung
@@ -800,6 +800,7 @@ def ai_create_draft_email(subject_keyword: str, recipient_name: str = None) -> D
     Args:
         subject_keyword: Chủ đề email (VD: "xin nghỉ học", "hỏi bài")
         recipient_name: Tên người nhận (VD: "thầy Nguyễn Văn A")
+        full_message: Tin nhắn đầy đủ từ user (để hiểu context tốt hơn)
     
     Returns:
         Dict với subject và body được AI generate
@@ -818,30 +819,34 @@ def ai_create_draft_email(subject_keyword: str, recipient_name: str = None) -> D
         
         groq_client = GroqClient(groq_api_key)
         
-        # Build prompt for AI
+        # Build prompt for AI with better context
+        context_info = f"\n\nTin nhắn gốc từ user: \"{full_message}\"" if full_message else ""
+        
         if recipient_name:
-            prompt = f"""Viết một email chuyên nghiệp gửi đến {recipient_name} về chủ đề: {subject_keyword}
+            prompt = f"""Viết một email chuyên nghiệp gửi đến {recipient_name} về chủ đề: {subject_keyword}{context_info}
 
 Yêu cầu:
 - Tone: Lịch sự, trang trọng, phù hợp ngữ cảnh học thuật/công việc
 - Độ dài: Ngắn gọn, đi thẳng vào vấn đề (4-6 câu)
 - Cấu trúc: Lời chào → Nội dung chính → Lời kết lịch sự
 - Không cần chữ ký vì sẽ tự động thêm
+- QUAN TRỌNG: Nội dung phải phù hợp với chủ đề "{subject_keyword}"
 
 Trả về JSON với format chính xác:
 {{
-    "subject": "Tiêu đề email ngắn gọn",
+    "subject": "Tiêu đề email ngắn gọn phù hợp với chủ đề",
     "body": "Nội dung email đầy đủ với lời chào và kết thúc"
 }}
 
 CHỈ trả về JSON, không thêm markdown hay giải thích."""
         else:
-            prompt = f"""Viết một email chuyên nghiệp về chủ đề: {subject_keyword}
+            prompt = f"""Viết một email chuyên nghiệp về chủ đề: {subject_keyword}{context_info}
 
 Yêu cầu:
 - Tone: Lịch sự, trang trọng
 - Độ dài: Ngắn gọn, đi thẳng vào vấn đề
 - Cấu trúc: Lời chào → Nội dung → Kết thúc
+- QUAN TRỌNG: Nội dung phải phù hợp với chủ đề "{subject_keyword}"
 
 Trả về JSON:
 {{

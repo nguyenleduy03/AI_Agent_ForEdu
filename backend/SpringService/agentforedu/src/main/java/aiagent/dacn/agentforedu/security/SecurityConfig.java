@@ -42,6 +42,8 @@ public class SecurityConfig {
                     "/api/auth/**",
                     "/api/users/*/google-tokens",
                     "/api/users/*/google-status",
+                    "/api/credentials/user/**",
+                    "/api/credentials/*/decrypt",
                     "/swagger-ui/**",
                     "/swagger-ui.html",
                     "/v3/api-docs/**",

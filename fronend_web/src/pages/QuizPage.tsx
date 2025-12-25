@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Trophy, ArrowLeft } from 'lucide-react';
+import { Trophy, ArrowLeft, CheckCircle, XCircle, ChevronDown, ChevronUp } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Layout from '../components/Layout';
 import { quizService } from '../services/quizService';
@@ -14,6 +14,7 @@ const QuizPage = () => {
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [submitted, setSubmitted] = useState(false);
   const [result, setResult] = useState<any>(null);
+  const [showAnswers, setShowAnswers] = useState(true);
 
   const { data, isLoading } = useQuery({
     queryKey: ['quiz', quizId],
@@ -64,40 +65,142 @@ const QuizPage = () => {
   }
 
   if (submitted && result) {
-    const percentage = (result.score / result.totalQuestions) * 100;
+    const percentage = (result.score || (result.correctAnswers / result.totalQuestions) * 100);
     return (
       <Layout>
-        <div className="max-w-2xl mx-auto">
+        <div className="max-w-4xl mx-auto px-4 py-8">
+          {/* Result Summary */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="card text-center"
+            className="bg-white rounded-2xl shadow-xl p-8 text-center mb-8"
           >
-            <div className="w-24 h-24 bg-gradient-to-br from-primary-500 to-purple-500 rounded-full flex items-center justify-center text-white mx-auto mb-6">
+            <div className={`w-24 h-24 rounded-full flex items-center justify-center text-white mx-auto mb-6 ${
+              percentage >= 50 ? 'bg-gradient-to-br from-green-500 to-emerald-500' : 'bg-gradient-to-br from-red-500 to-orange-500'
+            }`}>
               <Trophy className="w-12 h-12" />
             </div>
             <h1 className="text-3xl font-bold mb-4">Quiz Completed!</h1>
-            <div className="text-6xl font-bold mb-4 bg-gradient-to-r from-primary-600 to-purple-600 bg-clip-text text-transparent">
+            <div className={`text-6xl font-bold mb-4 ${
+              percentage >= 50 ? 'text-green-600' : 'text-red-600'
+            }`}>
               {percentage.toFixed(0)}%
             </div>
-            <p className="text-xl text-gray-600 mb-8">
-              You scored {result.score} out of {result.totalQuestions}
+            <p className="text-xl text-gray-600 mb-2">
+              {result.correctAnswers} / {result.totalQuestions} câu đúng
             </p>
+            <p className="text-lg text-gray-500 mb-6">{result.message}</p>
             <div className="flex gap-4 justify-center">
               <button
                 onClick={() => navigate('/dashboard')}
-                className="btn-primary"
+                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all"
               >
-                Back to Dashboard
+                Về Dashboard
               </button>
               <button
                 onClick={() => window.location.reload()}
-                className="btn-secondary"
+                className="px-6 py-3 border-2 border-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-all"
               >
-                Try Again
+                Làm lại
               </button>
             </div>
           </motion.div>
+
+          {/* Answer Review Section */}
+          {result.questionResults && result.questionResults.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <div 
+                className="flex items-center justify-between bg-white rounded-xl p-4 shadow-lg mb-4 cursor-pointer"
+                onClick={() => setShowAnswers(!showAnswers)}
+              >
+                <h2 className="text-xl font-bold">Xem đáp án chi tiết</h2>
+                {showAnswers ? <ChevronUp className="w-6 h-6" /> : <ChevronDown className="w-6 h-6" />}
+              </div>
+
+              {showAnswers && (
+                <div className="space-y-4">
+                  {result.questionResults.map((qr: any, index: number) => (
+                    <motion.div
+                      key={qr.questionId}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.1 * index }}
+                      className={`bg-white rounded-xl p-6 shadow-lg border-l-4 ${
+                        qr.isCorrect ? 'border-green-500' : 'border-red-500'
+                      }`}
+                    >
+                      <div className="flex items-start gap-4 mb-4">
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
+                          qr.isCorrect ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'
+                        }`}>
+                          {qr.isCorrect ? <CheckCircle className="w-6 h-6" /> : <XCircle className="w-6 h-6" />}
+                        </div>
+                        <div className="flex-1">
+                          <p className="font-bold text-lg mb-1">Câu {index + 1}</p>
+                          <p className="text-gray-800">{qr.question}</p>
+                        </div>
+                      </div>
+
+                      {/* Options */}
+                      <div className="space-y-2 ml-14">
+                        {['A', 'B', 'C', 'D'].map((option) => {
+                          const optionText = qr[`option${option}`];
+                          const isUserAnswer = qr.userAnswer === option;
+                          const isCorrectAnswer = qr.correctAnswer === option;
+                          
+                          let bgColor = 'bg-gray-50';
+                          let textColor = 'text-gray-700';
+                          let borderColor = 'border-gray-200';
+                          
+                          if (isCorrectAnswer) {
+                            bgColor = 'bg-green-50';
+                            textColor = 'text-green-700';
+                            borderColor = 'border-green-300';
+                          } else if (isUserAnswer && !qr.isCorrect) {
+                            bgColor = 'bg-red-50';
+                            textColor = 'text-red-700';
+                            borderColor = 'border-red-300';
+                          }
+                          
+                          return (
+                            <div
+                              key={option}
+                              className={`flex items-center p-3 rounded-lg border-2 ${bgColor} ${borderColor}`}
+                            >
+                              <span className={`font-semibold mr-3 ${textColor}`}>{option}.</span>
+                              <span className={textColor}>{optionText}</span>
+                              {isCorrectAnswer && (
+                                <span className="ml-auto text-green-600 font-semibold flex items-center gap-1">
+                                  <CheckCircle className="w-4 h-4" /> Đáp án đúng
+                                </span>
+                              )}
+                              {isUserAnswer && !isCorrectAnswer && (
+                                <span className="ml-auto text-red-600 font-semibold flex items-center gap-1">
+                                  <XCircle className="w-4 h-4" /> Bạn chọn
+                                </span>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* Explanation */}
+                      {qr.explanation && (
+                        <div className="mt-4 ml-14 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                          <p className="text-sm font-semibold text-blue-800 mb-1">💡 Giải thích:</p>
+                          <p className="text-blue-700">{qr.explanation}</p>
+                        </div>
+                      )}
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          )}
         </div>
       </Layout>
     );

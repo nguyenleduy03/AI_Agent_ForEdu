@@ -1,4 +1,4 @@
-import re
+﻿import re
 import requests
 from typing import Dict, List, Optional
 from datetime import datetime, timedelta
@@ -265,21 +265,30 @@ class AgentFeatures:
         """Detect if user wants to see schedule"""
         message_lower = message.lower()
         
+        # CRITICAL: Check for email address first - if contains @, likely email intent
+        if '@' in message_lower:
+            print(f"⚠️ detect_schedule_intent: Found @ in message, likely email address - returning False")
+            return False
+        
         # NEGATIVE PATTERNS - loại trừ email intent
         negative_patterns = [
             r'gửi\s+(?:email|mail)',
+            r'gui\s+(?:email|mail)',  # Added without diacritics
             r'send\s+email',
             r'soạn\s+(?:email|mail)',
             r'viết\s+(?:email|mail)',
             r'đọc\s+(?:email|mail)',
             r'xem\s+(?:email|mail)',
             r'email\s+cho',
-            r'mail\s+cho'
+            r'mail\s+cho',
+            r'mail\s+den',  # Added "mail den"
+            r'email\s+den'  # Added "email den"
         ]
         
         # Check negative patterns first
         for neg_pattern in negative_patterns:
             if re.search(neg_pattern, message_lower):
+                print(f"⚠️ detect_schedule_intent: Matched negative pattern '{neg_pattern}' - returning False")
                 return False  # Không phải intent xem lịch
         
         # Positive patterns for schedule
@@ -290,13 +299,13 @@ class AgentFeatures:
             r'hôm nay.*lớp',
             r'có lớp',
             r'schedule',
-            # Relative dates
+            # Relative dates - USE WORD BOUNDARIES to avoid matching "gmail"
             r'hôm qua',
             r'hom qua',
-            r'mai',
-            r'mốt',
-            r'mot',
-            r'kia',
+            r'\bmai\b',  # FIXED: Word boundary to avoid matching "gmail"
+            r'\bmốt\b',
+            r'\bmot\b',
+            r'\bkia\b',
             # Specific day patterns
             r'thứ\s*[2-7]',
             r'chủ\s*nhật',
@@ -325,36 +334,71 @@ class AgentFeatures:
     def detect_email_intent(self, message: str) -> bool:
         """Detect if user wants to manage email (read, send, search)"""
         patterns = [
-            # Gửi email
+            # Gửi email (có dấu)
             r'gửi email',
-            r'gửi mail',  # FIX: Added to detect "gửi mail"
+            r'gửi mail',
+            r'gửi gmail',
+            # Gửi email (không dấu)
+            r'gui email',
+            r'gui mail',
+            r'gui gmail',
+            # Send email
             r'send email',
+            r'send mail',
+            # Email/Mail cho/đến
             r'email cho',
             r'mail cho',
+            r'gmail cho',
+            r'email den',  # không dấu
+            r'mail den',   # không dấu
+            r'gmail den',  # không dấu
+            r'email đến',
+            r'mail đến',
+            r'gmail đến',
+            # Soạn email
             r'soạn email',
-            r'soạn mail',  # Added
+            r'soạn mail',
+            r'soan email',  # không dấu
+            r'soan mail',   # không dấu
+            # Viết email
             r'viết email',
-            r'viết mail',  # Added
+            r'viết mail',
+            r'viet email',  # không dấu
+            r'viet mail',   # không dấu
             # Đọc email
             r'đọc email',
-            r'đọc mail',  # Added
+            r'đọc mail',
+            r'doc email',   # không dấu
+            r'doc mail',    # không dấu
+            # Xem email
             r'xem email',
-            r'xem mail',  # Added
+            r'xem mail',
+            # Kiểm tra email
             r'kiểm tra email',
+            r'kiem tra email',  # không dấu
             r'check email',
             r'inbox',
             r'hộp thư',
+            r'hop thu',  # không dấu
             r'email mới',
+            r'email moi',  # không dấu
             r'email chưa đọc',
+            r'email chua doc',  # không dấu
             r'unread email',
             # Tìm kiếm email
             r'tìm email',
-            r'tìm mail',  # Added
+            r'tìm mail',
+            r'tim email',  # không dấu
+            r'tim mail',   # không dấu
             r'search email',
             r'email từ',
+            r'email tu',   # không dấu
             r'email của',
-            r'mail từ',  # Added
-            r'mail của'  # Added
+            r'email cua',  # không dấu
+            r'mail từ',
+            r'mail tu',    # không dấu
+            r'mail của',
+            r'mail cua'    # không dấu
         ]
         
         message_lower = message.lower()
@@ -381,13 +425,36 @@ class AgentFeatures:
     def detect_gmail_send_intent(self, message: str) -> bool:
         """Detect if user wants to send email"""
         patterns = [
+            # Có dấu
             r'gửi email',
+            r'gửi mail',
+            r'gửi gmail',
+            # Không dấu
+            r'gui email',
+            r'gui mail',
+            r'gui gmail',
+            # English
             r'send email',
+            r'send mail',
+            # Cho/đến
             r'email cho',
             r'mail cho',
+            r'gmail cho',
+            r'email den',
+            r'mail den',
+            r'gmail den',
+            r'email đến',
+            r'mail đến',
+            r'gmail đến',
+            # Soạn/viết
             r'soạn email',
+            r'soạn mail',
+            r'soan email',
+            r'soan mail',
             r'viết email',
-            r'gửi mail'
+            r'viết mail',
+            r'viet email',
+            r'viet mail'
         ]
         message_lower = message.lower()
         return any(re.search(pattern, message_lower) for pattern in patterns)
@@ -507,6 +574,59 @@ class AgentFeatures:
             return None
         except Exception as e:
             logger.error(f"Error getting TVU credential: {e}")
+            return None
+
+    def get_tvu_credential_by_user_id(self, user_id: int) -> Optional[Dict]:
+        """
+        Get TVU credential by user_id (không cần token)
+        Gọi API Spring Boot với user_id
+        """
+        try:
+            # Gọi API lấy credentials theo user_id
+            response = requests.get(
+                f"{self.spring_boot_url}/api/credentials/user/{user_id}",
+                timeout=5
+            )
+            
+            logger.info(f"Get credentials by user_id response: {response.status_code}")
+            
+            if response.status_code == 200:
+                credentials_list = response.json()
+                logger.info(f"Found {len(credentials_list)} credentials for user {user_id}")
+                
+                # Find TVU credential
+                for cred in credentials_list:
+                    service_name = cred.get('serviceName', '').lower()
+                    service_url = cred.get('serviceUrl', '').lower()
+                    purpose = cred.get('purpose', '').lower()
+                    category = cred.get('category', '').upper()
+                    
+                    is_tvu = (
+                        'tvu' in service_name or 
+                        'tvu' in service_url or 
+                        'ttsv.tvu' in service_url or
+                        'ttsv' in service_url or
+                        (category == 'EDUCATION' and ('thời khóa biểu' in purpose or 'tkb' in purpose or 'lịch học' in purpose))
+                    )
+                    
+                    if is_tvu:
+                        logger.info(f"Found TVU credential: {cred['id']}")
+                        # Get decrypted password
+                        cred_response = requests.get(
+                            f"{self.spring_boot_url}/api/credentials/{cred['id']}/decrypt",
+                            timeout=5
+                        )
+                        if cred_response.status_code == 200:
+                            decrypted = cred_response.json()
+                            return decrypted
+                        else:
+                            # Return credential without decryption if API not available
+                            return cred
+            
+            logger.warning(f"No TVU credential found for user {user_id}")
+            return None
+        except Exception as e:
+            logger.error(f"Error getting TVU credential by user_id: {e}")
             return None
     
     def sync_schedule_from_school(self, token: str) -> Dict:
@@ -1430,9 +1550,10 @@ Bạn có thể gửi trực tiếp bằng cách:
             # ===== STEP 2: Parse full email command with recipient =====
             # VD: "gửi email cho teacher@tvu.edu.vn chủ đề ... nội dung ..."
             # Also match: "gửi mail xin nghỉ học đến email@gmail.com"
+            # Also match: "gửi mail cho email@gmail.com nói tôi ngủ quá"
             to_match = re.search(r'(?:cho|to|tới|đến)\s+([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})', message_lower)
             subject_match = re.search(r'(?:chủ đề|subject|tiêu đề)\s*[:\"]?\s*(.+?)(?:\s*nội dung|\s*body|$)', message, re.IGNORECASE)
-            body_match = re.search(r'(?:nội dung|body|content)\s*[:\"]?\s*(.+)', message, re.IGNORECASE)
+            body_match = re.search(r'(?:nội dung|body|content|nói|về)\s*[:\"]?\s*(.+)', message, re.IGNORECASE)
             
             if not to_match:
                 return {
@@ -1445,6 +1566,7 @@ Bạn có thể gửi trực tiếp bằng cách:
 
 **Ví dụ:**
 • "Gửi email cho teacher@tvu.edu.vn chủ đề Xin nghỉ học nội dung Em xin phép nghỉ học ngày mai"
+• "Gửi mail cho email@gmail.com nói tôi bận việc"
 """
                 }
             
@@ -1457,32 +1579,45 @@ Bạn có thể gửi trực tiếp bằng cách:
                 # Extract subject keyword from message
                 # VD: "gửi email xin nghỉ học đến an@gmail.com"
                 # VD: "gửi mail hỏi bài cho teacher@tvu.edu.vn"
+                # VD: "gửi mail cho email@gmail.com hỏi ngủ chưa"
                 if not subject:
-                    # Try to extract subject from message before email
+                    # Try to extract subject from message before email or after "nói/về/hỏi"
                     subject_patterns = [
                         r'(?:gửi|soạn|viết)\s+(?:email|mail)\s+(.+?)\s+(?:cho|đến|tới)',
                         r'(?:email|mail)\s+(.+?)\s+(?:cho|đến|tới)',
-                        r'(?:gửi|soạn|viết)\s+(?:email|mail)\s+(.+?)$'  # Match until end if no recipient keyword
+                        r'(?:nói|về|hỏi)\s+(.+?)$',  # ← FIXED: Thêm "hỏi"
                     ]
+                    subject_keyword = None
                     for pattern in subject_patterns:
                         match = re.search(pattern, message_lower)
                         if match:
                             subject_keyword = match.group(1).strip()
-                            # Remove email address from subject if extracted
+                            # Remove email address from subject_keyword
                             subject_keyword = re.sub(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', '', subject_keyword).strip()
                             if subject_keyword:
                                 break
-                    else:
-                        subject_keyword = "thông báo"
+                    
+                    # If still no subject_keyword, try to extract from body
+                    if not subject_keyword:
+                        if body:
+                            subject_keyword = body[:50]
+                        else:
+                            # Last resort: extract everything after email address
+                            after_email = re.search(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\s+(.+)', message_lower)
+                            if after_email:
+                                subject_keyword = after_email.group(1).strip()
+                            else:
+                                subject_keyword = "thông báo"
                 else:
                     subject_keyword = subject
                 
                 logger.info(f"🤖 Auto-generating email content for: {subject_keyword} to {to_email}")
                 
-                # Generate draft with AI
+                # Generate draft with AI - pass full context
                 draft_result = ai_create_draft_email(
                     subject_keyword=subject_keyword,
-                    recipient_name=to_email.split('@')[0]  # Use email username as name
+                    recipient_name=to_email.split('@')[0],  # Use email username as name
+                    full_message=message  # ← ADDED: Pass full message for better context
                 )
                 
                 if draft_result.get("success"):
@@ -1495,65 +1630,60 @@ Bạn có thể gửi trực tiếp bằng cách:
                     if not body:
                         body = ai_body
                     
-                    # Show preview with send button
+                    logger.info(f"✅ AI generated email draft - to: {to_email}, subject: {subject}")
+                    
+                    # Return email_draft for frontend to show form
+                    email_draft_obj = {
+                        "to": to_email,
+                        "subject": subject,
+                        "body": body,
+                        "user_id": user_id
+                    }
+                    logger.info(f"📧 Returning email_draft: {email_draft_obj}")
+                    
                     return {
                         "success": True,
-                        "message": f"""📝 **Xem trước Email**
-
-📧 **Người nhận:** {to_email}
-📌 **Chủ đề:** {subject}
-
-**📄 Nội dung:**
-{body}
-
----
-💡 Bạn có thể chỉnh sửa nội dung trước khi gửi.""",
+                        "message": "📧 Email draft đã được tạo. Vui lòng kiểm tra và gửi.",
                         "action": "email_draft",
-                        "email_draft": {
-                            "to": to_email,
-                            "subject": subject,
-                            "body": body,
-                            "user_id": user_id
-                        }
+                        "email_draft": email_draft_obj
                     }
                 else:
-                    # Fallback if AI generation fails
-                    if not body:
-                        return {
-                            "success": False,
-                            "message": f"""📝 **Soạn Email**
-
-**Người nhận:** {to_email}
-**Chủ đề:** {subject or subject_keyword}
-
-⚠️ Vui lòng thêm nội dung email.
-Ví dụ: "...nội dung: Đây là nội dung email của tôi"
-"""
-                        }
+                    # Fallback if AI generation fails - still return draft with placeholder
+                    logger.warning(f"⚠️ AI draft generation failed, using fallback")
+                    fallback_body = f"Kính gửi {to_email.split('@')[0]},\n\n[Nội dung về: {subject_keyword}]\n\nTrân trọng."
+                    
+                    email_draft_obj = {
+                        "to": to_email,
+                        "subject": subject_keyword.title() if subject_keyword else "Thông báo",
+                        "body": fallback_body,
+                        "user_id": user_id
+                    }
+                    logger.info(f"📧 Returning fallback email_draft: {email_draft_obj}")
+                    
+                    return {
+                        "success": True,
+                        "message": "📧 Email draft đã được tạo. Vui lòng chỉnh sửa nội dung và gửi.",
+                        "action": "email_draft",
+                        "email_draft": email_draft_obj
+                    }
             
             # ===== RETURN DRAFT FOR USER TO REVIEW =====
             # Không tự động gửi, cho user xem và confirm trước
             logger.info(f"📧 Created email draft to {to_email}")
             
+            email_draft_obj = {
+                "to": to_email,
+                "subject": subject,
+                "body": body,
+                "user_id": user_id
+            }
+            logger.info(f"📧 Returning email_draft (with provided content): {email_draft_obj}")
+            
             return {
                 "success": True,
-                "message": f"""📝 **Xem trước Email**
-
-📧 **Người nhận:** {to_email}
-📌 **Chủ đề:** {subject}
-
-**📄 Nội dung:**
-{body}
-
----
-💡 Bạn có thể chỉnh sửa nội dung trước khi gửi.""",
+                "message": "📧 Email draft đã được tạo. Vui lòng kiểm tra và gửi.",
                 "action": "email_draft",
-                "email_draft": {
-                    "to": to_email,
-                    "subject": subject,
-                    "body": body,
-                    "user_id": user_id
-                }
+                "email_draft": email_draft_obj
             }
                 
         except Exception as e:
@@ -1562,6 +1692,257 @@ Ví dụ: "...nội dung: Đây là nội dung email của tôi"
                 "success": False,
                 "message": f"❌ Không thể gửi email: {str(e)}"
             }
+    
+    def sync_schedule_to_calendar(self, token: str, user_id: int, week: int = None, hoc_ky: str = None, reminder_email: int = None, reminder_popup: int = None, notification_email: str = None) -> Dict:
+        """
+        🔄 Đồng bộ thời khóa biểu lên Google Calendar
+        
+        Args:
+            token: JWT token để lấy credentials (optional)
+            user_id: User ID để gọi Calendar API và lấy credentials
+            week: Tuần học (optional, mặc định tuần hiện tại)
+            hoc_ky: Học kỳ (optional, mặc định học kỳ hiện tại)
+            reminder_email: Số phút trước để gửi email nhắc nhở (vd: 30, 60, 1440 cho 1 ngày)
+            reminder_popup: Số phút trước để hiện popup nhắc nhở
+            notification_email: Email tùy chỉnh để nhận thông báo (nếu khác Gmail đã kết nối)
+        
+        Returns:
+            Dict với success, message, và số events đã tạo
+        """
+        try:
+            logger.info(f"🔄 Starting schedule sync to calendar for user {user_id}")
+            
+            # 1. Get TVU credentials - thử bằng user_id trước, nếu không được thì dùng token
+            credential = None
+            if user_id:
+                credential = self.get_tvu_credential_by_user_id(user_id)
+            if not credential and token:
+                credential = self.get_tvu_credential(token)
+                
+            if not credential:
+                return {
+                    "success": False,
+                    "message": "❌ Chưa cấu hình tài khoản TVU. Vui lòng thêm trong Settings → Credentials."
+                }
+            
+            school_username = credential.get('username')
+            school_password = credential.get('password')
+            
+            # 2. Login to TVU and get schedule
+            if TVUScraper:
+                scraper = TVUScraper()
+            else:
+                scraper = get_scraper("https://ttsv.tvu.edu.vn")
+            
+            if not scraper.login(school_username, school_password):
+                return {
+                    "success": False,
+                    "message": "❌ Đăng nhập TVU thất bại. Vui lòng kiểm tra tài khoản."
+                }
+            
+            # 3. Get schedule
+            schedules = scraper.get_schedule(week=week, hoc_ky=hoc_ky)
+            
+            if not schedules:
+                return {
+                    "success": True,
+                    "message": "📅 Không có lịch học nào để đồng bộ.",
+                    "events_created": 0
+                }
+            
+            logger.info(f"📚 Found {len(schedules)} classes to sync")
+            
+            # 3.5. Get existing events to check for duplicates
+            existing_events = []
+            try:
+                # Get events for the next 7 days
+                today = datetime.now()
+                time_min = today.strftime('%Y-%m-%dT00:00:00+07:00')
+                time_max = (today + timedelta(days=7)).strftime('%Y-%m-%dT23:59:59+07:00')
+                
+                list_response = requests.post(
+                    "http://localhost:8004/api/google-cloud/calendar/list-events",
+                    json={
+                        "user_id": user_id,
+                        "time_min": time_min,
+                        "time_max": time_max,
+                        "max_results": 100
+                    },
+                    timeout=10
+                )
+                if list_response.status_code == 200:
+                    existing_events = list_response.json().get('events', [])
+                    logger.info(f"📋 Found {len(existing_events)} existing events")
+            except Exception as e:
+                logger.warning(f"Could not fetch existing events: {e}")
+            
+            # 4. Create events on Google Calendar
+            events_created = 0
+            events_skipped = 0
+            events_failed = 0
+            failed_details = []
+            
+            # Map day names
+            day_map = {
+                'MONDAY': 0,
+                'TUESDAY': 1,
+                'WEDNESDAY': 2,
+                'THURSDAY': 3,
+                'FRIDAY': 4,
+                'SATURDAY': 5,
+                'SUNDAY': 6
+            }
+            
+            for schedule in schedules:
+                try:
+                    # Parse schedule info
+                    subject = schedule.get('subject', 'Lớp học')
+                    teacher = schedule.get('teacher', '')
+                    room = schedule.get('room', '')
+                    day_of_week = schedule.get('day_of_week', 'MONDAY')
+                    start_time = schedule.get('start_time', '07:00')
+                    end_time = schedule.get('end_time', '09:00')
+                    
+                    # Calculate date for this class
+                    # Get the next occurrence of this day of week
+                    today = datetime.now()
+                    target_weekday = day_map.get(day_of_week, 0)
+                    current_weekday = today.weekday()
+                    
+                    days_ahead = target_weekday - current_weekday
+                    if days_ahead < 0:  # Target day already happened this week
+                        days_ahead += 7
+                    
+                    class_date = today + timedelta(days=days_ahead)
+                    
+                    # Format datetime for Calendar API (ISO 8601 with timezone)
+                    start_datetime = f"{class_date.strftime('%Y-%m-%d')}T{start_time}:00+07:00"
+                    end_datetime = f"{class_date.strftime('%Y-%m-%d')}T{end_time}:00+07:00"
+                    
+                    # Create event description
+                    description = f"Giảng viên: {teacher}\nLớp: {schedule.get('class_name', '')}"
+                    
+                    # Check for duplicate event
+                    event_summary = f"📚 {subject}"
+                    is_duplicate = False
+                    for existing in existing_events:
+                        existing_summary = existing.get('summary', '')
+                        existing_start = existing.get('start', '')
+                        # Check if same subject and same start time
+                        if event_summary in existing_summary and start_datetime[:16] in existing_start:
+                            is_duplicate = True
+                            logger.info(f"⏭️ Skipping duplicate: {subject} on {class_date.strftime('%d/%m')}")
+                            break
+                    
+                    if is_duplicate:
+                        events_skipped += 1
+                        continue
+                    
+                    # Call Google Calendar API
+                    calendar_url = "http://localhost:8004/api/google-cloud/calendar/create-event"
+                    event_payload = {
+                        "user_id": user_id,
+                        "summary": event_summary,
+                        "description": description,
+                        "start_time": start_datetime,
+                        "end_time": end_datetime,
+                        "location": f"Phòng {room}" if room else None
+                    }
+                    
+                    # Add notification email as attendee if specified
+                    if notification_email:
+                        event_payload["attendees"] = [notification_email]
+                    
+                    # Add reminders if specified
+                    if reminder_email is not None:
+                        event_payload["reminder_email"] = reminder_email
+                    if reminder_popup is not None:
+                        event_payload["reminder_popup"] = reminder_popup
+                    
+                    response = requests.post(
+                        calendar_url,
+                        json=event_payload,
+                        timeout=10
+                    )
+                    
+                    if response.status_code in [200, 201]:
+                        events_created += 1
+                        logger.info(f"✅ Created: {subject} on {class_date.strftime('%d/%m')} at {start_time}")
+                    else:
+                        events_failed += 1
+                        error_msg = response.text[:100]
+                        failed_details.append(f"{subject}: {error_msg}")
+                        logger.warning(f"❌ Failed: {subject} - {error_msg}")
+                
+                except Exception as e:
+                    events_failed += 1
+                    failed_details.append(f"{schedule.get('subject', 'Unknown')}: {str(e)}")
+                    logger.error(f"Error creating event: {e}")
+            
+            # 5. Format response message
+            if events_created > 0 or events_skipped > 0:
+                message = f"""✅ **Đồng bộ thành công!**
+
+📅 Đã thêm **{events_created} lớp học** vào Google Calendar
+"""
+                if events_skipped > 0:
+                    message += f"⏭️ Bỏ qua **{events_skipped} lớp** (đã tồn tại)\n"
+                
+                message += f"""
+📚 **Chi tiết:**
+• Tuần: {week or 'hiện tại'}
+• Học kỳ: {hoc_ky or 'hiện tại'}
+"""
+                if notification_email:
+                    message += f"• Email thông báo: {notification_email}\n"
+                
+                message += "\n🔗 Xem lịch tại: [Google Calendar](https://calendar.google.com)"
+                
+                if events_failed > 0:
+                    message += f"\n\n⚠️ {events_failed} lớp không thể thêm"
+                
+                return {
+                    "success": True,
+                    "message": message,
+                    "events_created": events_created,
+                    "events_skipped": events_skipped,
+                    "events_failed": events_failed
+                }
+            elif events_skipped > 0 and events_created == 0:
+                return {
+                    "success": True,
+                    "message": f"📋 Tất cả {events_skipped} lớp học đã có trong Calendar rồi!",
+                    "events_created": 0,
+                    "events_skipped": events_skipped
+                }
+            else:
+                return {
+                    "success": False,
+                    "message": f"❌ Không thể đồng bộ lịch.\n\nLỗi: {failed_details[0] if failed_details else 'Unknown error'}",
+                    "events_created": 0,
+                    "events_failed": events_failed
+                }
+        
+        except Exception as e:
+            logger.error(f"Sync schedule to calendar error: {e}")
+            import traceback
+            traceback.print_exc()
+            return {
+                "success": False,
+                "message": f"❌ Lỗi đồng bộ: {str(e)}",
+                "events_created": 0
+            }
+    
+    def detect_calendar_sync_intent(self, message: str) -> bool:
+        """Phát hiện intent đồng bộ TKB lên Calendar"""
+        patterns = [
+            r'đồng bộ.*(?:tkb|thời khóa biểu|lịch học).*calendar',
+            r'sync.*(?:schedule|tkb).*calendar',
+            r'thêm.*(?:tkb|lịch học).*(?:vào|lên).*calendar',
+            r'add.*schedule.*calendar',
+            r'đưa.*(?:tkb|lịch).*lên.*calendar'
+        ]
+        return any(re.search(pattern, message.lower()) for pattern in patterns)
     
     def handle_gmail_search(self, message: str, token: str, user_id: int = None) -> Dict:
         """
