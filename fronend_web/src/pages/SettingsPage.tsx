@@ -1,11 +1,17 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { School, Key, RefreshCw, Save, Trash2, CheckCircle, AlertCircle, Plus, Edit2, Eye, EyeOff, Globe, Film, Users, Briefcase, DollarSign, Heart, Cloud, Settings as SettingsIcon, Sparkles } from 'lucide-react';
+import { 
+  School, Key, RefreshCw, Save, Trash2, CheckCircle, AlertCircle, Plus, Edit2, 
+  Eye, EyeOff, Globe, Film, Users, Briefcase, DollarSign, Heart, Cloud, 
+  Settings as SettingsIcon, Sparkles, Palette, Type, Sun, Moon, Monitor,
+  MessageSquare, Accessibility, RotateCcw, Check
+} from 'lucide-react';
 import Layout from '../components/Layout';
 import { springApi } from '../services/api';
 import toast from 'react-hot-toast';
 import GoogleConnectButton from '../components/GoogleConnectButton';
 import { useAuthStore } from '../store/authStore';
+import { useUISettingsStore, COLOR_PRESETS, FONT_SIZE_MAP, FONT_FAMILY_MAP } from '../store/uiSettingsStore';
 
 interface Credential {
   id: number;
@@ -66,6 +72,22 @@ const SettingsPage = () => {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [showPassword, setShowPassword] = useState<{ [key: number]: boolean }>({});
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
+  const [activeTab, setActiveTab] = useState<'appearance' | 'credentials' | 'integrations'>('appearance');
+  
+  // UI Settings
+  const {
+    fontSize, setFontSize,
+    fontFamily, setFontFamily,
+    primaryColor, setPrimaryColor,
+    accentColor, setAccentColor,
+    darkMode, toggleDarkMode,
+    compactMode, setCompactMode,
+    chatBubbleStyle, setChatBubbleStyle,
+    showTimestamps, setShowTimestamps,
+    reduceMotion, setReduceMotion,
+    highContrast, setHighContrast,
+    resetToDefaults
+  } = useUISettingsStore();
   
   const [formData, setFormData] = useState<CredentialFormData>({
     serviceName: '',
@@ -241,60 +263,454 @@ const SettingsPage = () => {
           </div>
         </motion.div>
 
-        {/* Google Cloud Integration Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 mb-8"
-        >
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center">
-              <Cloud className="w-7 h-7 text-blue-600" />
-            </div>
-            <div>
-              <h2 className="text-2xl font-bold">Google Cloud Integration</h2>
-              <p className="text-gray-600">
-                Connect your Google account to use free APIs in chat
-              </p>
-            </div>
-          </div>
-          
-          {user && (
-            <GoogleConnectButton 
-              userId={user.id}
-              onConnectionChange={(connected) => {
-                if (connected) {
-                  toast.success('🎉 Đã kết nối tài khoản Google!');
-                } else {
-                  toast('Đã ngắt kết nối tài khoản Google');
-                }
-              }}
-            />
-          )}
+        {/* Tab Navigation */}
+        <div className="flex space-x-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-xl mb-8">
+          <button
+            onClick={() => setActiveTab('appearance')}
+            className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium transition-all ${
+              activeTab === 'appearance'
+                ? 'bg-white dark:bg-gray-700 text-primary-600 shadow-sm'
+                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+            }`}
+          >
+            <Palette className="w-5 h-5" />
+            <span>Giao Diện</span>
+          </button>
+          <button
+            onClick={() => setActiveTab('integrations')}
+            className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium transition-all ${
+              activeTab === 'integrations'
+                ? 'bg-white dark:bg-gray-700 text-primary-600 shadow-sm'
+                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+            }`}
+          >
+            <Cloud className="w-5 h-5" />
+            <span>Tích Hợp</span>
+          </button>
+          <button
+            onClick={() => setActiveTab('credentials')}
+            className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium transition-all ${
+              activeTab === 'credentials'
+                ? 'bg-white dark:bg-gray-700 text-primary-600 shadow-sm'
+                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+            }`}
+          >
+            <Key className="w-5 h-5" />
+            <span>Credentials</span>
+          </button>
+        </div>
 
-          <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <h3 className="font-semibold text-blue-900 mb-2">💬 Sử dụng trong Chat:</h3>
-            <ul className="text-sm text-blue-800 space-y-1">
-              <li>• <strong>Dịch thuật:</strong> "Dịch sang tiếng Anh: Xin chào"</li>
-              <li>• <strong>Phân tích cảm xúc:</strong> "Phân tích cảm xúc: Tôi rất vui!"</li>
-              <li>• <strong>Nhận diện ảnh:</strong> "Phân tích ảnh này [URL]"</li>
-              <li>• <strong>Text-to-Speech:</strong> "Đọc cho tôi: Hello world"</li>
-            </ul>
-          </div>
-        </motion.div>
+        {/* Appearance Settings Tab */}
+        {activeTab === 'appearance' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6"
+          >
+            {/* Theme Section */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center">
+                  {darkMode ? <Moon className="w-6 h-6 text-white" /> : <Sun className="w-6 h-6 text-white" />}
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold dark:text-white">Chế Độ Hiển Thị</h3>
+                  <p className="text-gray-600 dark:text-gray-400">Chọn giao diện sáng hoặc tối</p>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-3 gap-4">
+                <button
+                  onClick={() => { if (darkMode) toggleDarkMode(); }}
+                  className={`p-4 rounded-xl border-2 transition-all ${
+                    !darkMode 
+                      ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20' 
+                      : 'border-gray-200 dark:border-gray-600 hover:border-gray-300'
+                  }`}
+                >
+                  <Sun className={`w-8 h-8 mx-auto mb-2 ${!darkMode ? 'text-primary-600' : 'text-gray-400'}`} />
+                  <p className={`font-medium ${!darkMode ? 'text-primary-600' : 'text-gray-600 dark:text-gray-400'}`}>Sáng</p>
+                </button>
+                
+                <button
+                  onClick={() => { if (!darkMode) toggleDarkMode(); }}
+                  className={`p-4 rounded-xl border-2 transition-all ${
+                    darkMode 
+                      ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20' 
+                      : 'border-gray-200 dark:border-gray-600 hover:border-gray-300'
+                  }`}
+                >
+                  <Moon className={`w-8 h-8 mx-auto mb-2 ${darkMode ? 'text-primary-600' : 'text-gray-400'}`} />
+                  <p className={`font-medium ${darkMode ? 'text-primary-600' : 'text-gray-600 dark:text-gray-400'}`}>Tối</p>
+                </button>
+                
+                <button
+                  onClick={() => {
+                    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    if (prefersDark !== darkMode) toggleDarkMode();
+                  }}
+                  className="p-4 rounded-xl border-2 border-gray-200 dark:border-gray-600 hover:border-gray-300 transition-all"
+                >
+                  <Monitor className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                  <p className="font-medium text-gray-600 dark:text-gray-400">Hệ thống</p>
+                </button>
+              </div>
+            </div>
 
-        {/* Credentials Management Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="mb-8"
-        >
+            {/* Font Settings */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-xl flex items-center justify-center">
+                  <Type className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold dark:text-white">Phông Chữ</h3>
+                  <p className="text-gray-600 dark:text-gray-400">Tùy chỉnh cỡ chữ và kiểu chữ</p>
+                </div>
+              </div>
+              
+              {/* Font Size */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Cỡ chữ</label>
+                <div className="grid grid-cols-4 gap-3">
+                  {(['small', 'medium', 'large', 'xlarge'] as const).map((size) => (
+                    <button
+                      key={size}
+                      onClick={() => setFontSize(size)}
+                      className={`p-3 rounded-xl border-2 transition-all ${
+                        fontSize === size
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-600 hover:border-gray-300'
+                      }`}
+                    >
+                      <span 
+                        className={`block font-medium ${fontSize === size ? 'text-primary-600' : 'text-gray-600 dark:text-gray-400'}`}
+                        style={{ fontSize: FONT_SIZE_MAP[size] }}
+                      >
+                        Aa
+                      </span>
+                      <span className={`text-xs mt-1 block ${fontSize === size ? 'text-primary-600' : 'text-gray-500'}`}>
+                        {size === 'small' ? 'Nhỏ' : size === 'medium' ? 'Vừa' : size === 'large' ? 'Lớn' : 'Rất lớn'}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Font Family */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Kiểu chữ</label>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {([
+                    { key: 'system', label: 'Hệ thống' },
+                    { key: 'inter', label: 'Inter' },
+                    { key: 'roboto', label: 'Roboto' },
+                    { key: 'opensans', label: 'Open Sans' }
+                  ] as const).map(({ key, label }) => (
+                    <button
+                      key={key}
+                      onClick={() => setFontFamily(key)}
+                      className={`p-3 rounded-xl border-2 transition-all ${
+                        fontFamily === key
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-600 hover:border-gray-300'
+                      }`}
+                    >
+                      <span 
+                        className={`block font-medium ${fontFamily === key ? 'text-primary-600' : 'text-gray-600 dark:text-gray-400'}`}
+                        style={{ fontFamily: FONT_FAMILY_MAP[key] }}
+                      >
+                        {label}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Color Settings */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 bg-gradient-to-br from-pink-400 to-purple-500 rounded-xl flex items-center justify-center">
+                  <Palette className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold dark:text-white">Màu Sắc</h3>
+                  <p className="text-gray-600 dark:text-gray-400">Tùy chỉnh màu chủ đạo</p>
+                </div>
+              </div>
+              
+              {/* Primary Color */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Màu chính</label>
+                <div className="flex flex-wrap gap-3">
+                  {COLOR_PRESETS.primary.map((color) => (
+                    <button
+                      key={color.value}
+                      onClick={() => setPrimaryColor(color.value)}
+                      className={`w-12 h-12 rounded-xl transition-all transform hover:scale-110 ${
+                        primaryColor === color.value ? 'ring-4 ring-offset-2 ring-gray-400' : ''
+                      }`}
+                      style={{ backgroundColor: color.value }}
+                      title={color.name}
+                    >
+                      {primaryColor === color.value && (
+                        <Check className="w-6 h-6 text-white mx-auto" />
+                      )}
+                    </button>
+                  ))}
+                  <div className="relative">
+                    <input
+                      type="color"
+                      value={primaryColor}
+                      onChange={(e) => setPrimaryColor(e.target.value)}
+                      className="w-12 h-12 rounded-xl cursor-pointer border-2 border-dashed border-gray-300"
+                      title="Chọn màu tùy chỉnh"
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              {/* Accent Color */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Màu nhấn</label>
+                <div className="flex flex-wrap gap-3">
+                  {COLOR_PRESETS.accent.map((color) => (
+                    <button
+                      key={color.value}
+                      onClick={() => setAccentColor(color.value)}
+                      className={`w-12 h-12 rounded-xl transition-all transform hover:scale-110 ${
+                        accentColor === color.value ? 'ring-4 ring-offset-2 ring-gray-400' : ''
+                      }`}
+                      style={{ backgroundColor: color.value }}
+                      title={color.name}
+                    >
+                      {accentColor === color.value && (
+                        <Check className="w-6 h-6 text-white mx-auto" />
+                      )}
+                    </button>
+                  ))}
+                  <div className="relative">
+                    <input
+                      type="color"
+                      value={accentColor}
+                      onChange={(e) => setAccentColor(e.target.value)}
+                      className="w-12 h-12 rounded-xl cursor-pointer border-2 border-dashed border-gray-300"
+                      title="Chọn màu tùy chỉnh"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Chat Settings */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-teal-500 rounded-xl flex items-center justify-center">
+                  <MessageSquare className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold dark:text-white">Giao Diện Chat</h3>
+                  <p className="text-gray-600 dark:text-gray-400">Tùy chỉnh hiển thị tin nhắn</p>
+                </div>
+              </div>
+              
+              {/* Chat Bubble Style */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Kiểu bong bóng chat</label>
+                <div className="grid grid-cols-3 gap-3">
+                  {([
+                    { key: 'modern', label: 'Hiện đại', desc: 'Bo tròn, gradient' },
+                    { key: 'classic', label: 'Cổ điển', desc: 'Vuông vắn, đơn giản' },
+                    { key: 'minimal', label: 'Tối giản', desc: 'Không viền, nhẹ nhàng' }
+                  ] as const).map(({ key, label, desc }) => (
+                    <button
+                      key={key}
+                      onClick={() => setChatBubbleStyle(key)}
+                      className={`p-4 rounded-xl border-2 text-left transition-all ${
+                        chatBubbleStyle === key
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-600 hover:border-gray-300'
+                      }`}
+                    >
+                      <span className={`block font-medium ${chatBubbleStyle === key ? 'text-primary-600' : 'text-gray-700 dark:text-gray-300'}`}>
+                        {label}
+                      </span>
+                      <span className="text-xs text-gray-500 dark:text-gray-400">{desc}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Show Timestamps */}
+              <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+                <div>
+                  <p className="font-medium text-gray-700 dark:text-gray-300">Hiển thị thời gian</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Hiện thời gian gửi tin nhắn</p>
+                </div>
+                <button
+                  onClick={() => setShowTimestamps(!showTimestamps)}
+                  className={`relative w-14 h-8 rounded-full transition-colors ${
+                    showTimestamps ? 'bg-primary-500' : 'bg-gray-300 dark:bg-gray-600'
+                  }`}
+                >
+                  <span
+                    className={`absolute top-1 w-6 h-6 bg-white rounded-full shadow transition-transform ${
+                      showTimestamps ? 'translate-x-7' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+              </div>
+            </div>
+
+            {/* Accessibility Settings */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-xl flex items-center justify-center">
+                  <Accessibility className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold dark:text-white">Trợ Năng</h3>
+                  <p className="text-gray-600 dark:text-gray-400">Cài đặt hỗ trợ tiếp cận</p>
+                </div>
+              </div>
+              
+              <div className="space-y-4">
+                {/* Compact Mode */}
+                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+                  <div>
+                    <p className="font-medium text-gray-700 dark:text-gray-300">Chế độ gọn</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Giảm khoảng cách, hiển thị nhiều nội dung hơn</p>
+                  </div>
+                  <button
+                    onClick={() => setCompactMode(!compactMode)}
+                    className={`relative w-14 h-8 rounded-full transition-colors ${
+                      compactMode ? 'bg-primary-500' : 'bg-gray-300 dark:bg-gray-600'
+                    }`}
+                  >
+                    <span
+                      className={`absolute top-1 w-6 h-6 bg-white rounded-full shadow transition-transform ${
+                        compactMode ? 'translate-x-7' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
+                </div>
+                
+                {/* Reduce Motion */}
+                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+                  <div>
+                    <p className="font-medium text-gray-700 dark:text-gray-300">Giảm chuyển động</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Tắt hiệu ứng animation</p>
+                  </div>
+                  <button
+                    onClick={() => setReduceMotion(!reduceMotion)}
+                    className={`relative w-14 h-8 rounded-full transition-colors ${
+                      reduceMotion ? 'bg-primary-500' : 'bg-gray-300 dark:bg-gray-600'
+                    }`}
+                  >
+                    <span
+                      className={`absolute top-1 w-6 h-6 bg-white rounded-full shadow transition-transform ${
+                        reduceMotion ? 'translate-x-7' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
+                </div>
+                
+                {/* High Contrast */}
+                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+                  <div>
+                    <p className="font-medium text-gray-700 dark:text-gray-300">Độ tương phản cao</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Tăng độ tương phản màu sắc</p>
+                  </div>
+                  <button
+                    onClick={() => setHighContrast(!highContrast)}
+                    className={`relative w-14 h-8 rounded-full transition-colors ${
+                      highContrast ? 'bg-primary-500' : 'bg-gray-300 dark:bg-gray-600'
+                    }`}
+                  >
+                    <span
+                      className={`absolute top-1 w-6 h-6 bg-white rounded-full shadow transition-transform ${
+                        highContrast ? 'translate-x-7' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Reset Button */}
+            <div className="flex justify-end">
+              <button
+                onClick={() => {
+                  resetToDefaults();
+                  toast.success('Đã khôi phục cài đặt mặc định!');
+                }}
+                className="flex items-center gap-2 px-6 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+              >
+                <RotateCcw className="w-5 h-5" />
+                <span>Khôi phục mặc định</span>
+              </button>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Integrations Tab */}
+        {activeTab === 'integrations' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            {/* Google Cloud Integration Section */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg border border-gray-100 dark:border-gray-700 mb-8">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-14 h-14 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
+                  <Cloud className="w-7 h-7 text-blue-600" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold dark:text-white">Google Cloud Integration</h2>
+                  <p className="text-gray-600 dark:text-gray-400">
+                    Connect your Google account to use free APIs in chat
+                  </p>
+                </div>
+              </div>
+              
+              {user && (
+                <GoogleConnectButton 
+                  userId={user.id}
+                  onConnectionChange={(connected) => {
+                    if (connected) {
+                      toast.success('🎉 Đã kết nối tài khoản Google!');
+                    } else {
+                      toast('Đã ngắt kết nối tài khoản Google');
+                    }
+                  }}
+                />
+              )}
+
+              <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                <h3 className="font-semibold text-blue-900 dark:text-blue-300 mb-2">💬 Sử dụng trong Chat:</h3>
+                <ul className="text-sm text-blue-800 dark:text-blue-400 space-y-1">
+                  <li>• <strong>Dịch thuật:</strong> "Dịch sang tiếng Anh: Xin chào"</li>
+                  <li>• <strong>Phân tích cảm xúc:</strong> "Phân tích cảm xúc: Tôi rất vui!"</li>
+                  <li>• <strong>Nhận diện ảnh:</strong> "Phân tích ảnh này [URL]"</li>
+                  <li>• <strong>Text-to-Speech:</strong> "Đọc cho tôi: Hello world"</li>
+                </ul>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Credentials Tab */}
+        {activeTab === 'credentials' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+          {/* Credentials Management Header */}
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-2xl font-bold">Quản Lý Credentials</h2>
-              <p className="text-gray-600 mt-1">
+              <h2 className="text-2xl font-bold dark:text-white">Quản Lý Credentials</h2>
+              <p className="text-gray-600 dark:text-gray-400 mt-1">
                 Lưu trữ và quản lý tài khoản cho các dịch vụ khác nhau
               </p>
             </div>
@@ -306,7 +722,6 @@ const SettingsPage = () => {
               <span>Thêm Credential</span>
             </button>
           </div>
-        </motion.div>
 
         {/* Category Filter */}
         <div className="flex flex-wrap gap-2 mb-6">
@@ -659,9 +1074,9 @@ const SettingsPage = () => {
         )}
 
         {/* Instructions */}
-        <div className="card mt-6 bg-gradient-to-r from-blue-50 to-purple-50">
-          <h3 className="text-lg font-bold mb-4">🤖 AI Agent Tự Động</h3>
-          <div className="space-y-3 text-sm text-gray-700">
+        <div className="card mt-6 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20">
+          <h3 className="text-lg font-bold mb-4 dark:text-white">🤖 AI Agent Tự Động</h3>
+          <div className="space-y-3 text-sm text-gray-700 dark:text-gray-300">
             <p>
               <strong>Semantic Search:</strong> AI hiểu ngôn ngữ tự nhiên. Ví dụ:
             </p>
@@ -670,11 +1085,13 @@ const SettingsPage = () => {
               <li>"Xem phim Netflix" → Tự động chọn credential Netflix</li>
               <li>"Đăng bài lên Facebook" → Tự động chọn credential Facebook</li>
             </ul>
-            <p className="text-xs text-gray-600 mt-3">
+            <p className="text-xs text-gray-600 dark:text-gray-400 mt-3">
               💡 Mẹo: Viết "Mục đích sử dụng" rõ ràng để AI chọn đúng credential!
             </p>
           </div>
         </div>
+          </motion.div>
+        )}
       </div>
     </Layout>
   );

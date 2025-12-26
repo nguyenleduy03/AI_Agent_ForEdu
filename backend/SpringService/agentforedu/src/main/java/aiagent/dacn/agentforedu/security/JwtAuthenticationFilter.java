@@ -26,9 +26,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         
-        // Bỏ qua JWT filter cho các endpoint public
+        // Bỏ qua JWT filter cho các endpoint public (chỉ login và register)
         String path = request.getRequestURI();
-        if (path.startsWith("/api/auth/") || 
+        if (path.equals("/api/auth/login") || 
+            path.equals("/api/auth/register") ||
             path.startsWith("/swagger-ui") || 
             path.startsWith("/v3/api-docs")) {
             filterChain.doFilter(request, response);
