@@ -13,7 +13,6 @@ import {
   Menu,
   X,
   CreditCard,
-  Sparkles,
   BarChart3
 } from 'lucide-react';
 import { useState } from 'react';
@@ -38,7 +37,6 @@ const Layout = ({ children }: LayoutProps) => {
     ...(isTeacher ? [{ icon: <BarChart3 className="w-5 h-5" />, label: 'Quản lý khóa học', path: '/teacher', badge: '👨‍🏫' }] : []),
     { icon: <MessageSquare className="w-5 h-5" />, label: 'AI Chat', path: '/chat' },
     { icon: <CreditCard className="w-5 h-5" />, label: 'Flashcards', path: '/flashcards' },
-    { icon: <Sparkles className="w-5 h-5" />, label: 'AI Flashcards', path: '/document-intelligence', badge: '🆕' },
     { icon: <Calendar className="w-5 h-5" />, label: 'Google Calendar', path: '/calendar' },
     { icon: <User className="w-5 h-5" />, label: 'Profile', path: '/profile' },
     { icon: <Settings className="w-5 h-5" />, label: 'Settings', path: '/settings' },

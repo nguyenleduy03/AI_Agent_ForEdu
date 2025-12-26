@@ -13,7 +13,7 @@ if sys.platform == 'win32':
     # Also set console code page to UTF-8
     os.system('chcp 65001 >nul 2>&1')
 
-from fastapi import FastAPI, HTTPException, Header
+from fastapi import FastAPI, HTTPException, Header, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, ConfigDict
 from typing import List, Optional, Dict
@@ -2576,6 +2576,411 @@ async def sync_schedule_to_calendar(
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
+
+# ============================================================================
+# FLASHCARD AI GENERATION
+# ============================================================================
+
+class FlashcardGenerateRequest(BaseModel):
+    text: str
+    num_cards: int = 5
+    ai_provider: str = "groq"  # "groq" hoặc "gemini" - mặc định groq vì nhiều token hơn
+    
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "text": "Quang hợp là quá trình thực vật sử dụng ánh sáng mặt trời để chuyển đổi CO2 và nước thành glucose và oxy. Quá trình này diễn ra trong lục lạp, nơi chứa chất diệp lục.",
+                "num_cards": 5,
+                "ai_provider": "groq"
+            }
+        }
+    )
+
+class FlashcardFromLessonRequest(BaseModel):
+    lesson_id: int
+    num_cards: int = 10
+
+# ============================================================================
+# FILE TEXT EXTRACTION FOR FLASHCARDS
+# ============================================================================
+
+@app.post("/api/flashcards/extract-text", tags=["Flashcard AI"])
+async def extract_text_from_file(file: UploadFile = File(...)):
+    """
+    📄 Extract text từ file PDF, DOCX, TXT
+    
+    Hỗ trợ:
+    - TXT: Đọc trực tiếp
+    - PDF: Dùng PyPDF2 hoặc pdfplumber
+    - DOCX: Dùng python-docx
+    
+    Returns:
+    - text: Nội dung văn bản đã trích xuất
+    - filename: Tên file
+    - file_size: Kích thước file
+    """
+    import tempfile
+    import os as os_module
+    
+    # Validate file type
+    filename = file.filename or "unknown"
+    file_ext = filename.split('.')[-1].lower()
+    
+    allowed_extensions = ['txt', 'pdf', 'doc', 'docx']
+    if file_ext not in allowed_extensions:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Không hỗ trợ định dạng .{file_ext}. Chỉ hỗ trợ: TXT, PDF, DOC, DOCX"
+        )
+    
+    # Read file content
+    content = await file.read()
+    file_size = len(content)
+    
+    # Max 10MB
+    if file_size > 10 * 1024 * 1024:
+        raise HTTPException(
+            status_code=400,
+            detail="File quá lớn. Tối đa 10MB."
+        )
+    
+    print(f"📄 Extracting text from {filename} ({file_size} bytes)")
+    
+    extracted_text = ""
+    
+    try:
+        if file_ext == 'txt':
+            # TXT: decode directly
+            try:
+                extracted_text = content.decode('utf-8')
+            except UnicodeDecodeError:
+                extracted_text = content.decode('latin-1')
+        
+        elif file_ext == 'pdf':
+            # PDF: use PyPDF2 or pdfplumber
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as tmp:
+                tmp.write(content)
+                tmp_path = tmp.name
+            
+            try:
+                # Try PyPDF2 first
+                try:
+                    import PyPDF2
+                    with open(tmp_path, 'rb') as pdf_file:
+                        reader = PyPDF2.PdfReader(pdf_file)
+                        text_parts = []
+                        for page in reader.pages:
+                            text = page.extract_text()
+                            if text:
+                                text_parts.append(text)
+                        extracted_text = '\n'.join(text_parts)
+                    print(f"   Used PyPDF2")
+                except ImportError:
+                    # Fallback to pdfplumber
+                    try:
+                        import pdfplumber
+                        with pdfplumber.open(tmp_path) as pdf:
+                            text_parts = []
+                            for page in pdf.pages:
+                                text = page.extract_text()
+                                if text:
+                                    text_parts.append(text)
+                            extracted_text = '\n'.join(text_parts)
+                        print(f"   Used pdfplumber")
+                    except ImportError:
+                        raise HTTPException(
+                            status_code=500,
+                            detail="Không thể đọc PDF. Cần cài đặt: pip install PyPDF2 hoặc pdfplumber"
+                        )
+            finally:
+                os_module.unlink(tmp_path)
+        
+        elif file_ext == 'docx':
+            # DOCX: use python-docx
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.docx') as tmp:
+                tmp.write(content)
+                tmp_path = tmp.name
+            
+            try:
+                try:
+                    from docx import Document
+                    doc = Document(tmp_path)
+                    text_parts = []
+                    for para in doc.paragraphs:
+                        if para.text.strip():
+                            text_parts.append(para.text)
+                    extracted_text = '\n'.join(text_parts)
+                    print(f"   Used python-docx")
+                except ImportError:
+                    raise HTTPException(
+                        status_code=500,
+                        detail="Không thể đọc DOCX. Cần cài đặt: pip install python-docx"
+                    )
+                except Exception as docx_err:
+                    raise HTTPException(
+                        status_code=400,
+                        detail=f"Lỗi đọc file DOCX: {str(docx_err)}"
+                    )
+            finally:
+                os_module.unlink(tmp_path)
+        
+        elif file_ext == 'doc':
+            # DOC (old Word format): không hỗ trợ trực tiếp
+            # Gợi ý user convert sang DOCX
+            raise HTTPException(
+                status_code=400,
+                detail="File .DOC (Word cũ) không được hỗ trợ. Vui lòng mở file trong Word và lưu lại dưới dạng .DOCX rồi upload lại."
+            )
+        
+        # Clean up text
+        extracted_text = extracted_text.strip()
+        
+        if not extracted_text:
+            raise HTTPException(
+                status_code=400,
+                detail="Không thể trích xuất nội dung từ file. File có thể trống hoặc là ảnh scan."
+            )
+        
+        print(f"✅ Extracted {len(extracted_text)} characters from {filename}")
+        
+        return {
+            "text": extracted_text,
+            "filename": filename,
+            "file_size": file_size,
+            "char_count": len(extracted_text)
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"❌ Extract text error: {type(e).__name__}: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Lỗi đọc file: {str(e)}"
+        )
+
+@app.post("/api/flashcards/generate", tags=["Flashcard AI"])
+async def generate_flashcards_from_text(request: FlashcardGenerateRequest):
+    """
+    🎴 AI Generate Flashcards từ văn bản
+    
+    Sử dụng AI để tự động tạo flashcards từ nội dung học tập.
+    
+    **Parameters:**
+    - text: Nội dung văn bản (tối thiểu 50 ký tự, tối đa 30,000 ký tự)
+    - num_cards: Số lượng thẻ muốn tạo (3-20)
+    
+    **Returns:**
+    - cards: Danh sách flashcards với front/back/hint
+    - source_text_length: Độ dài văn bản gốc
+    - model_used: Model AI đã sử dụng
+    """
+    import re as regex_module
+    
+    text_content = request.text.strip()
+    original_length = len(text_content)
+    
+    if original_length < 50:
+        raise HTTPException(
+            status_code=400,
+            detail="Nội dung quá ngắn. Vui lòng nhập ít nhất 50 ký tự."
+        )
+    
+    # Giới hạn text để tránh lỗi Payload Too Large
+    MAX_TEXT_LENGTH = 25000  # ~25K ký tự, an toàn cho Groq
+    text_truncated = False
+    
+    if original_length > MAX_TEXT_LENGTH:
+        # Cắt text thông minh - giữ phần đầu (thường chứa nội dung quan trọng)
+        text_content = text_content[:MAX_TEXT_LENGTH]
+        # Cắt tại dấu chấm cuối cùng để không cắt giữa câu
+        last_period = text_content.rfind('.')
+        if last_period > MAX_TEXT_LENGTH * 0.8:  # Nếu dấu chấm ở 80% cuối
+            text_content = text_content[:last_period + 1]
+        text_truncated = True
+        print(f"⚠️ Text truncated from {original_length} to {len(text_content)} chars")
+    
+    num_cards = max(3, min(20, request.num_cards))
+    ai_provider = request.ai_provider.lower() if request.ai_provider else "groq"
+    
+    try:
+        # Build prompt for AI
+        prompt = f"""Bạn là một giáo viên chuyên tạo flashcards học tập. 
+Hãy tạo {num_cards} flashcards từ nội dung sau. Mỗi flashcard gồm:
+- front: Câu hỏi ngắn gọn, rõ ràng
+- back: Câu trả lời chính xác, súc tích
+- hint: Gợi ý nhỏ giúp nhớ (tùy chọn)
+
+Nội dung:
+{text_content}
+
+Trả về JSON array với format:
+[
+  {{"front": "Câu hỏi 1?", "back": "Câu trả lời 1", "hint": "Gợi ý 1"}},
+  {{"front": "Câu hỏi 2?", "back": "Câu trả lời 2", "hint": "Gợi ý 2"}}
+]
+
+CHỈ trả về JSON array, không có text khác."""
+
+        model_used = ""
+        response_text = ""
+        
+        print(f"🎴 Generating {num_cards} flashcards using {ai_provider}...")
+        
+        # Ưu tiên theo request, fallback nếu không có
+        if ai_provider == "groq" and groq_client:
+            # Dùng Groq
+            model_used = "groq/llama-3.3-70b-versatile"
+            print(f"   Using Groq: llama-3.3-70b-versatile")
+            response_text = groq_client.generate_text(
+                prompt=prompt,
+                system_prompt="Bạn là AI tạo flashcards. Chỉ trả về JSON array, không thêm text khác.",
+                model="llama-3.3-70b-versatile",
+                timeout=60
+            )
+        elif ai_provider == "gemini":
+            # Dùng Gemini
+            model_used = "gemini-2.0-flash-exp"
+            print(f"   Using Gemini: gemini-2.0-flash-exp")
+            try:
+                model = genai.GenerativeModel('gemini-2.0-flash-exp')
+                response = model.generate_content(prompt)
+                response_text = response.text
+            except Exception as e1:
+                print(f"   gemini-2.0-flash-exp failed: {e1}")
+                model = genai.GenerativeModel('gemini-1.5-flash')
+                response = model.generate_content(prompt)
+                response_text = response.text
+                model_used = "gemini-1.5-flash"
+        else:
+            # Fallback: thử Groq trước, rồi Gemini
+            if groq_client:
+                model_used = "groq/llama-3.3-70b-versatile"
+                print(f"   Fallback to Groq")
+                response_text = groq_client.generate_text(
+                    prompt=prompt,
+                    system_prompt="Bạn là AI tạo flashcards. Chỉ trả về JSON array.",
+                    model="llama-3.3-70b-versatile",
+                    timeout=60
+                )
+            else:
+                model_used = "gemini-2.0-flash-exp"
+                print(f"   Fallback to Gemini")
+                model = genai.GenerativeModel('gemini-2.0-flash-exp')
+                response = model.generate_content(prompt)
+                response_text = response.text
+        
+        print(f"📝 AI Response length: {len(response_text)}")
+        
+        # Parse JSON from response
+        import re as regex_module
+        json_match = regex_module.search(r'\[[\s\S]*\]', response_text)
+        if json_match:
+            cards = json.loads(json_match.group())
+        else:
+            # Fallback: try to parse entire response
+            cards = json.loads(response_text)
+        
+        # Validate cards
+        valid_cards = []
+        for card in cards:
+            if isinstance(card, dict) and 'front' in card and 'back' in card:
+                valid_cards.append({
+                    'front': str(card.get('front', '')).strip(),
+                    'back': str(card.get('back', '')).strip(),
+                    'hint': str(card.get('hint', '')).strip() if card.get('hint') else None
+                })
+        
+        if not valid_cards:
+            raise HTTPException(
+                status_code=500,
+                detail="Không thể tạo flashcards từ nội dung này. Vui lòng thử lại."
+            )
+        
+        print(f"✅ Generated {len(valid_cards)} flashcards using {model_used}")
+        
+        result = {
+            "cards": valid_cards,
+            "source_text_length": original_length,
+            "processed_text_length": len(text_content),
+            "model_used": model_used,
+            "text_truncated": text_truncated
+        }
+        
+        if text_truncated:
+            result["warning"] = f"Nội dung quá dài ({original_length} ký tự), chỉ xử lý {len(text_content)} ký tự đầu tiên."
+        
+        return result
+        
+    except json.JSONDecodeError as e:
+        print(f"JSON parse error: {e}")
+        print(f"Response was: {response_text[:500] if response_text else 'empty'}")
+        raise HTTPException(
+            status_code=500,
+            detail="Lỗi xử lý kết quả AI. Vui lòng thử lại."
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Flashcard generation error: {type(e).__name__}: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Lỗi tạo flashcards: {str(e)}"
+        )
+
+@app.post("/api/flashcards/generate-from-lesson", tags=["Flashcard AI"])
+async def generate_flashcards_from_lesson(
+    request: FlashcardFromLessonRequest,
+    authorization: Optional[str] = Header(None)
+):
+    """
+    🎴 AI Generate Flashcards từ Lesson
+    
+    Lấy nội dung lesson từ database và tạo flashcards tự động.
+    """
+    try:
+        # Get lesson content from Spring Boot
+        headers = {}
+        if authorization:
+            headers["Authorization"] = authorization
+        
+        response = requests.get(
+            f"http://localhost:8080/api/lessons/{request.lesson_id}",
+            headers=headers,
+            timeout=10
+        )
+        
+        if response.status_code != 200:
+            raise HTTPException(
+                status_code=404,
+                detail="Không tìm thấy bài học"
+            )
+        
+        lesson = response.json()
+        content = lesson.get('content', '')
+        title = lesson.get('title', '')
+        
+        if not content or len(content) < 50:
+            raise HTTPException(
+                status_code=400,
+                detail="Nội dung bài học quá ngắn để tạo flashcards"
+            )
+        
+        # Generate using the text endpoint
+        gen_request = FlashcardGenerateRequest(
+            text=f"Bài học: {title}\n\n{content}",
+            num_cards=request.num_cards
+        )
+        
+        return await generate_flashcards_from_text(gen_request)
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Lỗi: {str(e)}"
+        )
 
 # ============================================================================
 # MAIN

@@ -73,3 +73,21 @@ export interface CreateFlashcardRequest {
   audioUrl?: string;
   tags?: string;
 }
+
+
+// AI Generation types
+export interface AIGeneratedCard {
+  front: string;
+  back: string;
+  hint?: string;
+  explanation?: string;
+}
+
+export interface AIGenerateResult {
+  cards: AIGeneratedCard[];
+  source_text_length: number;
+  processed_text_length?: number;
+  model_used: string;
+  text_truncated?: boolean;
+  warning?: string;
+}

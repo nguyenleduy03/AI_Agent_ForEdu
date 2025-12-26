@@ -19,7 +19,8 @@ import CreateQuizPage from './pages/CreateQuizPage';
 import ProfilePage from './pages/ProfilePage';
 import SettingsPage from './pages/SettingsPage';
 import SchedulePage from './pages/SchedulePage';
-import FlashcardsPage from './pages/FlashcardsPage';
+// Flashcard Pro là trang chính
+import FlashcardUnifiedPage from './pages/FlashcardUnifiedPage';
 import DeckDetailPage from './pages/DeckDetailPage';
 import FlashcardStudyPage from './pages/FlashcardStudyPage';
 import GoogleCalendarPage from './pages/GoogleCalendarPage';
@@ -74,7 +75,7 @@ function App() {
           <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
           <Route path="/schedule" element={<ProtectedRoute><SchedulePage /></ProtectedRoute>} />
           <Route path="/calendar" element={<ProtectedRoute><GoogleCalendarPage /></ProtectedRoute>} />
-          <Route path="/flashcards" element={<ProtectedRoute><FlashcardsPage /></ProtectedRoute>} />
+          <Route path="/flashcards" element={<ProtectedRoute><FlashcardUnifiedPage /></ProtectedRoute>} />
           <Route path="/flashcards/deck/:deckId" element={<ProtectedRoute><DeckDetailPage /></ProtectedRoute>} />
           <Route path="/flashcards/study/:deckId" element={<ProtectedRoute><FlashcardStudyPage /></ProtectedRoute>} />
           <Route path="/document-intelligence" element={<ProtectedRoute><DocumentIntelligencePage /></ProtectedRoute>} />

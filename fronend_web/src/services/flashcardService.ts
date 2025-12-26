@@ -1,5 +1,5 @@
-import { springApi } from './api';
-import type { FlashcardDeck, Flashcard, ReviewRequest, DeckStats, CreateDeckRequest, CreateFlashcardRequest } from '../types/flashcard';
+import { springApi, fastApi } from './api';
+import type { FlashcardDeck, Flashcard, ReviewRequest, DeckStats, CreateDeckRequest, CreateFlashcardRequest, AIGenerateResult } from '../types/flashcard';
 
 const BASE_URL = '/api/flashcards';
 
@@ -79,6 +79,25 @@ export const flashcardService = {
 
   getOverview: async (): Promise<any> => {
     const response = await springApi.get(`${BASE_URL}/stats/overview`);
+    return response.data;
+  },
+
+  // ==================== AI GENERATION ====================
+  
+  generateCardsFromText: async (text: string, numCards: number = 5, aiProvider: string = 'groq'): Promise<AIGenerateResult> => {
+    const response = await fastApi.post('/api/flashcards/generate', {
+      text,
+      num_cards: numCards,
+      ai_provider: aiProvider
+    });
+    return response.data;
+  },
+
+  generateCardsFromLesson: async (lessonId: number, numCards: number = 10): Promise<AIGenerateResult> => {
+    const response = await fastApi.post('/api/flashcards/generate-from-lesson', {
+      lesson_id: lessonId,
+      num_cards: numCards
+    });
     return response.data;
   },
 };
