@@ -59,6 +59,8 @@ SCOPES = [
     # Calendar API
     "https://www.googleapis.com/auth/calendar",           # Full calendar access
     "https://www.googleapis.com/auth/calendar.events",    # Manage events
+    # Google Drive API - Upload files/videos
+    "https://www.googleapis.com/auth/drive.file",         # Manage files created by app
     # User info
     "openid",
     "email",

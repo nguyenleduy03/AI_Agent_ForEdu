@@ -1,18 +1,43 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { FileText, ArrowLeft, Save, Loader, BookOpen } from 'lucide-react';
+import { FileText, ArrowLeft, Save, Loader, BookOpen, Upload, File, X, CheckCircle, AlertCircle, Trash2 } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import Layout from '../components/Layout';
-import { courseService } from '../services/courseService';
+import { driveService, formatFileSize, isSupportedFileType, getMaterialTypeFromMime } from '../services/driveService';
+import { courseService, type MaterialUploadData } from '../services/courseService';
+import { useAuthStore } from '../store/authStore';
 import type { Course } from '../types';
+
+// Pending upload - file đã upload lên Drive nhưng chưa save vào DB (vì chưa có lessonId)
+interface PendingUpload {
+  id: string; // unique id for UI
+  file: File;
+  driveResponse: {
+    file_id: string;
+    file_name: string;
+    mime_type: string;
+    view_link: string;
+    embed_link: string;
+    download_link?: string;
+    size?: number;
+  } | null;
+  status: 'uploading' | 'uploaded' | 'saving' | 'saved' | 'error';
+  progress: number;
+  error?: string;
+}
 
 const CreateLessonPage = () => {
   const navigate = useNavigate();
   const { courseId } = useParams<{ courseId: string }>();
+  const { user } = useAuthStore();
   const [loading, setLoading] = useState(false);
   const [loadingCourse, setLoadingCourse] = useState(true);
   const [course, setCourse] = useState<Course | null>(null);
+  const [pendingUploads, setPendingUploads] = useState<PendingUpload[]>([]);
+  const [showUploader, setShowUploader] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({
     title: '',
     content: '',
@@ -55,6 +80,90 @@ const CreateLessonPage = () => {
     });
   };
 
+  // Upload file lên Drive (chưa save vào DB)
+  const handleFileUpload = async (files: FileList | File[]) => {
+    if (!user || !course) return;
+
+    const fileArray = Array.from(files);
+    
+    for (const file of fileArray) {
+      // Validate file
+      if (!isSupportedFileType(file)) {
+        toast.error(`File "${file.name}" không được hỗ trợ!`);
+        continue;
+      }
+
+      if (file.size > 100 * 1024 * 1024) { // 100MB limit
+        toast.error(`File "${file.name}" quá lớn (max 100MB)!`);
+        continue;
+      }
+
+      // Create pending upload entry
+      const uploadId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      const newUpload: PendingUpload = {
+        id: uploadId,
+        file,
+        driveResponse: null,
+        status: 'uploading',
+        progress: 0,
+      };
+
+      setPendingUploads(prev => [...prev, newUpload]);
+
+      try {
+        // Upload to Drive
+        const driveResponse = await driveService.uploadFile(
+          file,
+          user.id,
+          Number(courseId),
+          course.title
+          // Không truyền lessonId vì chưa có
+        );
+
+        // Update status to uploaded
+        setPendingUploads(prev => prev.map(u => 
+          u.id === uploadId 
+            ? { ...u, driveResponse, status: 'uploaded', progress: 100 }
+            : u
+        ));
+
+        toast.success(`Đã upload "${file.name}" lên Drive!`);
+      } catch (error: any) {
+        console.error('Upload error:', error);
+        setPendingUploads(prev => prev.map(u => 
+          u.id === uploadId 
+            ? { ...u, status: 'error', error: error.message || 'Upload failed' }
+            : u
+        ));
+        toast.error(`Lỗi upload "${file.name}": ${error.message}`);
+      }
+    }
+  };
+
+  // Remove pending upload
+  const removePendingUpload = (uploadId: string) => {
+    setPendingUploads(prev => prev.filter(u => u.id !== uploadId));
+  };
+
+  // Handle drag events
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files.length > 0) {
+      handleFileUpload(e.dataTransfer.files);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -68,10 +177,63 @@ const CreateLessonPage = () => {
       return;
     }
 
+    // Check if any uploads are still in progress
+    const uploadingFiles = pendingUploads.filter(u => u.status === 'uploading');
+    if (uploadingFiles.length > 0) {
+      toast.error('Vui lòng đợi upload hoàn tất!');
+      return;
+    }
+
     setLoading(true);
 
     try {
-      await courseService.createLesson(Number(courseId), formData);
+      // 1. Create lesson first
+      const newLesson = await courseService.createLesson(Number(courseId), formData);
+      const lessonId = newLesson.id;
+
+      // 2. Save pending uploads to DB with new lessonId
+      const uploadedFiles = pendingUploads.filter(u => u.status === 'uploaded' && u.driveResponse);
+      
+      if (uploadedFiles.length > 0) {
+        for (const upload of uploadedFiles) {
+          if (!upload.driveResponse) continue;
+
+          // Update status to saving
+          setPendingUploads(prev => prev.map(u => 
+            u.id === upload.id ? { ...u, status: 'saving' } : u
+          ));
+
+          try {
+            const materialData: MaterialUploadData = {
+              courseId: Number(courseId),
+              lessonId: lessonId,
+              title: upload.file.name,
+              fileUrl: upload.driveResponse.view_link,
+              type: getMaterialTypeFromMime(upload.driveResponse.mime_type, upload.file.name),
+              driveFileId: upload.driveResponse.file_id,
+              driveEmbedLink: upload.driveResponse.embed_link,
+              driveDownloadLink: upload.driveResponse.download_link,
+              fileSize: upload.driveResponse.size || upload.file.size,
+              originalFilename: upload.file.name,
+            };
+
+            console.log('Saving material to DB:', materialData);
+            const savedMaterial = await courseService.uploadMaterialWithDrive(materialData);
+            console.log('Material saved:', savedMaterial);
+
+            // Update status to saved
+            setPendingUploads(prev => prev.map(u => 
+              u.id === upload.id ? { ...u, status: 'saved' } : u
+            ));
+          } catch (error: any) {
+            console.error('Error saving material:', error);
+            setPendingUploads(prev => prev.map(u => 
+              u.id === upload.id ? { ...u, status: 'error', error: 'Lỗi lưu vào DB' } : u
+            ));
+          }
+        }
+      }
+
       toast.success('Tạo bài học thành công!');
       navigate(`/courses/${courseId}`);
     } catch (error: any) {
@@ -215,6 +377,135 @@ print('Hello World')
               </p>
             </div>
 
+            {/* Upload Materials Section */}
+            <div className="border-t pt-6">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 flex items-center space-x-2">
+                    <Upload className="w-5 h-5 text-primary-600" />
+                    <span>Tài Liệu & Video</span>
+                  </h3>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Upload file PDF, DOC, PPT hoặc video MP4 cho bài học
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowUploader(!showUploader)}
+                  className="px-4 py-2 text-sm bg-primary-50 text-primary-700 rounded-lg hover:bg-primary-100 transition-colors flex items-center space-x-2"
+                >
+                  <Upload className="w-4 h-4" />
+                  <span>{showUploader ? 'Ẩn' : 'Thêm tài liệu'}</span>
+                </button>
+              </div>
+
+              {/* File Uploader - Inline */}
+              {showUploader && user && (
+                <div className="mb-4">
+                  <div
+                    className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
+                      isDragging 
+                        ? 'border-primary-500 bg-primary-50' 
+                        : 'border-gray-300 hover:border-primary-400'
+                    }`}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                  >
+                    <Upload className="w-10 h-10 mx-auto text-gray-400 mb-3" />
+                    <p className="text-gray-600 mb-2">
+                      Kéo thả file vào đây hoặc{' '}
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="text-primary-600 hover:text-primary-700 font-medium"
+                      >
+                        chọn file
+                      </button>
+                    </p>
+                    <p className="text-xs text-gray-400">
+                      PDF, DOC, DOCX, PPT, PPTX, TXT, MP4, AVI, MOV, JPG, PNG (max 100MB)
+                    </p>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      multiple
+                      accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.mp4,.avi,.mov,.jpg,.jpeg,.png,.gif"
+                      onChange={(e) => e.target.files && handleFileUpload(e.target.files)}
+                      className="hidden"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Pending Uploads List */}
+              {pendingUploads.length > 0 && (
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <h4 className="text-sm font-medium text-gray-700 mb-3 flex items-center space-x-2">
+                    <File className="w-4 h-4" />
+                    <span>Files đã upload ({pendingUploads.length})</span>
+                  </h4>
+                  <div className="space-y-2">
+                    {pendingUploads.map((upload) => (
+                      <div
+                        key={upload.id}
+                        className="flex items-center justify-between bg-white rounded-lg p-3 border"
+                      >
+                        <div className="flex items-center space-x-3 flex-1 min-w-0">
+                          <File className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-medium text-gray-900 truncate">
+                              {upload.file.name}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              {formatFileSize(upload.file.size)}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2 ml-3">
+                          {upload.status === 'uploading' && (
+                            <Loader className="w-4 h-4 animate-spin text-primary-600" />
+                          )}
+                          {upload.status === 'uploaded' && (
+                            <CheckCircle className="w-4 h-4 text-green-500" />
+                          )}
+                          {upload.status === 'saving' && (
+                            <Loader className="w-4 h-4 animate-spin text-blue-600" />
+                          )}
+                          {upload.status === 'saved' && (
+                            <CheckCircle className="w-4 h-4 text-green-500" />
+                          )}
+                          {upload.status === 'error' && (
+                            <AlertCircle className="w-4 h-4 text-red-500" />
+                          )}
+                          {(upload.status === 'uploaded' || upload.status === 'error') && (
+                            <button
+                              type="button"
+                              onClick={() => removePendingUpload(upload.id)}
+                              className="p-1 text-gray-400 hover:text-red-500 transition-colors"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-xs text-gray-500 mt-3">
+                    * Files sẽ được liên kết với bài học sau khi tạo
+                  </p>
+                </div>
+              )}
+
+              {pendingUploads.length === 0 && !showUploader && (
+                <div className="text-center py-6 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
+                  <File className="w-10 h-10 mx-auto text-gray-300 mb-2" />
+                  <p className="text-sm text-gray-500">Chưa có tài liệu nào</p>
+                  <p className="text-xs text-gray-400 mt-1">Click "Thêm tài liệu" để upload</p>
+                </div>
+              )}
+            </div>
+
             {/* Info Box */}
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <h3 className="font-semibold text-blue-900 mb-2">💡 Markdown Tips:</h3>
@@ -239,7 +530,7 @@ print('Hello World')
               </button>
               <button
                 type="submit"
-                disabled={loading}
+                disabled={loading || pendingUploads.some(u => u.status === 'uploading')}
                 className="btn-primary flex items-center space-x-2"
               >
                 {loading ? (

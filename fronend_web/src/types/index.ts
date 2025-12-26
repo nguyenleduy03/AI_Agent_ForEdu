@@ -56,11 +56,40 @@ export interface Lesson {
 export interface Material {
   id: number;
   courseId: number;
+  lessonId?: number;
+  lessonTitle?: string;
   title: string;
+  description?: string;
   fileUrl: string;
-  fileType: string;
+  type: MaterialType;
+  // Google Drive fields
+  driveFileId?: string;
+  driveEmbedLink?: string;
+  driveDownloadLink?: string;
+  // File info
+  fileSize?: number;
+  fileSizeFormatted?: string;
+  originalFilename?: string;
+  // Uploader info
+  uploadedBy: number;
+  uploaderName?: string;
   uploadedAt: string;
 }
+
+export type MaterialType =
+  | 'PDF'
+  | 'DOC'
+  | 'DOCX'
+  | 'PPT'
+  | 'PPTX'
+  | 'TXT'
+  | 'HTML'
+  | 'IMAGE'
+  | 'VIDEO'
+  | 'MP4'
+  | 'AVI'
+  | 'MOV'
+  | 'OTHER';
 
 export interface ChatSession {
   id: number;

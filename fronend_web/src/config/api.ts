@@ -34,6 +34,8 @@ export const ENDPOINTS = {
   MATERIALS: {
     UPLOAD: '/api/materials/upload',
     BY_COURSE: (courseId: number) => `/api/courses/${courseId}/materials`,
+    BY_LESSON: (lessonId: number) => `/api/lessons/${lessonId}/materials`,
+    GENERAL: (courseId: number) => `/api/courses/${courseId}/materials/general`,
     DELETE: (id: number) => `/api/materials/${id}`,
   },
   // Chat

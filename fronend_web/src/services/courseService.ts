@@ -2,6 +2,21 @@ import { springApi } from './api';
 import { ENDPOINTS } from '../config/api';
 import type { Course, Lesson, Material } from '../types';
 
+// Material upload data interface
+export interface MaterialUploadData {
+  courseId: number;
+  lessonId?: number;
+  title: string;
+  description?: string;
+  fileUrl: string;
+  type: string;
+  driveFileId?: string;
+  driveEmbedLink?: string;
+  driveDownloadLink?: string;
+  fileSize?: number;
+  originalFilename?: string;
+}
+
 export const courseService = {
   // Courses
   getCourses: async (): Promise<Course[]> => {
@@ -64,11 +79,40 @@ export const courseService = {
     return response.data;
   },
 
+  getMaterialsByLesson: async (lessonId: number): Promise<Material[]> => {
+    const response = await springApi.get(ENDPOINTS.MATERIALS.BY_LESSON(lessonId));
+    return response.data;
+  },
+
+  getCourseMaterialsGeneral: async (courseId: number): Promise<Material[]> => {
+    const response = await springApi.get(ENDPOINTS.MATERIALS.GENERAL(courseId));
+    return response.data;
+  },
+
   uploadMaterial: async (formData: FormData): Promise<Material> => {
     const response = await springApi.post(ENDPOINTS.MATERIALS.UPLOAD, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
     return response.data;
+  },
+
+  // Upload material với Drive info (JSON)
+  uploadMaterialWithDrive: async (data: MaterialUploadData): Promise<Material> => {
+    console.log('=== Sending to Spring Boot ===');
+    console.log('URL:', ENDPOINTS.MATERIALS.UPLOAD);
+    console.log('Data:', JSON.stringify(data, null, 2));
+    console.log('==============================');
+    
+    try {
+      const response = await springApi.post(ENDPOINTS.MATERIALS.UPLOAD, data);
+      return response.data;
+    } catch (error: any) {
+      console.error('=== Spring Boot Error ===');
+      console.error('Status:', error.response?.status);
+      console.error('Response:', error.response?.data);
+      console.error('=========================');
+      throw error;
+    }
   },
 
   deleteMaterial: async (id: number): Promise<void> => {

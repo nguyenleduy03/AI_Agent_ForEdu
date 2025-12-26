@@ -59,6 +59,14 @@ except ImportError:
     DOCUMENT_INTELLIGENCE_AVAILABLE = False
     print("⚠️  Document Intelligence not available.")
 
+# Google Drive Service
+try:
+    from google_drive_service import router as drive_router
+    GOOGLE_DRIVE_AVAILABLE = True
+except ImportError:
+    GOOGLE_DRIVE_AVAILABLE = False
+    print("⚠️  Google Drive Service not available.")
+
 # LangChain Agent
 try:
     from langchain_agent_simple import create_simple_langchain_agent, SimpleLangChainAgent
@@ -257,6 +265,13 @@ if GOOGLE_CLOUD_AGENT_AVAILABLE:
 else:
     google_cloud_agent = None
     print("⚠️  Google Cloud Agent not initialized")
+
+# Register Google Drive router
+if GOOGLE_DRIVE_AVAILABLE:
+    app.include_router(drive_router)
+    print("✅ Google Drive Service registered")
+else:
+    print("⚠️  Google Drive Service not registered")
 
 # Initialize LangChain Agent - DISABLED (không cần thiết cho dự án này)
 # Kết luận: LangChain phức tạp 8/10, giá trị thực tế thấp

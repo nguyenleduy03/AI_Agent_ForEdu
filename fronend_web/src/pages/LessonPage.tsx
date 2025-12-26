@@ -1,14 +1,16 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Sparkles, BookOpen, Clock, CheckCircle, Target, Brain, Zap, Plus, ClipboardCheck, Edit, Trash2 } from 'lucide-react';
+import { ArrowLeft, Sparkles, BookOpen, Clock, CheckCircle, Target, Brain, Zap, Plus, ClipboardCheck, Edit, Trash2, FileText, Video, Download } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import Layout from '../components/Layout';
+import MaterialList from '../components/MaterialList';
 import { courseService } from '../services/courseService';
 import { quizService } from '../services/quizService';
 import { progressService } from '../services/progressService';
 import { useAuthStore } from '../store/authStore';
+import type { Material } from '../types';
 
 const LessonPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -40,6 +42,13 @@ const LessonPage = () => {
   const { data: quizzes = [], isLoading: quizzesLoading, error: quizzesError } = useQuery({
     queryKey: ['lessonQuizzes', lessonId],
     queryFn: () => quizService.getQuizzesByLesson(lessonId),
+    enabled: !!lesson,
+  });
+
+  // Fetch materials for this lesson
+  const { data: materials = [] } = useQuery({
+    queryKey: ['lessonMaterials', lessonId],
+    queryFn: () => courseService.getMaterialsByLesson(lessonId),
     enabled: !!lesson,
   });
 
@@ -347,6 +356,35 @@ const LessonPage = () => {
             </div>
           )}
         </motion.div>
+
+        {/* Materials Section */}
+        {materials.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.12 }}
+            className="bg-white rounded-2xl p-6 md:p-8 shadow-lg border border-gray-100 mb-8"
+          >
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                <FileText className="w-5 h-5 text-blue-600" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold">Tài liệu bài học</h2>
+                <p className="text-sm text-gray-500">{materials.length} tài liệu</p>
+              </div>
+            </div>
+            
+            <MaterialList 
+              materials={materials} 
+              canDelete={isTeacher}
+              onDelete={(id) => {
+                // Refetch materials after delete
+                queryClient.invalidateQueries({ queryKey: ['lessonMaterials', lessonId] });
+              }}
+            />
+          </motion.div>
+        )}
 
         {/* Quizzes Section */}
         {quizzes.length > 0 && (
