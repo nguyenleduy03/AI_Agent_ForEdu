@@ -1,0 +1,77 @@
+/* ChatGPT Dark Theme Override for ChatPage */
+
+/* Make the card background darker */
+.card {
+  background: #343541 !important;
+  border: 1px solid #565869 !important;
+}
+
+/* Dark header */
+.card .border-b {
+  border-color: #565869 !important;
+}
+
+/* User messages - purple gradient */
+.bg-gradient-to-br.from-purple-600 {
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%) !important;
+}
+
+/* AI messages - darker background */
+.bg-gray-100 {
+  background: #444654 !important;
+  color: #ececf1 !important;
+}
+
+/* Input field - darker */
+.input-field {
+  background: #40414f !important;
+  border-color: #565869 !important;
+  color: #ececf1 !important;
+}
+
+.input-field::placeholder {
+  color: #8e8ea0 !important;
+}
+
+/* Buttons */
+.btn-primary {
+  background: #10a37f !important;
+}
+
+.btn-primary:hover {
+  background: #0d8c6d !important;
+}
+
+/* Mode selector buttons */
+.bg-gray-100.rounded-xl {
+  background: #40414f !important;
+}
+
+/* Text colors */
+.text-gray-600 {
+  color: #c5c5d2 !important;
+}
+
+.text-gray-700 {
+  color: #ececf1 !important;
+}
+
+.text-gray-900 {
+  color: #ececf1 !important;
+}
+
+/* Helper text box */
+.bg-gradient-to-r.from-gray-50 {
+  background: #444654 !important;
+  border-color: #565869 !important;
+}
+
+.text-gray-800 {
+  color: #ececf1 !important;
+}
+
+/* File preview */
+.bg-blue-50 {
+  background: #2d3748 !important;
+  border-color: #4a5568 !important;
+}

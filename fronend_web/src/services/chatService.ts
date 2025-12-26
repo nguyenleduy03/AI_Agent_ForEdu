@@ -38,7 +38,8 @@ export const chatService = {
     aiProvider: string = 'gemini',
     model?: string,
     imageBase64?: string,
-    imageMimeType?: string
+    imageMimeType?: string,
+    sessionId?: number
   ): Promise<any> => {
     const response = await fastApi.post(ENDPOINTS.AI.CHAT, {
       message,
@@ -47,6 +48,7 @@ export const chatService = {
       model: model,
       image_base64: imageBase64,
       image_mime_type: imageMimeType,
+      session_id: sessionId,
     });
     return response.data;
   },

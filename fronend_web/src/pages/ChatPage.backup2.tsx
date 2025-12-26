@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Bot, User, Plus, CheckCheck, AlertCircle, Clock, ExternalLink, Paperclip, Image as ImageIcon, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import Layout from '../components/Layout';
 import VoiceChatButton from '../components/VoiceChatButton';
 import QuotaWarningBanner from '../components/QuotaWarningBanner';
 import ErrorBoundary from '../components/ErrorBoundary';
@@ -13,6 +12,7 @@ import { springApi } from '../services/api';
 import { useVoiceChat } from '../hooks/useVoiceChat';
 import { useAuthStore } from '../store/authStore';
 import type { ChatMessage } from '../types';
+import './ChatPage.css';
 
 interface ActionLink {
   type: string;
@@ -101,7 +101,7 @@ const ChatPage = () => {
     language: 'vi-VN', // Vietnamese
   });
 
-  // Cleanup on unmount
+  // Cleanup on unmount - MUST be after voiceChat declaration
   useEffect(() => {
     isMountedRef.current = true;
 
@@ -116,12 +116,26 @@ const ChatPage = () => {
       // Cancel all pending timeouts
       timeoutsRef.current.forEach(timeout => clearTimeout(timeout));
       timeoutsRef.current = [];
+      
       // Cancel scroll timer
       if (scrollTimerRef.current) {
         clearTimeout(scrollTimerRef.current);
       }
+      
+      // ✅ Revoke file URLs
+      if (filePreview && filePreview.startsWith('blob:')) {
+        URL.revokeObjectURL(filePreview);
+      }
+      
+      // ✅ Stop voice chat
+      if (voiceChat.isListening) {
+        voiceChat.stopListening();
+      }
+      if (voiceChat.isSpeaking) {
+        voiceChat.stopSpeaking();
+      }
     };
-  }, []);
+  }, [filePreview, voiceChat]);
 
   // Load chat sessions
   const { data: sessions = [] } = useQuery({
@@ -179,9 +193,9 @@ const ChatPage = () => {
 
   // Reset initialLoadDone when switching sessions
   useEffect(() => {
-    if (currentSessionId && initialLoadDone !== currentSessionId) {
+    if (currentSessionId && initialLoadDoneRef.current !== currentSessionId) {
       // Allow reload for new session
-      setInitialLoadDone(null);
+      initialLoadDoneRef.current = null;
     }
   }, [currentSessionId]);
 
@@ -221,87 +235,68 @@ const ChatPage = () => {
     }
   }, [aiProvider]);
 
-  // Track if we've loaded initial messages for this session
-  const [initialLoadDone, setInitialLoadDone] = useState<number | null>(null);
-
   // Convert backend messages to display format - ONLY on initial load
   useEffect(() => {
-    // Safety check: prevent loading if no session
-    if (!currentSessionId) {
-      return;
-    }
-
-    // Only load from backend on initial session load, not on every update
-    if (initialLoadDone === currentSessionId) {
+    if (!currentSessionId) return;
+    if (initialLoadDoneRef.current === currentSessionId) {
       console.log('⏭️ Skipping message reload - already loaded for session', currentSessionId);
       return;
     }
 
-    console.log('📥 Raw sessionMessages from backend:', sessionMessages);
+    let isCancelled = false;
 
-    if (sessionMessages.length > 0) {
-      const convertedMessages: Message[] = sessionMessages.map((msg: ChatMessage) => {
-        console.log('🔄 Converting message:', {
-          id: msg.id,
-          sender: msg.sender,
-          senderType: typeof msg.sender,
-          message: msg.message.substring(0, 30) + '...',
-        });
+    const loadMessages = async () => {
+      try {
+        const data = await chatService.getMessages(currentSessionId);
+        if (isCancelled) return;
 
-        return {
-          id: msg.id.toString(),
-          sender: msg.sender.toLowerCase() as 'user' | 'ai',
-          text: msg.message,
-          timestamp: new Date(msg.timestamp),
-        };
-      });
+        console.log('📥 Raw sessionMessages from backend:', data);
 
-      console.log('✅ Converted messages:', convertedMessages.map(m => ({
-        sender: m.sender,
-        text: m.text.substring(0, 30) + '...',
-      })));
+        if (data.length > 0) {
+          const convertedMessages: Message[] = data.map((msg: ChatMessage) => ({
+            id: msg.id.toString(),
+            sender: msg.sender.toLowerCase() as 'user' | 'ai',
+            text: msg.message,
+            timestamp: new Date(msg.timestamp),
+          }));
 
-      setMessages(convertedMessages);
-      setInitialLoadDone(currentSessionId);
-    } else if (currentSessionId) {
-      // Show welcome message for new session
-      console.log('👋 Showing welcome message for new session');
-      setMessages([
-        {
-          id: '1',
-          sender: 'ai',
-          text: 'Hello! I\'m your AI learning assistant. How can I help you today?',
-          timestamp: new Date(),
-        },
-      ]);
-    }
-  }, [sessionMessages, currentSessionId]);
+          console.log('✅ Converted messages:', convertedMessages.length);
+          setMessages(convertedMessages);
+        } else {
+          console.log('👋 Showing welcome message for new session');
+          setMessages([
+            {
+              id: '1',
+              sender: 'ai',
+              text: 'Hello! I\'m your AI learning assistant. How can I help you today?',
+              timestamp: new Date(),
+            },
+          ]);
+        }
+
+        initialLoadDoneRef.current = currentSessionId;
+      } catch (error) {
+        console.error('Failed to load messages:', error);
+      }
+    };
+
+    loadMessages();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [currentSessionId]);
 
   const scrollToBottom = () => {
-    // Simple scroll without animation to avoid conflicts
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'auto' });
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
     }
   };
 
   useEffect(() => {
-    // Debounce scroll with longer delay
-    if (scrollTimerRef.current) {
-      clearTimeout(scrollTimerRef.current);
-    }
-
-    scrollTimerRef.current = setTimeout(() => {
-      if (isMountedRef.current) {
-        scrollToBottom();
-      }
-    }, 300); // Increased debounce
-
-    return () => {
-      if (scrollTimerRef.current) {
-        clearTimeout(scrollTimerRef.current);
-      }
-    };
-  }, [messages]);
+    const timer = setTimeout(scrollToBottom, 100);
+    return () => clearTimeout(timer);
+  }, [messages.length]); // ✅ Only depend on length, not entire array
 
   // Auto-adjust RAG based on mode
   useEffect(() => {
@@ -314,22 +309,29 @@ const ChatPage = () => {
 
   // Auto-send when voice transcript is complete
   useEffect(() => {
-    if (voiceChat.transcript && !voiceChat.isListening && voiceChat.transcript.trim()) {
-      // Wait a bit for transcript to finalize
-      const timer = setTimeout(() => {
-        if (input === voiceChat.transcript && input.trim()) {
-          handleSend();
-        }
-      }, 800);
-      return () => clearTimeout(timer);
-    }
-  }, [voiceChat.transcript, voiceChat.isListening, input]); // handleSend is stable, no need to include
+    if (!voiceChat.transcript || voiceChat.isListening) return;
+    if (!voiceChat.transcript.trim()) return;
+    
+    const timer = setTimeout(() => {
+      if (input === voiceChat.transcript && input.trim()) {
+        handleSend();
+      }
+    }, 800);
+    
+    return () => clearTimeout(timer);
+  }, [voiceChat.transcript, voiceChat.isListening]); // ✅ Removed 'input' dependency
 
   const handleSend = async () => {
     if ((!input.trim() && !selectedFile) || loading || !currentSessionId) {
       console.log('Cannot send:', { input: input.trim(), selectedFile, loading, currentSessionId });
       return;
     }
+
+    // ✅ Cancel previous request if any
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    abortControllerRef.current = new AbortController();
 
     const userMessageText = input.trim() || (selectedFile ?
       (selectedFile.type.startsWith('image/') ?
@@ -412,17 +414,14 @@ const ChatPage = () => {
 
       // Get AI response with image if present
       console.log('Getting AI response...', imageBase64 ? 'with image' : 'text only');
-      console.log('🔍 DEBUG: Sending session_id:', currentSessionId);
       const aiResponse = await chatService.sendMessageWithActions(
         userMessageText,
         useRag,
         aiProvider,
         aiProvider === 'groq' ? selectedGroqModel : selectedGeminiModel,
         imageBase64,
-        imageMimeType,
-        currentSessionId || undefined
+        imageMimeType
       );
-      console.log('✅ DEBUG: AI response received');
 
       // Safely convert response to string (handle arrays and objects)
       let responseText = '';
@@ -535,6 +534,7 @@ const ChatPage = () => {
         // ✅ Auto-execute tool action if present
         if (aiResponse.tool_action && aiResponse.tool_action.auto_execute) {
           console.log('Auto-executing tool:', aiResponse.tool_action);
+          console.log('isMountedRef.current:', isMountedRef.current);
           
           // Execute immediately instead of setTimeout
           try {
@@ -616,6 +616,7 @@ const ChatPage = () => {
       if (isMountedRef.current) {
         setLoading(false);
       }
+      abortControllerRef.current = null; // ✅ Clear abort controller
     }
   };
 
@@ -679,7 +680,7 @@ const ChatPage = () => {
 
   const handleNewSession = () => {
     const title = `Chat ${new Date().toLocaleString()}`;
-    setInitialLoadDone(null); // Reset to allow loading messages for new session
+    initialLoadDoneRef.current = null; // ✅ Reset to allow loading messages for new session
     createSessionMutation.mutate(title);
   };
 
@@ -733,106 +734,143 @@ const ChatPage = () => {
 
   return (
     <ErrorBoundary>
-      <Layout>
-        <div className="max-w-5xl mx-auto h-[calc(100vh-12rem)]">
-          <div className="card h-full flex flex-col">
-            {/* Quota Warning Banner */}
-            <AnimatePresence mode="wait">
-              {showQuotaWarning && (
-                <QuotaWarningBanner onClose={() => setShowQuotaWarning(false)} />
-              )}
-            </AnimatePresence>
+      <div className="flex h-screen bg-white dark:bg-gray-900">
+        {/* Sidebar - ChatGPT Style */}
+        <div className="w-64 bg-gray-900 text-white flex flex-col border-r border-gray-800">
+          {/* New Chat Button */}
+          <div className="p-3">
+            <button
+              onClick={handleNewSession}
+              className="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors"
+            >
+              <Plus className="w-5 h-5" />
+              <span className="font-medium">New chat</span>
+            </button>
+          </div>
 
-            {/* Header */}
-            <div className="border-b pb-4 mb-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-purple-500 rounded-xl flex items-center justify-center text-white">
-                    <Bot className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h1 className="text-2xl font-bold">AI Learning Assistant</h1>
-                    <p className="text-sm text-gray-600">
-                      {currentSessionId ? `Session #${currentSessionId}` : 'Loading...'}
-                    </p>
-                  </div>
-                </div>
+          {/* Chat History */}
+          <div className="flex-1 overflow-y-auto px-2">
+            <div className="text-xs text-gray-400 px-3 py-2 font-semibold">Recent</div>
+            {sessions.map((session) => (
+              <button
+                key={session.id}
+                onClick={() => setCurrentSessionId(session.id)}
+                className={`w-full text-left px-3 py-2 rounded-lg mb-1 transition-colors ${
+                  currentSessionId === session.id
+                    ? 'bg-gray-800 text-white'
+                    : 'text-gray-300 hover:bg-gray-800'
+                }`}
+              >
+                <span className="text-sm truncate block">{session.title}</span>
+              </button>
+            ))}
+          </div>
 
-                {/* Mode Selector */}
-                <div className="flex items-center space-x-2 bg-gray-100 rounded-xl p-1">
+          {/* User Info */}
+          <div className="p-3 border-t border-gray-800">
+            <div className="flex items-center space-x-2 px-2 py-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-sm font-bold">
+                {user?.username?.charAt(0).toUpperCase() || 'U'}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-sm font-medium truncate">{user?.username || 'User'}</div>
+                <div className="text-xs text-gray-400">Free plan</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Chat Area */}
+        <div className="flex-1 flex flex-col">
+          {/* Quota Warning Banner */}
+          <AnimatePresence mode="wait">
+            {showQuotaWarning && (
+              <QuotaWarningBanner onClose={() => setShowQuotaWarning(false)} />
+            )}
+          </AnimatePresence>
+
+          {/* Header - Compact */}
+          <div className="border-b border-gray-200 dark:border-gray-700 p-4">
+            <div className="flex items-center justify-between">
+              <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                AI Learning Assistant
+              </h1>
+              <div className="flex items-center space-x-2">
+
+                {/* Mode Selector - Compact */}
+                <div className="flex items-center space-x-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
                   <button
                     onClick={() => setChatMode('normal')}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${chatMode === 'normal'
-                        ? 'bg-white text-primary-600 shadow-sm'
-                        : 'text-gray-600 hover:text-gray-900'
+                    className={`px-3 py-1.5 rounded text-xs font-medium transition-all ${chatMode === 'normal'
+                        ? 'bg-white dark:bg-gray-700 text-primary-600 shadow-sm'
+                        : 'text-gray-600 dark:text-gray-400'
                       }`}
                     title="Normal AI Chat"
                   >
-                    🤖 Normal
+                    🤖
                   </button>
                   <button
                     onClick={() => setChatMode('google-cloud')}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${chatMode === 'google-cloud'
-                        ? 'bg-white text-blue-600 shadow-sm'
-                        : 'text-gray-600 hover:text-gray-900'
+                    className={`px-3 py-1.5 rounded text-xs font-medium transition-all ${chatMode === 'google-cloud'
+                        ? 'bg-white dark:bg-gray-700 text-blue-600 shadow-sm'
+                        : 'text-gray-600 dark:text-gray-400'
                       }`}
-                    title="Google Cloud APIs: Translation, Vision, Sentiment"
+                    title="Google Cloud APIs"
                   >
-                    🌐 Cloud
+                    🌐
                   </button>
                   <button
                     onClick={() => setChatMode('rag')}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${chatMode === 'rag'
-                        ? 'bg-white text-green-600 shadow-sm'
-                        : 'text-gray-600 hover:text-gray-900'
+                    className={`px-3 py-1.5 rounded text-xs font-medium transition-all ${chatMode === 'rag'
+                        ? 'bg-white dark:bg-gray-700 text-green-600 shadow-sm'
+                        : 'text-gray-600 dark:text-gray-400'
                       }`}
-                    title="RAG Mode: Search knowledge base"
+                    title="RAG Mode"
                   >
-                    📚 RAG
+                    📚
                   </button>
                   <button
                     onClick={() => setChatMode('agent')}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${chatMode === 'agent'
-                        ? 'bg-white text-purple-600 shadow-sm'
-                        : 'text-gray-600 hover:text-gray-900'
+                    className={`px-3 py-1.5 rounded text-xs font-medium transition-all ${chatMode === 'agent'
+                        ? 'bg-white dark:bg-gray-700 text-purple-600 shadow-sm'
+                        : 'text-gray-600 dark:text-gray-400'
                       }`}
-                    title="Agent Mode: Schedule, Grades, Credentials"
+                    title="Agent Mode"
                   >
-                    🎓 Agent
+                    🎓
                   </button>
                 </div>
 
-                {/* AI Provider Selector */}
-                <div className="flex items-center space-x-2 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-1 border border-purple-200">
+                {/* AI Provider Selector - Compact */}
+                <div className="flex items-center space-x-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
                   <button
                     onClick={() => setAiProvider('gemini')}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${aiProvider === 'gemini'
+                    className={`px-3 py-1.5 rounded text-xs font-semibold transition-all ${aiProvider === 'gemini'
                         ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md'
-                        : 'text-purple-600 hover:bg-white/50'
+                        : 'text-gray-600 dark:text-gray-400'
                       }`}
-                    title="Google Gemini 2.5 Flash"
+                    title="Google Gemini"
                   >
-                    ✨ Gemini
+                    ✨
                   </button>
                   <button
                     onClick={() => setAiProvider('groq')}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${aiProvider === 'groq'
-                        ? 'bg-gradient-to-r from-gray-800 to-gray-900 text-white shadow-md'
-                        : 'text-gray-700 hover:bg-white/50'
+                    className={`px-3 py-1.5 rounded text-xs font-semibold transition-all ${aiProvider === 'groq'
+                        ? 'bg-gray-800 text-white shadow-md'
+                        : 'text-gray-600 dark:text-gray-400'
                       }`}
-                    title="Groq LPU Inference (Fast)"
+                    title="Groq"
                   >
-                    ⚡ Groq
+                    ⚡
                   </button>
                 </div>
 
-                {/* Gemini Model Selector */}
+                {/* Model Selector - Compact */}
                 {aiProvider === 'gemini' && geminiModels.length > 0 && (
                   <select
                     value={selectedGeminiModel}
                     onChange={(e) => setSelectedGeminiModel(e.target.value)}
-                    className="px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500"
-                    title="Select Gemini Model"
+                    className="px-2 py-1.5 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-xs"
                   >
                     {geminiModels.map((model) => (
                       <option key={model.name} value={model.name}>
@@ -842,102 +880,90 @@ const ChatPage = () => {
                   </select>
                 )}
 
-                {/* Groq Model Selector - Show only when Groq is selected */}
                 {aiProvider === 'groq' && groqModels.length > 0 && (
                   <select
                     value={selectedGroqModel}
                     onChange={(e) => setSelectedGroqModel(e.target.value)}
-                    className="px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500"
-                    title="Select Groq Model"
+                    className="px-2 py-1.5 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-xs"
                   >
                     {groqModels.map((model) => (
                       <option key={model.id} value={model.id}>
-                        {model.name} - {model.description} ({model.speed})
+                        {model.name}
                       </option>
                     ))}
                   </select>
                 )}
-                {aiProvider === 'groq' && groqModels.length === 0 && (
-                  <div className="text-xs text-orange-600 font-semibold">
-                    Loading Groq models...
-                  </div>
-                )}
 
-                <div className="flex items-center space-x-4">
-                  <button
-                    onClick={handleNewSession}
-                    className="flex items-center space-x-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
-                  >
-                    <Plus className="w-4 h-4" />
-                    <span>New Chat</span>
-                  </button>
-                  <label className="flex items-center space-x-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={useRag}
-                      onChange={(e) => setUseRag(e.target.checked)}
-                      className="w-4 h-4 text-primary-600 rounded"
-                    />
-                    <span className="text-sm text-gray-700">Use Course Context</span>
-                  </label>
-                </div>
+                {/* RAG Toggle */}
+                <label className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={useRag}
+                    onChange={(e) => setUseRag(e.target.checked)}
+                    className="w-4 h-4 text-primary-600 rounded"
+                  />
+                  <span className="text-xs text-gray-700 dark:text-gray-300">RAG</span>
+                </label>
               </div>
             </div>
+          </div>
 
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto space-y-4 mb-4">
-              <AnimatePresence initial={false}>
-                {messages.map((message) => {
-                  // Debug log for each message
-                  if (message.sender === 'ai' && message.emailDraft) {
-                    console.log('🎨 Rendering AI message with emailDraft:', message.id, message.emailDraft);
-                  }
-                  
-                  return (
-                  <motion.div
-                    key={`${message.id}-${message.sender}`}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, transition: { duration: 0.1 } }}
-                    transition={{ duration: 0.2, ease: "easeOut" }}
-                    className={`flex flex-col ${message.sender === 'user' ? 'items-end' : 'items-start'}`}
-                  >
-                    <div className={`flex items-start space-x-3 max-w-[80%] ${message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${message.sender === 'user'
+          {/* Messages Area - ChatGPT Style */}
+          <div className="flex-1 overflow-y-auto">
+            <AnimatePresence mode="popLayout">
+              {messages.map((message) => {
+                if (message.sender === 'ai' && message.emailDraft) {
+                  console.log('🎨 Rendering AI message with emailDraft:', message.id, message.emailDraft);
+                }
+                
+                return (
+                <motion.div
+                  key={message.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, transition: { duration: 0.1 } }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                  layout
+                  className={`py-6 px-4 ${
+                    message.sender === 'ai' ? 'bg-gray-50 dark:bg-gray-800/50' : 'bg-white dark:bg-gray-900'
+                  }`}
+                >
+                  <div className="max-w-3xl mx-auto flex space-x-4">
+                    {/* Avatar */}
+                    <div className="flex-shrink-0">
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                        message.sender === 'user'
                           ? 'bg-gradient-to-br from-purple-600 to-purple-700 text-white'
-                          : 'bg-gradient-to-br from-purple-500 to-pink-500 text-white'
+                          : 'bg-gradient-to-br from-green-500 to-emerald-600 text-white'
                         }`}>
                         {message.sender === 'user' ? <User className="w-5 h-5" /> : <Bot className="w-5 h-5" />}
                       </div>
+                    </div>
 
-                      <div className="flex-1">
-                        <div className={`rounded-2xl px-4 py-3 ${message.sender === 'user'
-                            ? 'bg-gradient-to-br from-purple-600 to-purple-700 text-white'
-                            : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white'
-                          }`}>
-                          {/* AI Provider Badge (only for AI messages) */}
-                          {message.sender === 'ai' && (
-                            <div className="flex items-center space-x-2 mb-2">
-                              <span className="text-xs px-2 py-0.5 rounded-full bg-white/10 text-gray-600 dark:text-gray-300 font-semibold">
-                                {aiProvider === 'groq' ? '⚡ Groq' : '✨ Gemini'}
-                              </span>
-                            </div>
-                          )}
+                    {/* Message Content */}
+                    <div className="flex-1 min-w-0">
+                      {/* AI Provider Badge */}
+                      {message.sender === 'ai' && (
+                        <div className="text-xs text-gray-600 dark:text-gray-400 mb-1 font-semibold">
+                          {aiProvider === 'groq' ? '⚡ Groq' : '✨ Gemini'}
+                        </div>
+                      )}
 
-                          <div className="whitespace-pre-wrap">
-                            <span>{
-                              (() => {
-                                try {
-                                  return typeof message.text === 'string'
-                                    ? message.text
-                                    : JSON.stringify(message.text, null, 2);
-                                } catch (error) {
-                                  console.error('Error rendering message text:', error);
-                                  return '[Lỗi hiển thị tin nhắn]';
-                                }
-                              })()
-                            }</span>
-                          </div>
+                      {/* Message Text */}
+                      <div className="prose dark:prose-invert max-w-none">
+                        <div className="whitespace-pre-wrap text-gray-900 dark:text-gray-100">
+                          {(() => {
+                            try {
+                              return typeof message.text === 'string'
+                                ? message.text
+                                : JSON.stringify(message.text, null, 2);
+                            } catch (error) {
+                              console.error('Error rendering message text:', error);
+                              return '[Lỗi hiển thị tin nhắn]';
+                            }
+                          })()}
+                        </div>
+                      </div>
 
                           {/* File/Image Attachment Display */}
                           {message.attachment && (
@@ -1061,29 +1087,48 @@ const ChatPage = () => {
                               </motion.span>
                             )}
                           </div>
-                        </div> {/* Close rounded-2xl div */}
-                      </div> {/* Close flex-1 div */}
-                    </div> {/* Close flex items-start div */}
+                        </div>
+                      </div>
+                    </div>
                   </motion.div>
-                  );
-                })}
-              </AnimatePresence>
-              {loading && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="flex justify-start"
+                );
+              })}
+            </AnimatePresence>
+            
+            {loading && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="py-6 px-4 bg-gray-50 dark:bg-gray-800/50"
+              >
+                <div className="max-w-3xl mx-auto flex space-x-4">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white">
+                    <Bot className="w-5 h-5" />
+                  </div>
+                  <div className="flex space-x-2 pt-2">
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Input Area */}
+          <div className="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4">
+            <div className="max-w-3xl mx-auto space-y-3">
+                  className="py-6 px-4 bg-gray-50 dark:bg-gray-800/50"
                 >
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white">
+                  <div className="max-w-3xl mx-auto flex space-x-4">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white">
                       <Bot className="w-5 h-5" />
                     </div>
-                    <div className="bg-gray-100 rounded-2xl px-4 py-3">
-                      <div className="flex space-x-2">
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
-                      </div>
+                    <div className="flex space-x-2 pt-2">
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
                     </div>
                   </div>
                 </motion.div>
@@ -1091,17 +1136,140 @@ const ChatPage = () => {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Input */}
-            <div className="border-t pt-4 space-y-4">
-              {/* Mode Helper Text */}
-              <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg px-4 py-3 border border-gray-200">
-                {chatMode === 'normal' && (
-                  <div className="flex items-start space-x-2">
-                    <span className="text-lg">🤖</span>
-                    <div>
-                      <p className="font-semibold text-gray-800">Normal Chat Mode</p>
-                      <p className="text-sm text-gray-600">Ask anything - AI will answer naturally</p>
+            {/* Input Area */}
+            <div className="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4">
+              <div className="max-w-3xl mx-auto space-y-3">
+                {/* Mode Helper Text - Compact */}
+                {chatMode !== 'normal' && (
+                  <div className="mb-3 p-2 bg-gray-50 dark:bg-gray-800 rounded-lg text-xs text-gray-600 dark:text-gray-400">
+                    {chatMode === 'google-cloud' && '🌐 Google Cloud Mode'}
+                    {chatMode === 'rag' && '📚 RAG Mode - Searching knowledge base'}
+                    {chatMode === 'agent' && '🎓 Agent Mode - Schedule, Grades, Email'}
+                  </div>
+                )}
+
+                {/* Voice Chat Controls */}
+                <div className="flex items-center justify-between mb-3">
+                  <VoiceChatButton
+                    isListening={voiceChat.isListening}
+                    isSpeaking={voiceChat.isSpeaking}
+                    isSupported={voiceChat.isSupported}
+                    transcript={voiceChat.transcript}
+                    onStartListening={voiceChat.startListening}
+                    onStopListening={voiceChat.stopListening}
+                    onStopSpeaking={voiceChat.stopSpeaking}
+                  />
+
+                  {/* Auto-speak toggle */}
+                  {voiceChat.isSupported && (
+                    <label className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={autoSpeak}
+                        onChange={(e) => setAutoSpeak(e.target.checked)}
+                        className="w-4 h-4 text-primary-600 rounded"
+                      />
+                      <span className="text-xs text-gray-700 dark:text-gray-300">🔊 Auto-speak</span>
+                    </label>
+                  )}
+                </div>
+
+                {/* File preview */}
+                {(selectedFile || filePreview) && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex items-center space-x-2 p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800 mb-2"
+                  >
+                    {filePreview ? (
+                      <img src={filePreview} alt="Preview" className="w-12 h-12 object-cover rounded" />
+                    ) : (
+                      <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
+                        <ImageIcon className="w-6 h-6 text-gray-500" />
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+                        {selectedFile?.name}
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        {selectedFile && `${(selectedFile.size / 1024).toFixed(1)} KB`}
+                      </p>
                     </div>
+                    <button
+                      onClick={handleRemoveFile}
+                      className="p-1 hover:bg-red-100 dark:hover:bg-red-900/30 rounded transition-colors"
+                      title="Xóa file"
+                    >
+                      <X className="w-4 h-4 text-red-600 dark:text-red-400" />
+                    </button>
+                  </motion.div>
+                )}
+
+                {/* Input Box */}
+                <div className="flex items-end space-x-2">
+                  {/* Hidden file input */}
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*,.pdf,.txt"
+                    onChange={handleFileSelect}
+                    className="hidden"
+                  />
+
+                  {/* File upload button */}
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+                    title="Attach file"
+                    disabled={loading || voiceChat.isListening}
+                  >
+                    <Paperclip className="w-5 h-5" />
+                  </button>
+
+                  {/* Text input */}
+                  <input
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    placeholder={selectedFile ? "Describe what to analyze..." : "Message ChatGPT..."}
+                    className="flex-1 px-4 py-3 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50"
+                    disabled={loading || voiceChat.isListening}
+                  />
+
+                  {/* Send button */}
+                  <button
+                    onClick={handleSend}
+                    disabled={loading || (!input.trim() && !selectedFile) || voiceChat.isListening}
+                    className={`p-3 rounded-xl transition-all ${
+                      (input.trim() || selectedFile) && !loading && !voiceChat.isListening
+                        ? 'bg-purple-600 hover:bg-purple-700 text-white'
+                        : 'bg-gray-200 dark:bg-gray-700 text-gray-400 cursor-not-allowed'
+                    }`}
+                    title="Send message"
+                  >
+                    <Send className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Email Draft Overlay */}
+      {console.log('🎨 Rendering EmailDraftOverlay, draft:', emailDraftOverlay)}
+      <EmailDraftOverlay
+        draft={emailDraftOverlay}
+        userId={user?.id}
+        onClose={() => setEmailDraftOverlay(null)}
+      />
+    </ErrorBoundary>
+  );
+};
+
+export default ChatPage;
                   </div>
                 )}
                 {chatMode === 'google-cloud' && (

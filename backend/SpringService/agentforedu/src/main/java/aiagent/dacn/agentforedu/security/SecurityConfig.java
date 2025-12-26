@@ -40,6 +40,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                     "/api/auth/**",
+                    "/api/chat/internal/**",
                     "/api/users/*/google-tokens",
                     "/api/users/*/google-status",
                     "/api/credentials/user/**",

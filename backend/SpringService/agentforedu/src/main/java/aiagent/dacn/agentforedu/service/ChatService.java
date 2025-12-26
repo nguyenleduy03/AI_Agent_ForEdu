@@ -107,4 +107,15 @@ public class ChatService {
         response.setTimestamp(message.getTimestamp());
         return response;
     }
+    
+    // ===== INTERNAL API FOR PYTHON SERVICE =====
+    
+    @Transactional(readOnly = true)
+    public List<ChatMessageResponse> getSessionMessagesInternal(Long sessionId) {
+        // Internal API - no authentication check
+        // Used by Python service for conversation context
+        return messageRepository.findBySessionIdOrderByTimestampAsc(sessionId).stream()
+                .map(this::toMessageResponse)
+                .collect(Collectors.toList());
+    }
 }

@@ -67,4 +67,14 @@ public class ChatController {
         chatService.deleteSession(id, user);
         return ResponseEntity.ok(Map.of("message", "Xóa phiên chat thành công"));
     }
+    
+    // ===== INTERNAL API FOR PYTHON SERVICE =====
+    
+    @GetMapping("/internal/sessions/{id}/messages")
+    @Operation(summary = "Lấy tin nhắn của session (Internal API - không cần auth)")
+    public ResponseEntity<List<ChatMessageResponse>> getSessionMessagesInternal(
+            @PathVariable Long id) {
+        // Internal API for Python service - no authentication required
+        return ResponseEntity.ok(chatService.getSessionMessagesInternal(id));
+    }
 }

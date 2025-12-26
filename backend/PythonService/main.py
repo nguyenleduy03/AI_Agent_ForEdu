@@ -436,6 +436,7 @@ class ChatRequest(BaseModel):
     use_rag: bool = True
     image_base64: Optional[str] = None  # Base64 encoded image for vision analysis
     image_mime_type: Optional[str] = None  # e.g., "image/jpeg", "image/png"
+    session_id: Optional[int] = None  # Chat session ID for conversation context
     
     model_config = ConfigDict(
         json_schema_extra={
@@ -445,7 +446,8 @@ class ChatRequest(BaseModel):
                 "ai_provider": "gemini",
                 "use_rag": True,
                 "image_base64": None,
-                "image_mime_type": None
+                "image_mime_type": None,
+                "session_id": None
             }
         }
     )
@@ -809,16 +811,21 @@ async def test_tvu_schedule(request: TVUTestRequest):
 @app.post("/api/chat", tags=["Chat"])
 async def chat(request: ChatRequest, authorization: Optional[str] = Header(None)):
     """
-    Chat với Gemini AI (có hỗ trợ RAG + Agent Features)
+    Chat với Gemini AI (có hỗ trợ RAG + Agent Features + Conversation Memory)
     
     - **message**: Tin nhắn của người dùng
     - **model**: Model Gemini sử dụng (mặc định: gemini-2.5-flash)
     - **use_rag**: Sử dụng RAG để tăng cường context (mặc định: true)
+    - **session_id**: ID của chat session để load conversation history (optional)
     
     Agent Features (tự động):
     - Xem thời khóa biểu (tự động lấy từ trang trường)
     - Xem điểm số
     - Gửi email
+    
+    Conversation Memory:
+    - Nếu có session_id, AI sẽ nhớ toàn bộ context của phiên chat
+    - Giống như ChatGPT - không cần lặp lại thông tin
     
     Models được khuyến nghị:
     - gemini-2.5-flash (MỚI NHẤT - Nhanh, stable)
@@ -837,6 +844,7 @@ async def chat(request: ChatRequest, authorization: Optional[str] = Header(None)
         print(f"\n{'='*60}")
         print(f"📨 NEW CHAT REQUEST")
         print(f"Message: {request.message}")
+        print(f"Session ID: {request.session_id}")
         print(f"AI Provider: {request.ai_provider}")
         print(f"Has token: {token is not None}")
         print(f"User ID: {user_id}")
@@ -851,6 +859,34 @@ async def chat(request: ChatRequest, authorization: Optional[str] = Header(None)
             print(f"🔍 Gmail Send Intent: {gmail_send_intent}")
         
         print(f"{'='*60}\n")
+        conversation_history = []
+        if request.session_id:
+            try:
+                print(f"💬 Loading conversation history for session {request.session_id}...")
+                # Call Spring Boot INTERNAL API (no auth required)
+                history_response = requests.get(
+                    f"http://localhost:8080/api/chat/internal/sessions/{request.session_id}/messages",
+                    timeout=5
+                )
+                
+                if history_response.status_code == 200:
+                    messages = history_response.json()
+                    # Take last 10 messages for context (5 exchanges)
+                    recent_messages = messages[-10:] if len(messages) > 10 else messages
+                    
+                    for msg in recent_messages:
+                        role = "user" if msg["sender"] == "USER" else "assistant"
+                        conversation_history.append({
+                            "role": role,
+                            "content": msg["message"]
+                        })
+                    
+                    print(f"✅ Loaded {len(conversation_history)} messages from session history")
+                else:
+                    print(f"⚠️ Could not load session history: {history_response.status_code}")
+            except Exception as e:
+                print(f"⚠️ Error loading conversation history: {e}")
+                # Continue without history - not critical
         
         # ===== DECISION TREE: IMAGE vs AGENTS vs TOOLS =====
         # Priority: Image > Google Cloud Agent > Agent Features > Tools > Normal chat
@@ -1015,7 +1051,13 @@ async def chat(request: ChatRequest, authorization: Optional[str] = Header(None)
         # Detect tool action (YouTube, Google, Wikipedia) - ONLY if NO image
         tool_action = None
         if not has_image_input:
+            print(f"🔍 Detecting tool intent for message: {request.message}")
             tool_action = detect_tool_intent(request.message)
+            if tool_action:
+                print(f"✅ Tool action detected: {tool_action.tool} - {tool_action.query}")
+                print(f"   URL: {tool_action.url}")
+            else:
+                print(f"❌ No tool action detected")
         
         if tool_action:
             # AI xác nhận action
@@ -1043,6 +1085,7 @@ async def chat(request: ChatRequest, authorization: Optional[str] = Header(None)
 - Giải thích kiến thức rõ ràng, dễ hiểu
 - Khuyến khích học sinh tư duy và đặt câu hỏi
 - Luôn tích cực và động viên
+- Nhớ context của cuộc trò chuyện (như ChatGPT)
 
 **Phong cách giao tiếp:**
 - Thân thiện, gần gũi như người bạn 😊
@@ -1060,10 +1103,21 @@ async def chat(request: ChatRequest, authorization: Optional[str] = Header(None)
 - Nếu không chắc chắn, hãy thừa nhận và đề xuất tìm hiểu thêm
 - Khuyến khích học sinh tự suy nghĩ trước khi đưa ra đáp án
 - Sử dụng ngôn ngữ phù hợp với trình độ học sinh
+- Nhớ thông tin từ các tin nhắn trước trong phiên chat này
 """
         
         context_docs = []
         prompt = request.message
+        
+        # Build conversation context if available
+        conversation_context = ""
+        if conversation_history:
+            print(f"📝 Building conversation context from {len(conversation_history)} messages...")
+            conversation_context = "\n\n**Lịch sử cuộc trò chuyện:**\n"
+            for msg in conversation_history:
+                role_label = "Học sinh" if msg["role"] == "user" else "AI"
+                conversation_context += f"{role_label}: {msg['content']}\n"
+            conversation_context += "\n"
         
         # Nếu bật RAG, tìm kiếm context từ vector DB
         if request.use_rag and vector_db.get_count() > 0:
@@ -1074,24 +1128,24 @@ async def chat(request: ChatRequest, authorization: Optional[str] = Header(None)
                 context_text = "\n\n".join([f"📚 Tài liệu {i+1}: {doc}" for i, doc in enumerate(context_docs)])
                 prompt = f"""{system_prompt}
 
-**Tài liệu tham khảo từ khóa học:**
+{conversation_context}**Tài liệu tham khảo từ khóa học:**
 {context_text}
 
 **Câu hỏi của học sinh:**
 {request.message}
 
-Hãy trả lời dựa trên tài liệu và kiến thức của bạn. Nếu tài liệu không đủ thông tin, hãy bổ sung từ kiến thức chung."""
+Hãy trả lời dựa trên lịch sử cuộc trò chuyện, tài liệu và kiến thức của bạn. Nếu tài liệu không đủ thông tin, hãy bổ sung từ kiến thức chung."""
             else:
                 prompt = f"""{system_prompt}
 
-**Câu hỏi của học sinh:**
+{conversation_context}**Câu hỏi của học sinh:**
 {request.message}
 
-Hãy trả lời dựa trên kiến thức của bạn."""
+Hãy trả lời dựa trên lịch sử cuộc trò chuyện và kiến thức của bạn."""
         else:
             prompt = f"""{system_prompt}
 
-**Câu hỏi của học sinh:**
+{conversation_context}**Câu hỏi của học sinh:**
 {request.message}"""
         
         # Check if image is provided for vision analysis
@@ -1205,6 +1259,13 @@ Hãy trả lời dựa trên kiến thức của bạn."""
                     
                     # Use content_parts[0] which may contain context
                     groq_final_prompt = content_parts[0] if isinstance(content_parts[0], str) else request.message
+                    
+                    # Debug: Check if conversation context is in prompt
+                    if conversation_history:
+                        print(f"📝 DEBUG: Groq prompt includes {len(conversation_history)} messages of context")
+                        print(f"📝 DEBUG: Prompt preview: {groq_final_prompt[:200]}...")
+                    else:
+                        print(f"⚠️ DEBUG: No conversation history for Groq")
                     
                     ai_response = groq_client.generate_text(
                         prompt=groq_final_prompt,
