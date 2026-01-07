@@ -65,7 +65,8 @@ const QuizPage = () => {
   }
 
   if (submitted && result) {
-    const percentage = (result.score || (result.correctAnswers / result.totalQuestions) * 100);
+    // Backend already returns score as percentage (0-100)
+    const percentage = result.score;
     return (
       <Layout>
         <div className="max-w-4xl mx-auto px-4 py-8">

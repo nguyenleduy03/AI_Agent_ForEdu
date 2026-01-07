@@ -524,7 +524,28 @@ class AgentFeatures:
         try:
             headers = {"Authorization": f"Bearer {token}"}
             
-            # Try to get TVU credential
+            # First try school-credentials endpoint (correct endpoint for TVU)
+            try:
+                response = requests.get(
+                    f"{self.spring_boot_url}/api/school-credentials?decrypt=true",
+                    headers=headers,
+                    timeout=5
+                )
+                
+                logger.info(f"Get school-credentials response: {response.status_code}")
+                
+                if response.status_code == 200:
+                    cred = response.json()
+                    if cred and cred.get('decryptedUsername'):
+                        logger.info(f"Found school credential: {cred.get('decryptedUsername')}")
+                        return {
+                            'username': cred.get('decryptedUsername'),
+                            'password': cred.get('decryptedPassword')
+                        }
+            except Exception as e:
+                logger.warning(f"Error getting school-credentials: {e}")
+            
+            # Fallback: Try to get from general credentials
             response = requests.get(
                 f"{self.spring_boot_url}/api/credentials",
                 headers=headers,
@@ -984,21 +1005,62 @@ class AgentFeatures:
                     "message": "❌ Đăng nhập TVU thất bại. Vui lòng kiểm tra tài khoản."
                 }
             
-            # Calculate target week if specific date is provided
-            target_week = None
-            if target_date:
-                target_week = self.calculate_week_from_date(target_date)
-                logger.info(f"Target date: {target_date.strftime('%d/%m/%Y')}, Target week: {target_week}")
+            # Get hoc_ky list first (needed for get_current_week)
+            scraper.get_hoc_ky_list()
+            
+            # Let scraper find the correct week from API (don't use calculate_week_from_date)
+            # The scraper will find the week that contains today's date
+            target_week = None  # Let scraper determine
+            
+            logger.info(f"Getting schedule, target_week={target_week}, requested_day={requested_day}")
             
             # Get schedules for the target week (or current week if no specific date)
             all_schedules = scraper.get_schedule(week=target_week)
             
+            # Check schedule status from scraper
+            schedule_status = getattr(scraper, 'schedule_status', None)
+            weeks_with_schedule = getattr(scraper, 'weeks_with_schedule', [])
+            
             if not all_schedules:
-                return {
-                    "success": True,
-                    "message": f"📅 {day_label.capitalize()} bạn không có lớp nào.",
-                    "schedules": []
-                }
+                # Kiểm tra lý do không có lịch
+                if schedule_status == 'ended':
+                    # Học kỳ đã kết thúc
+                    if weeks_with_schedule:
+                        last_week = weeks_with_schedule[-1]
+                        return {
+                            "success": True,
+                            "message": f"📅 Học kỳ hiện tại đã kết thúc.\n\nLịch học gần nhất là {last_week.get('info', '')} với {last_week.get('count', 0)} lớp.",
+                            "schedules": [],
+                            "status": "semester_ended"
+                        }
+                    return {
+                        "success": True,
+                        "message": "📅 Học kỳ hiện tại đã kết thúc. Không có lịch học.",
+                        "schedules": [],
+                        "status": "semester_ended"
+                    }
+                elif schedule_status == 'not_started':
+                    # Học kỳ chưa bắt đầu
+                    if weeks_with_schedule:
+                        first_week = weeks_with_schedule[0]
+                        return {
+                            "success": True,
+                            "message": f"📅 Học kỳ chưa bắt đầu.\n\nLịch học sẽ bắt đầu từ {first_week.get('info', '')}.",
+                            "schedules": [],
+                            "status": "semester_not_started"
+                        }
+                    return {
+                        "success": True,
+                        "message": "📅 Học kỳ chưa bắt đầu. Chưa có lịch học.",
+                        "schedules": [],
+                        "status": "semester_not_started"
+                    }
+                else:
+                    return {
+                        "success": True,
+                        "message": f"📅 {day_label.capitalize()} bạn không có lớp nào.",
+                        "schedules": []
+                    }
             
             # Filter by requested day
             schedules = [s for s in all_schedules if s.get('day_of_week') == requested_day]

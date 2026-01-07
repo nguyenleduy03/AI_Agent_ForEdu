@@ -98,7 +98,8 @@ public class TeacherAnalyticsService {
             qr.setLessonTitle(lesson != null ? lesson.getTitle() : "N/A");
             qr.setScore(result.getScore());
             qr.setTotalQuestions(totalQuestions);
-            qr.setPercentage(totalQuestions > 0 ? (result.getScore() / totalQuestions) * 100 : 0);
+            // result.getScore() is already a percentage (0-100), no need to calculate again
+            qr.setPercentage(result.getScore());
             qr.setCompletedAt(result.getCreatedAt());
             qr.setAttemptNumber(attemptNumber);
             
@@ -230,12 +231,9 @@ public class TeacherAnalyticsService {
         response.setTotalQuizAttempts(allQuizResults.size());
         
         if (!allQuizResults.isEmpty()) {
-            // Calculate percentage scores
+            // qr.getScore() is already a percentage (0-100), no need to calculate
             List<Double> percentageScores = allQuizResults.stream()
-                    .map(qr -> {
-                        int totalQ = quizQuestionRepository.findByQuizId(qr.getQuizId()).size();
-                        return totalQ > 0 ? (qr.getScore() / totalQ) * 100 : 0.0;
-                    })
+                    .map(qr -> qr.getScore())
                     .collect(Collectors.toList());
             
             double avgScore = percentageScores.stream().mapToDouble(d -> d).average().orElse(0);

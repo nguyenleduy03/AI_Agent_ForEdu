@@ -1913,6 +1913,117 @@ CHỈ TRẢ VỀ JSON, KHÔNG THÊM TEXT KHÁC."""
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Lỗi: {str(e)}")
 
+
+class GenerateQuizPreviewRequest(BaseModel):
+    content: str
+    num_questions: int = 10
+    difficulty: str = "medium"
+    additional_text: Optional[str] = None
+    file_content: Optional[str] = None
+    
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "content": "Python là ngôn ngữ lập trình bậc cao...",
+                "num_questions": 10,
+                "difficulty": "medium",
+                "additional_text": "Tập trung vào cú pháp cơ bản",
+                "file_content": "Nội dung từ file PDF..."
+            }
+        }
+    )
+
+
+@app.post("/api/ai/generate-quiz-preview", tags=["AI - Extended"])
+async def generate_quiz_preview(request: GenerateQuizPreviewRequest):
+    """Tạo preview câu hỏi trắc nghiệm với text và file bổ sung - Giáo viên có thể xem và chỉnh sửa trước khi lưu"""
+    try:
+        import re
+        import json as json_lib
+        
+        if request.num_questions < 1 or request.num_questions > 50:
+            raise HTTPException(status_code=400, detail="Số câu hỏi phải từ 1-50")
+        
+        difficulty_map = {
+            "easy": "dễ, cơ bản",
+            "medium": "trung bình",
+            "hard": "khó, nâng cao"
+        }
+        
+        difficulty_desc = difficulty_map.get(request.difficulty.lower(), "trung bình")
+        
+        # Combine all content sources
+        combined_content = f"Nội dung bài học:\n{request.content}\n\n"
+        
+        if request.additional_text:
+            combined_content += f"Yêu cầu bổ sung từ giáo viên:\n{request.additional_text}\n\n"
+        
+        if request.file_content:
+            combined_content += f"Tài liệu tham khảo:\n{request.file_content}\n\n"
+        
+        prompt = f"""Dựa trên nội dung sau, hãy tạo {request.num_questions} câu hỏi trắc nghiệm với độ khó {difficulty_desc}.
+
+{combined_content}
+
+Yêu cầu:
+- Tạo đúng {request.num_questions} câu hỏi
+- Mỗi câu có 4 đáp án A, B, C, D
+- Chỉ 1 đáp án đúng
+- Câu hỏi phải liên quan trực tiếp đến nội dung
+- Nếu có yêu cầu bổ sung từ giáo viên, ưu tiên theo yêu cầu đó
+- Trả về JSON array với format:
+
+[
+  {{
+    "question": "Câu hỏi?",
+    "optionA": "Đáp án A",
+    "optionB": "Đáp án B",
+    "optionC": "Đáp án C",
+    "optionD": "Đáp án D",
+    "correctAnswer": "A",
+    "explanation": "Giải thích ngắn gọn"
+  }}
+]
+
+CHỈ TRẢ VỀ JSON, KHÔNG THÊM TEXT KHÁC."""
+
+        model = genai.GenerativeModel('gemini-2.5-flash')
+        response = model.generate_content(prompt)
+        
+        json_text = response.text.strip()
+        json_match = re.search(r'\[.*\]', json_text, re.DOTALL)
+        if not json_match:
+            raise HTTPException(status_code=500, detail="Không thể parse JSON từ AI response")
+        
+        questions_data = json_lib.loads(json_match.group())
+        
+        # Format questions for frontend
+        formatted_questions = []
+        for q in questions_data:
+            formatted_questions.append({
+                "question": q.get('question', ''),
+                "optionA": q.get('optionA', q.get('a', '')),
+                "optionB": q.get('optionB', q.get('b', '')),
+                "optionC": q.get('optionC', q.get('c', '')),
+                "optionD": q.get('optionD', q.get('d', '')),
+                "correctAnswer": q.get('correctAnswer', q.get('correct', 'A')).upper(),
+                "explanation": q.get('explanation', '')
+            })
+        
+        # Generate title and description
+        title = f"Kiểm tra - {difficulty_desc.capitalize()}"
+        description = f"Bài kiểm tra được tạo tự động bởi AI với {request.num_questions} câu hỏi"
+        
+        return {
+            "title": title,
+            "description": description,
+            "difficulty": request.difficulty.upper(),
+            "questions": formatted_questions
+        }
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Lỗi: {str(e)}")
+
 @app.post("/api/ai/summarize", response_model=SummarizeResponse, tags=["AI - Extended"])
 async def summarize(request: SummarizeRequest):
     """Tóm tắt văn bản"""

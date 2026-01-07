@@ -175,41 +175,105 @@ class TVUScraper:
     
     def get_current_week(self) -> int:
         """
-        Tính tuần học kỳ hiện tại dựa trên ngày bắt đầu học kỳ
+        Tính tuần học kỳ hiện tại
         
-        TVU HK2 2025-2026 bắt đầu từ 01/09/2025 là tuần 5
+        Tìm tuần có lịch học gần với ngày hiện tại nhất
+        Trả về: số tuần hoặc -1 nếu không có lịch
         """
         today = datetime.now()
         
-        # Lấy ngày bắt đầu học kỳ từ API nếu có
-        if hasattr(self, 'current_hoc_ky_start'):
-            hk_start = self.current_hoc_ky_start
-            base_week = self.current_hoc_ky_base_week
-        else:
-            # Mặc định: HK2 2025-2026 bắt đầu 01/09/2025, là tuần 5
-            current_month = today.month
-            current_year = today.year
-            
-            if 8 <= current_month <= 12:
-                # HK1 hoặc HK2: bắt đầu từ tháng 9
-                hk_start = datetime(current_year, 9, 1)
-                base_week = 5  # Tuần đầu tiên của HK
-            elif 1 <= current_month <= 5:
-                # HK2: bắt đầu từ tháng 2
-                hk_start = datetime(current_year, 2, 1)
-                base_week = 1
-            else:
-                # HK3 (hè): bắt đầu từ tháng 6
-                hk_start = datetime(current_year, 6, 1)
-                base_week = 1
+        # Nếu đã có thông tin từ API
+        if hasattr(self, 'current_week_from_api') and self.current_week_from_api:
+            logger.info(f"Using week from API: {self.current_week_from_api}")
+            return self.current_week_from_api
         
-        # Tính số tuần từ ngày bắt đầu
-        days_diff = (today - hk_start).days
-        week_offset = days_diff // 7
-        tuan_hoc_ky = base_week + week_offset
+        # Thử lấy tuần từ API response
+        try:
+            if self.is_logged_in and self.current_hoc_ky:
+                url = f"{self.dkmh_api_url}/sch/w-locdstkbtuanusertheohocky"
+                payload = {
+                    "filter": {
+                        "hoc_ky": self.current_hoc_ky,
+                        "tuan": 1
+                    },
+                    "additional": {
+                        "paging": {"limit": 100, "page": 1}
+                    }
+                }
+                
+                response = self.session.post(url, json=payload, timeout=15)
+                if response.status_code == 200:
+                    data = response.json()
+                    if data.get('data') and data['data'].get('ds_tuan_tkb'):
+                        ds_tuan = data['data']['ds_tuan_tkb']
+                        
+                        # Tìm tuần có lịch học và parse ngày
+                        weeks_with_schedule = []
+                        for tuan in ds_tuan:
+                            tuan_num = tuan.get('tuan_hoc_ky', tuan.get('tuan', 0))
+                            ds_tkb = tuan.get('ds_thoi_khoa_bieu', [])
+                            thong_tin = tuan.get('thong_tin_tuan', '')
+                            
+                            if ds_tkb and tuan_num > 0:
+                                # Parse date range from thong_tin: "Tuần X [từ ngày DD/MM/YYYY đến ngày DD/MM/YYYY]"
+                                start_date = None
+                                end_date = None
+                                date_match = re.search(r'từ ngày (\d{2}/\d{2}/\d{4}) đến ngày (\d{2}/\d{2}/\d{4})', thong_tin)
+                                if date_match:
+                                    try:
+                                        start_date = datetime.strptime(date_match.group(1), '%d/%m/%Y')
+                                        end_date = datetime.strptime(date_match.group(2), '%d/%m/%Y')
+                                    except:
+                                        pass
+                                
+                                weeks_with_schedule.append({
+                                    'week': tuan_num,
+                                    'info': thong_tin,
+                                    'count': len(ds_tkb),
+                                    'start_date': start_date,
+                                    'end_date': end_date
+                                })
+                        
+                        self.weeks_with_schedule = weeks_with_schedule
+                        
+                        if weeks_with_schedule:
+                            # Tìm tuần chứa ngày hiện tại
+                            for w in weeks_with_schedule:
+                                if w['start_date'] and w['end_date']:
+                                    if w['start_date'] <= today <= w['end_date']:
+                                        self.current_week_from_api = w['week']
+                                        logger.info(f"Found current week: {w['week']} ({w['info']})")
+                                        return w['week']
+                            
+                            # Không có tuần nào chứa ngày hiện tại
+                            # Kiểm tra xem ngày hiện tại có trước hay sau học kỳ
+                            first_week = weeks_with_schedule[0]
+                            last_week = weeks_with_schedule[-1]
+                            
+                            if first_week['start_date'] and today < first_week['start_date']:
+                                # Học kỳ chưa bắt đầu - trả về tuần đầu tiên
+                                self.current_week_from_api = first_week['week']
+                                self.schedule_status = 'not_started'
+                                logger.info(f"Semester not started yet, first week: {first_week['week']}")
+                                return first_week['week']
+                            elif last_week['end_date'] and today > last_week['end_date']:
+                                # Học kỳ đã kết thúc - trả về -1 để báo không có lịch
+                                self.schedule_status = 'ended'
+                                logger.info(f"Semester ended, last week was: {last_week['week']}")
+                                return -1
+                            else:
+                                # Trong khoảng học kỳ nhưng không có lịch tuần này
+                                # Trả về tuần gần nhất có lịch
+                                self.current_week_from_api = first_week['week']
+                                self.schedule_status = 'no_class_this_week'
+                                logger.info(f"No class this week, using first available: {first_week['week']}")
+                                return first_week['week']
+        except Exception as e:
+            logger.warning(f"Error getting week from API: {e}")
         
-        logger.info(f"Current week calculated: {tuan_hoc_ky} (base: {base_week}, offset: {week_offset})")
-        return tuan_hoc_ky
+        # Fallback: Trả về -1 (không có lịch)
+        logger.info("Fallback: no schedule found")
+        return -1
     
     def get_schedule(self, week: int = None, hoc_ky: str = None) -> List[Dict]:
         """
@@ -217,8 +281,11 @@ class TVUScraper:
         Endpoint: POST /dkmh/api/sch/w-locdstkbtuanusertheohocky
         
         Args:
-            week: Tuần học (1-20), mặc định là tuần hiện tại
+            week: Tuần học (1-20), mặc định là tuần hiện tại. -1 = không có lịch
             hoc_ky: Mã học kỳ (vd: "20241"), mặc định là học kỳ hiện tại
+            
+        Returns:
+            List[Dict]: Danh sách lịch học, hoặc [] nếu không có
         """
         if not self.is_logged_in:
             logger.error("Not logged in!")
@@ -233,7 +300,12 @@ class TVUScraper:
             
             # Sử dụng tham số hoặc giá trị mặc định
             target_hoc_ky = hoc_ky or self.current_hoc_ky
-            target_week = week or self.get_current_week()
+            target_week = week if week is not None else self.get_current_week()
+            
+            # Nếu week = -1, nghĩa là không có lịch (học kỳ đã kết thúc)
+            if target_week == -1:
+                logger.info("No schedule available (semester ended or no schedule)")
+                return []
             
             # Nếu vẫn không có học kỳ, tính từ ngày hiện tại
             if not target_hoc_ky:
@@ -263,12 +335,6 @@ class TVUScraper:
                     }
                 }
             }
-            
-            # Alternative payload format (nếu format trên không work)
-            # payload = {
-            #     "hocky": target_hoc_ky,
-            #     "tuan": target_week
-            # }
             
             logger.info(f"POST {url}")
             logger.info(f"Payload: hoc_ky={target_hoc_ky}, tuan={target_week}")

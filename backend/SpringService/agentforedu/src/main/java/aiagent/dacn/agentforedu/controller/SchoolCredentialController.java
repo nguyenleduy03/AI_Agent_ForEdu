@@ -39,9 +39,24 @@ public class SchoolCredentialController {
     
     @GetMapping
     @Operation(summary = "Lấy tài khoản trường", description = "Lấy thông tin tài khoản trường đã lưu")
-    public ResponseEntity<?> getCredentials(@AuthenticationPrincipal User user) {
+    public ResponseEntity<?> getCredentials(
+            @AuthenticationPrincipal User user,
+            @RequestParam(required = false, defaultValue = "false") boolean decrypt) {
         return credentialService.getCredentials(user.getId())
-                .map(ResponseEntity::ok)
+                .map(cred -> {
+                    if (decrypt) {
+                        // Return decrypted credentials
+                        java.util.Map<String, Object> result = new java.util.HashMap<>();
+                        result.put("id", cred.getId());
+                        result.put("decryptedUsername", credentialService.decrypt(cred.getEncryptedUsername()));
+                        result.put("decryptedPassword", credentialService.decrypt(cred.getEncryptedPassword()));
+                        result.put("schoolUrl", cred.getSchoolUrl());
+                        result.put("lastSyncedAt", cred.getLastSyncedAt());
+                        result.put("isActive", cred.getIsActive());
+                        return ResponseEntity.ok(result);
+                    }
+                    return ResponseEntity.ok(cred);
+                })
                 .orElse(ResponseEntity.notFound().build());
     }
     
