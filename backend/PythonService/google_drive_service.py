@@ -264,7 +264,8 @@ async def upload_file(
     folder_id: Optional[str] = Form(None),
     course_id: Optional[int] = Form(None),
     course_name: Optional[str] = Form(None),
-    lesson_id: Optional[int] = Form(None)
+    lesson_id: Optional[int] = Form(None),
+    authorization: Optional[str] = Header(None)
 ):
     """
     Upload file lên Google Drive của user
@@ -287,6 +288,39 @@ async def upload_file(
     - Videos: MP4, AVI, MOV, MKV
     - Images: JPG, PNG, GIF
     """
+    # ⚠️ SECURITY: Verify JWT token if provided
+    # Frontend should send Authorization header for security
+    # But we keep backward compatibility by allowing user_id from form
+    
+    verified_user_id = None
+    
+    if authorization and authorization.startswith("Bearer "):
+        token = authorization.replace("Bearer ", "")
+        # Verify token with Spring Boot
+        try:
+            response = requests.get(
+                f"{SPRING_BOOT_URL}/api/auth/profile",
+                headers={"Authorization": f"Bearer {token}"},
+                timeout=5
+            )
+            if response.status_code == 200:
+                user_data = response.json()
+                verified_user_id = user_data.get('id')
+                print(f"✅ Verified user_id from token: {verified_user_id}")
+        except Exception as e:
+            print(f"⚠️  Token verification failed: {e}")
+    
+    # Use verified user_id if available, otherwise use form user_id
+    final_user_id = verified_user_id if verified_user_id else user_id
+    
+    if not final_user_id:
+        raise HTTPException(
+            status_code=401,
+            detail="Unauthorized: Please login to upload files"
+        )
+    
+    print(f"📤 Upload request: user_id={final_user_id}, file={file.filename}, course_id={course_id}")
+    
     # Validate file size (max 100MB for free tier)
     MAX_SIZE = 100 * 1024 * 1024  # 100MB
     
@@ -297,7 +331,7 @@ async def upload_file(
         raise HTTPException(status_code=413, detail="File quá lớn. Giới hạn 100MB.")
     
     # Get user's access token
-    access_token = await get_user_access_token(user_id)
+    access_token = await get_user_access_token(final_user_id)
     
     # Determine target folder
     target_folder_id = folder_id

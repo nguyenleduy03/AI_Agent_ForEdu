@@ -56,8 +56,16 @@ export const driveService = {
       formData.append('lesson_id', lessonId.toString());
     }
 
+    // Get JWT token from localStorage
+    const token = localStorage.getItem('token');
+    const headers: HeadersInit = {};
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
     const response = await fetch(`${FASTAPI_URL}/api/drive/upload`, {
       method: 'POST',
+      headers,
       body: formData,
     });
 

@@ -34,6 +34,7 @@ import TeacherDashboard from './pages/TeacherDashboard';
 import EditLessonPage from './pages/EditLessonPage';
 import EditCoursePage from './pages/EditCoursePage';
 import EmailDraftPage from './pages/EmailDraftPage';
+import AdminPage from './pages/AdminPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -84,6 +85,7 @@ function App() {
           <Route path="/teacher" element={<ProtectedRoute><TeacherDashboard /></ProtectedRoute>} />
           <Route path="/teacher/courses/:courseId" element={<ProtectedRoute><TeacherCourseDashboard /></ProtectedRoute>} />
           <Route path="/teacher/courses/:courseId/students/:studentId" element={<ProtectedRoute><StudentDetailPage /></ProtectedRoute>} />
+          <Route path="/admin" element={<ProtectedRoute><AdminPage /></ProtectedRoute>} />
         </Routes>
       </Router>
       <Toaster position="top-right" />

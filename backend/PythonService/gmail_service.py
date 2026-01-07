@@ -10,6 +10,8 @@ NOTE: Using synchronous requests library (not async) for compatibility
 """
 
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 import base64
 from typing import Dict, List, Optional
 from datetime import datetime
@@ -25,6 +27,26 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Create session with retry logic for SSL errors
+def create_retry_session(retries=3, backoff_factor=0.3):
+    """
+    Create requests session with retry logic
+    Helps with intermittent SSL errors on Windows
+    """
+    session = requests.Session()
+    retry = Retry(
+        total=retries,
+        read=retries,
+        connect=retries,
+        backoff_factor=backoff_factor,
+        status_forcelist=(500, 502, 503, 504),
+        allowed_methods=["HEAD", "GET", "POST", "PUT", "DELETE", "OPTIONS", "TRACE"]
+    )
+    adapter = HTTPAdapter(max_retries=retry, pool_connections=10, pool_maxsize=20)
+    session.mount('http://', adapter)
+    session.mount('https://', adapter)
+    return session
+
 # Configuration
 OAUTH_SERVICE_URL = os.getenv("OAUTH_SERVICE_URL", "http://localhost:8003")
 GMAIL_API_URL = "https://gmail.googleapis.com/gmail/v1"
@@ -39,6 +61,7 @@ class GmailService:
     def __init__(self, oauth_service_url: str = OAUTH_SERVICE_URL):
         self.oauth_service_url = oauth_service_url
         self.gmail_api = GMAIL_API_URL
+        self.session = create_retry_session()  # Use session with retry logic
     
     def _get_access_token(self, user_id: int) -> Optional[str]:
         """
@@ -46,7 +69,7 @@ class GmailService:
         Tự động refresh nếu expired
         """
         try:
-            response = requests.get(
+            response = self.session.get(
                 f"{self.oauth_service_url}/api/oauth/google/token/{user_id}",
                 timeout=10
             )
@@ -105,7 +128,7 @@ class GmailService:
                 params["q"] = query
             
             # Call Gmail API
-            response = requests.get(
+            response = self.session.get(
                 f"{self.gmail_api}/users/me/messages",
                 headers=self._get_headers(access_token),
                 params=params,
@@ -153,7 +176,7 @@ class GmailService:
             if not access_token:
                 return {"success": False, "error": "Chưa kết nối Google"}
             
-            response = requests.get(
+            response = self.session.get(
                 f"{self.gmail_api}/users/me/messages/{message_id}",
                 headers=self._get_headers(access_token),
                 params={"format": "full"},
@@ -247,7 +270,7 @@ class GmailService:
                 return {"success": False, "error": "Chưa kết nối Google. Vui lòng kết nối trong Settings."}
             
             # Get sender email from profile
-            profile_response = requests.get(
+            profile_response = self.session.get(
                 f"{self.gmail_api}/users/me/profile",
                 headers=self._get_headers(access_token),
                 timeout=10
@@ -278,7 +301,7 @@ class GmailService:
             raw_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
             
             # Send via Gmail API
-            response = requests.post(
+            response = self.session.post(
                 f"{self.gmail_api}/users/me/messages/send",
                 headers=self._get_headers(access_token),
                 json={"raw": raw_message},

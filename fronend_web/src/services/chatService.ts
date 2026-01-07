@@ -14,6 +14,11 @@ export const chatService = {
     return response.data;
   },
 
+  updateSessionTitle: async (sessionId: number, title: string): Promise<ChatSession> => {
+    const response = await springApi.put(`/api/chat/sessions/${sessionId}/title`, { title });
+    return response.data;
+  },
+
   getMessages: async (sessionId: number): Promise<ChatMessage[]> => {
     const response = await springApi.get(ENDPOINTS.CHAT.MESSAGES(sessionId));
     return response.data;
@@ -61,5 +66,22 @@ export const chatService = {
   getGroqModels: async (): Promise<any> => {
     const response = await fastApi.get(ENDPOINTS.AI.GROQ_MODELS);
     return response.data;
+  },
+
+  // Generate title from AI
+  generateTitle: async (messages: Array<{role: string, content: string}>): Promise<string> => {
+    try {
+      const response = await fastApi.post('/api/ai/generate-title', { messages });
+      return response.data.title || 'New Chat';
+    } catch (error) {
+      console.error('Error generating title:', error);
+      // Fallback: use first user message
+      const firstUserMsg = messages.find(m => m.role === 'user');
+      if (firstUserMsg) {
+        const content = firstUserMsg.content;
+        return content.length > 30 ? content.substring(0, 30) + '...' : content;
+      }
+      return 'New Chat';
+    }
   },
 };

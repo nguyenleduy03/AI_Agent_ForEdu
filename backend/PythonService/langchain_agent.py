@@ -40,6 +40,13 @@ try:
 except ImportError:
     CALENDAR_AVAILABLE = False
 
+try:
+    from agent_features import AgentFeatures
+    AGENT_FEATURES_AVAILABLE = True
+except ImportError:
+    AGENT_FEATURES_AVAILABLE = False
+    AgentFeatures = None
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -58,6 +65,12 @@ class LangChainAgent:
             raise ImportError("LangChain not installed")
         
         self.spring_boot_url = spring_boot_url
+        
+        # Initialize AgentFeatures for schedule and other features
+        if AGENT_FEATURES_AVAILABLE:
+            self.agent_features = AgentFeatures(spring_boot_url=spring_boot_url)
+        else:
+            self.agent_features = None
         
         # Initialize LLM
         self.llm = ChatGoogleGenerativeAI(
@@ -183,13 +196,32 @@ class LangChainAgent:
             import json
             params = json.loads(input_str)
             user_id = params.get("user_id")
-            date_str = params.get("date", datetime.now().strftime("%Y-%m-%d"))
+            date_str = params.get("date", "")
             
-            # TODO: Implement actual schedule fetching
-            # For now, return mock data
-            return f"Lịch học ngày {date_str}: Toán 8:00-10:00, Lý 14:00-16:00"
+            # Get token from user_id (need to call Spring Boot API)
+            # For now, we need token to be passed in params
+            token = params.get("token")
+            
+            if not token:
+                return "❌ Cần token để lấy thời khóa biểu. Vui lòng đăng nhập."
+            
+            if not self.agent_features:
+                return "❌ Agent features không khả dụng."
+            
+            # Build message from date_str
+            message = f"lịch học {date_str}" if date_str else "lịch học hôm nay"
+            
+            # Call actual schedule function
+            result = self.agent_features.get_schedule(token=token, message=message, force_sync=False)
+            
+            if result.get("success"):
+                return result.get("message", "Không có lịch học")
+            else:
+                return result.get("message", "❌ Không thể lấy thời khóa biểu")
+                
         except Exception as e:
-            return f"Lỗi khi lấy lịch: {str(e)}"
+            logger.error(f"Get schedule tool error: {e}")
+            return f"❌ Lỗi khi lấy lịch: {str(e)}"
     
     def _send_email_tool(self, input_str: str) -> str:
         """Tool: Gửi email"""

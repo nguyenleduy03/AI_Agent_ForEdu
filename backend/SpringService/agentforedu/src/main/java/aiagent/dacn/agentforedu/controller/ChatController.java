@@ -40,6 +40,16 @@ public class ChatController {
         return ResponseEntity.ok(chatService.createSession(request, user));
     }
     
+    @PutMapping("/sessions/{id}/title")
+    @Operation(summary = "Cập nhật tiêu đề phiên chat")
+    public ResponseEntity<ChatSessionResponse> updateSessionTitle(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> request,
+            @AuthenticationPrincipal User user) {
+        String title = request.get("title");
+        return ResponseEntity.ok(chatService.updateSessionTitle(id, title, user));
+    }
+    
     @GetMapping("/sessions/{id}/messages")
     @Operation(summary = "Lấy danh sách tin nhắn trong phiên chat")
     public ResponseEntity<List<ChatMessageResponse>> getSessionMessages(

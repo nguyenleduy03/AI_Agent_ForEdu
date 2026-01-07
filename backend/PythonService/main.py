@@ -2052,6 +2052,70 @@ Yêu cầu:
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Lỗi: {str(e)}")
 
+
+class GenerateTitleRequest(BaseModel):
+    messages: List[Dict[str, str]]  # [{"role": "user/ai", "content": "..."}]
+    
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "messages": [
+                    {"role": "user", "content": "Giải thích về machine learning"},
+                    {"role": "ai", "content": "Machine learning là..."}
+                ]
+            }
+        }
+    )
+
+
+@app.post("/api/ai/generate-title", tags=["AI - Extended"])
+async def generate_chat_title(request: GenerateTitleRequest):
+    """Tạo tiêu đề ngắn gọn cho cuộc hội thoại dựa trên nội dung chat"""
+    try:
+        if not request.messages:
+            return {"title": "New Chat"}
+        
+        # Get first few messages for context
+        context_messages = request.messages[:4]  # First 2 exchanges
+        
+        conversation_text = ""
+        for msg in context_messages:
+            role = "User" if msg.get("role") == "user" else "AI"
+            conversation_text += f"{role}: {msg.get('content', '')[:200]}\n"
+        
+        prompt = f"""Dựa trên đoạn hội thoại sau, hãy tạo một tiêu đề ngắn gọn (tối đa 6 từ) mô tả chủ đề chính:
+
+{conversation_text}
+
+Yêu cầu:
+- Tiêu đề ngắn gọn, súc tích (3-6 từ)
+- Mô tả chủ đề chính của cuộc hội thoại
+- Không dùng dấu ngoặc kép
+- Viết bằng tiếng Việt nếu hội thoại bằng tiếng Việt
+
+CHỈ TRẢ VỀ TIÊU ĐỀ, KHÔNG THÊM GÌ KHÁC."""
+
+        model = genai.GenerativeModel('gemini-2.0-flash-exp')
+        response = model.generate_content(prompt)
+        
+        title = response.text.strip()
+        # Clean up title
+        title = title.replace('"', '').replace("'", "").strip()
+        # Limit length
+        if len(title) > 50:
+            title = title[:47] + "..."
+        
+        return {"title": title}
+    
+    except Exception as e:
+        print(f"Error generating title: {e}")
+        # Fallback: use first user message
+        for msg in request.messages:
+            if msg.get("role") == "user":
+                content = msg.get("content", "New Chat")[:30]
+                return {"title": content + "..." if len(msg.get("content", "")) > 30 else content}
+        return {"title": "New Chat"}
+
 @app.post("/api/ai/explain", response_model=ExplainResponse, tags=["AI - Extended"])
 async def explain(request: ExplainRequest):
     """Giải thích như một giáo viên"""

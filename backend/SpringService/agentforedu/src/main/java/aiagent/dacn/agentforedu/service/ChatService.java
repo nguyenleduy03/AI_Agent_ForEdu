@@ -9,9 +9,11 @@ import aiagent.dacn.agentforedu.entity.User;
 import aiagent.dacn.agentforedu.repository.ChatMessageRepository;
 import aiagent.dacn.agentforedu.repository.ChatSessionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,12 +21,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ChatService {
     
+    private static final int MAX_SESSIONS_LIMIT = 20;
+    
     private final ChatSessionRepository sessionRepository;
     private final ChatMessageRepository messageRepository;
     
     @Transactional(readOnly = true)
     public List<ChatSessionResponse> getUserSessions(User user) {
-        return sessionRepository.findByUserIdOrderByCreatedAtDesc(user.getId()).stream()
+        return sessionRepository.findByUserIdOrderByUpdatedAtDesc(user.getId(), PageRequest.of(0, MAX_SESSIONS_LIMIT)).stream()
                 .map(this::toSessionResponse)
                 .collect(Collectors.toList());
     }
@@ -35,6 +39,21 @@ public class ChatService {
         session.setUserId(user.getId());
         session.setTitle(request.getTitle() != null ? request.getTitle() : "New Chat");
         
+        ChatSession saved = sessionRepository.save(session);
+        return toSessionResponse(saved);
+    }
+    
+    @Transactional
+    public ChatSessionResponse updateSessionTitle(Long sessionId, String title, User currentUser) {
+        ChatSession session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy phiên chat"));
+        
+        if (!session.getUserId().equals(currentUser.getId())) {
+            throw new RuntimeException("Bạn không có quyền cập nhật phiên chat này");
+        }
+        
+        session.setTitle(title);
+        session.setUpdatedAt(LocalDateTime.now());
         ChatSession saved = sessionRepository.save(session);
         return toSessionResponse(saved);
     }
@@ -72,6 +91,11 @@ public class ChatService {
         message.setMessage(messageText);
         
         ChatMessage saved = messageRepository.save(message);
+        
+        // Update session's updatedAt
+        session.setUpdatedAt(LocalDateTime.now());
+        sessionRepository.save(session);
+        
         return toMessageResponse(saved);
     }
     
@@ -86,7 +110,14 @@ public class ChatService {
             throw new RuntimeException("Bạn không có quyền xóa phiên chat này");
         }
         
+        // Delete all messages first
+        messageRepository.deleteBySessionId(sessionId);
         sessionRepository.deleteById(sessionId);
+    }
+    
+    @Transactional(readOnly = true)
+    public int getSessionMessageCount(Long sessionId) {
+        return messageRepository.countBySessionId(sessionId);
     }
     
     private ChatSessionResponse toSessionResponse(ChatSession session) {
@@ -95,6 +126,7 @@ public class ChatService {
         response.setUserId(session.getUserId());
         response.setTitle(session.getTitle());
         response.setCreatedAt(session.getCreatedAt());
+        response.setUpdatedAt(session.getUpdatedAt());
         return response;
     }
     

@@ -14,4 +14,5 @@ public class ChatSessionResponse {
     private Long userId;
     private String title;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }
