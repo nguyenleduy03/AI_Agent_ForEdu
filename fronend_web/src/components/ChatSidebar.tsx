@@ -132,22 +132,22 @@ const ChatSidebar = ({
     <motion.div
       initial={{ width: 280 }}
       animate={{ width: 280 }}
-      className="flex-shrink-0 bg-gradient-to-b from-blue-50 via-purple-50 to-pink-50 border-r border-purple-200/50 flex flex-col h-full"
+      className="flex-shrink-0 bg-gradient-to-b from-green-50 via-emerald-50 to-teal-50 border-r border-green-200/50 flex flex-col h-full"
     >
       {/* Header */}
-      <div className="p-4 flex items-center justify-between border-b border-purple-200/50">
+      <div className="p-4 flex items-center justify-between border-b border-green-200/50">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 flex items-center justify-center shadow-lg">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 flex items-center justify-center shadow-lg">
             <Sparkles className="w-4 h-4 text-white" />
           </div>
-          <span className="font-semibold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">Lịch sử chat</span>
+          <span className="font-semibold bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 bg-clip-text text-transparent">Lịch sử chat</span>
         </div>
         <button
           onClick={onToggleCollapse}
           className="p-2 hover:bg-white/60 rounded-lg transition-colors"
           title="Thu gọn"
         >
-          <ChevronLeft className="w-4 h-4 text-purple-600" />
+          <ChevronLeft className="w-4 h-4 text-green-600" />
         </button>
       </div>
 
@@ -155,7 +155,7 @@ const ChatSidebar = ({
       <div className="px-3 pb-3">
         <button
           onClick={onNewSession}
-          className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white rounded-xl font-medium shadow-lg shadow-purple-500/20 hover:shadow-xl hover:shadow-purple-500/30 transition-all hover:-translate-y-0.5"
+          className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 text-white rounded-xl font-medium shadow-lg shadow-green-500/20 hover:shadow-xl hover:shadow-green-500/30 transition-all hover:-translate-y-0.5"
         >
           <Plus className="w-5 h-5" />
           <span>Cuộc hội thoại mới</span>
@@ -163,7 +163,7 @@ const ChatSidebar = ({
       </div>
 
       {/* Sessions List */}
-      <div className="flex-1 overflow-y-auto px-2 pb-4 scrollbar-thin scrollbar-thumb-purple-300 scrollbar-track-transparent">
+      <div className="flex-1 overflow-y-auto px-2 pb-4 scrollbar-thin scrollbar-thumb-green-300 scrollbar-track-transparent">
         <AnimatePresence>
           {sessions.map((session, index) => (
             <motion.div
@@ -174,7 +174,7 @@ const ChatSidebar = ({
               transition={{ delay: index * 0.03 }}
               className={`group relative mb-1 rounded-xl transition-all ${
                 currentSessionId === session.id
-                  ? 'bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 border border-purple-300 shadow-sm'
+                  ? 'bg-gradient-to-r from-green-100 via-emerald-100 to-teal-100 border border-green-300 shadow-sm'
                   : 'hover:bg-white/60'
               }`}
             >
@@ -184,7 +184,7 @@ const ChatSidebar = ({
                     type="text"
                     value={editTitle}
                     onChange={(e) => setEditTitle(e.target.value)}
-                    className="flex-1 px-3 py-2 text-sm bg-white border border-purple-300 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="flex-1 px-3 py-2 text-sm bg-white border border-green-300 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500"
                     autoFocus
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') handleSaveEdit();
@@ -206,22 +206,22 @@ const ChatSidebar = ({
                   <div className="flex items-start gap-3">
                     <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 shadow-sm ${
                       currentSessionId === session.id
-                        ? 'bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600'
-                        : 'bg-gradient-to-r from-blue-200 to-purple-200'
+                        ? 'bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600'
+                        : 'bg-gradient-to-r from-green-200 to-emerald-200'
                     }`}>
                       <MessageSquare className={`w-4 h-4 ${
-                        currentSessionId === session.id ? 'text-white' : 'text-purple-600'
+                        currentSessionId === session.id ? 'text-white' : 'text-green-600'
                       }`} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className={`text-sm font-medium truncate ${
-                        currentSessionId === session.id ? 'text-purple-800' : 'text-gray-700'
+                        currentSessionId === session.id ? 'text-green-800' : 'text-gray-700'
                       }`}>
                         {session.title}
                       </p>
                       <div className="flex items-center gap-1 mt-1">
-                        <Clock className="w-3 h-3 text-purple-400" />
-                        <p className="text-xs text-purple-500">
+                        <Clock className="w-3 h-3 text-green-400" />
+                        <p className="text-xs text-green-500">
                           {formatDate(session.updatedAt || session.createdAt)}
                         </p>
                       </div>
@@ -238,7 +238,7 @@ const ChatSidebar = ({
                       e.stopPropagation();
                       handleStartEdit(session);
                     }}
-                    className="p-2 text-purple-400 hover:text-purple-600 hover:bg-white rounded-lg transition-colors shadow-sm"
+                    className="p-2 text-green-400 hover:text-green-600 hover:bg-white rounded-lg transition-colors shadow-sm"
                     title="Đổi tên"
                   >
                     <Edit2 className="w-3.5 h-3.5" />
@@ -248,7 +248,7 @@ const ChatSidebar = ({
                       e.stopPropagation();
                       handleDelete(session.id);
                     }}
-                    className="p-2 text-purple-400 hover:text-red-500 hover:bg-white rounded-lg transition-colors shadow-sm"
+                    className="p-2 text-green-400 hover:text-red-500 hover:bg-white rounded-lg transition-colors shadow-sm"
                     title="Xóa"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -262,18 +262,18 @@ const ChatSidebar = ({
         {/* Empty State */}
         {sessions.length === 0 && (
           <div className="text-center py-12">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-r from-blue-100 to-purple-100 flex items-center justify-center">
-              <MessageSquare className="w-8 h-8 text-purple-500" />
+            <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-r from-green-100 to-emerald-100 flex items-center justify-center">
+              <MessageSquare className="w-8 h-8 text-green-500" />
             </div>
             <p className="text-sm text-gray-600">Chưa có cuộc hội thoại</p>
-            <p className="text-xs text-purple-500 mt-1">Nhấn nút trên để bắt đầu</p>
+            <p className="text-xs text-green-500 mt-1">Nhấn nút trên để bắt đầu</p>
           </div>
         )}
       </div>
 
       {/* Footer */}
-      <div className="p-3 border-t border-purple-200/50">
-        <p className="text-xs text-purple-600 text-center font-medium">
+      <div className="p-3 border-t border-green-200/50">
+        <p className="text-xs text-green-600 text-center font-medium">
           Hiển thị {sessions.length} cuộc hội thoại gần nhất
         </p>
       </div>

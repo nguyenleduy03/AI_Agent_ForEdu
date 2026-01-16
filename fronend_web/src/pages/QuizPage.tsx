@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Trophy, ArrowLeft, CheckCircle, XCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { Trophy, ArrowLeft, CheckCircle, XCircle, ChevronDown, ChevronUp, Clock, AlertTriangle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Layout from '../components/Layout';
 import { quizService } from '../services/quizService';
@@ -94,7 +94,7 @@ const QuizPage = () => {
             <div className="flex gap-4 justify-center">
               <button
                 onClick={() => navigate('/dashboard')}
-                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all"
+                className="px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all"
               >
                 Về Dashboard
               </button>
@@ -191,9 +191,9 @@ const QuizPage = () => {
 
                       {/* Explanation */}
                       {qr.explanation && (
-                        <div className="mt-4 ml-14 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                          <p className="text-sm font-semibold text-blue-800 mb-1">💡 Giải thích:</p>
-                          <p className="text-blue-700">{qr.explanation}</p>
+                        <div className="mt-4 ml-14 p-4 bg-green-50 rounded-lg border border-green-200">
+                          <p className="text-sm font-semibold text-green-800 mb-1">💡 Giải thích:</p>
+                          <p className="text-green-700">{qr.explanation}</p>
                         </div>
                       )}
                     </motion.div>
@@ -229,6 +229,41 @@ const QuizPage = () => {
           <p className="text-gray-600">
             Questions: {data?.questions?.length || 0}
           </p>
+          
+          {/* Hiển thị deadline nếu có */}
+          {data?.deadline && (
+            <div className={`mt-3 p-3 rounded-lg flex items-center gap-2 ${
+              data?.isExpired 
+                ? 'bg-red-50 text-red-700 border border-red-200' 
+                : 'bg-yellow-50 text-yellow-700 border border-yellow-200'
+            }`}>
+              {data?.isExpired ? (
+                <>
+                  <AlertTriangle className="w-5 h-5" />
+                  <span className="font-medium">Quiz đã hết hạn!</span>
+                </>
+              ) : (
+                <>
+                  <Clock className="w-5 h-5" />
+                  <span>
+                    Hạn nộp: <span className="font-medium">
+                      {new Date(data.deadline).toLocaleString('vi-VN')}
+                    </span>
+                  </span>
+                </>
+              )}
+            </div>
+          )}
+          
+          {/* Hiển thị thời gian làm bài nếu có */}
+          {data?.timeLimitMinutes && (
+            <div className="mt-2 p-3 rounded-lg bg-green-50 text-green-700 border border-green-200 flex items-center gap-2">
+              <Clock className="w-5 h-5" />
+              <span>
+                Thời gian làm bài: <span className="font-medium">{data.timeLimitMinutes} phút</span>
+              </span>
+            </div>
+          )}
         </div>
 
         <div className="space-y-6">

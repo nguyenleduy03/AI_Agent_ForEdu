@@ -1,13 +1,18 @@
 fastapi
 uvicorn[standard]
+python-multipart
 google-generativeai
 python-dotenv
 requests==2.31.0
 beautifulsoup4==4.12.2
 cryptography==41.0.7
-chromadb
-sentence-transformers
 nest-asyncio
+
+# MySQL connector for direct database access
+mysql-connector-python==8.2.0
+
+# ChromaDB with default embedding (no heavy torch)
+chromadb
 
 # LangChain - AI Agent Framework
 langchain>=0.1.0

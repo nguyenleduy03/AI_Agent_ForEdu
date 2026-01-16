@@ -188,8 +188,8 @@ const GoogleCalendarPage = () => {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
           <div className="flex items-center space-x-3 mb-4 md:mb-0">
-            <div className="p-3 bg-blue-100 rounded-xl">
-              <Calendar className="w-8 h-8 text-blue-600" />
+            <div className="p-3 bg-green-100 rounded-xl">
+              <Calendar className="w-8 h-8 text-green-600" />
             </div>
             <div>
               <h1 className="text-3xl font-bold">Lịch Google</h1>
@@ -238,7 +238,7 @@ const GoogleCalendarPage = () => {
               )}
             </div>
             
-            <button onClick={() => setShowCreateModal(true)} className="flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600">
+            <button onClick={() => setShowCreateModal(true)} className="flex items-center space-x-2 px-4 py-2 bg-green-500 text-white rounded-xl hover:bg-green-600">
               <Plus className="w-5 h-5" />
               <span>Tạo sự kiện</span>
             </button>
@@ -254,7 +254,7 @@ const GoogleCalendarPage = () => {
                 <button onClick={() => navigateMonth(-1)} className="p-2 bg-white border rounded-xl hover:bg-gray-50"><ChevronLeft className="w-5 h-5" /></button>
                 <button onClick={() => navigateMonth(1)} className="p-2 bg-white border rounded-xl hover:bg-gray-50"><ChevronRight className="w-5 h-5" /></button>
               </div>
-              <button onClick={loadEvents} className="p-2 text-blue-600 hover:bg-blue-50 rounded-xl"><RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} /></button>
+              <button onClick={loadEvents} className="p-2 text-green-600 hover:bg-green-50 rounded-xl"><RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} /></button>
             </div>
 
             {/* Calendar Grid */}
@@ -263,7 +263,7 @@ const GoogleCalendarPage = () => {
                 {weekDays.map(d => <div key={d} className="p-3 text-center font-semibold text-gray-600 text-sm">{d}</div>)}
               </div>
               {loading ? (
-                <div className="flex items-center justify-center py-32"><RefreshCw className="w-8 h-8 text-blue-500 animate-spin" /></div>
+                <div className="flex items-center justify-center py-32"><RefreshCw className="w-8 h-8 text-green-500 animate-spin" /></div>
               ) : (
                 <div className="grid grid-cols-7">
                   {days.map((day, i) => {
@@ -271,15 +271,15 @@ const GoogleCalendarPage = () => {
                     const today = isToday(day);
                     const curMonth = isCurrentMonth(day);
                     return (
-                      <div key={i} className={`min-h-[100px] border-r border-b p-1.5 ${!curMonth ? 'bg-gray-50' : ''} ${today ? 'bg-blue-50 ring-2 ring-blue-200 ring-inset' : ''}`}>
-                        <div className={`text-sm font-semibold mb-1 w-7 h-7 flex items-center justify-center rounded-full ${today ? 'bg-blue-600 text-white' : curMonth ? 'text-gray-900' : 'text-gray-400'}`}>{day.getDate()}</div>
+                      <div key={i} className={`min-h-[100px] border-r border-b p-1.5 ${!curMonth ? 'bg-gray-50' : ''} ${today ? 'bg-green-50 ring-2 ring-blue-200 ring-inset' : ''}`}>
+                        <div className={`text-sm font-semibold mb-1 w-7 h-7 flex items-center justify-center rounded-full ${today ? 'bg-green-600 text-white' : curMonth ? 'text-gray-900' : 'text-gray-400'}`}>{day.getDate()}</div>
                         <div className="space-y-1">
                           {dayEvents.slice(0, 2).map(e => (
-                            <div key={e.id} onClick={() => { setSelectedEvent(e); setShowEventModal(true); }} className="text-xs p-1 bg-blue-100 text-blue-800 rounded cursor-pointer hover:bg-blue-200 truncate">
+                            <div key={e.id} onClick={() => { setSelectedEvent(e); setShowEventModal(true); }} className="text-xs p-1 bg-green-100 text-green-800 rounded cursor-pointer hover:bg-green-200 truncate">
                               {formatTime(e.start)} {e.summary}
                             </div>
                           ))}
-                          {dayEvents.length > 2 && <div className="text-xs text-blue-600">+{dayEvents.length - 2}</div>}
+                          {dayEvents.length > 2 && <div className="text-xs text-green-600">+{dayEvents.length - 2}</div>}
                         </div>
                       </div>
                     );
@@ -338,18 +338,18 @@ const GoogleCalendarPage = () => {
       {showEventModal && selectedEvent && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
-            <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-4 text-white">
+            <div className="bg-gradient-to-r from-green-500 to-emerald-500 p-4 text-white">
               <div className="flex justify-between items-start">
                 <div className="flex-1 pr-4">
                   <h2 className="text-xl font-bold truncate">{selectedEvent.summary}</h2>
-                  <p className="text-blue-100 text-sm mt-1">{formatDate(selectedEvent.start)}</p>
+                  <p className="text-green-100 text-sm mt-1">{formatDate(selectedEvent.start)}</p>
                 </div>
                 <button onClick={() => setShowEventModal(false)} className="p-1 hover:bg-white/20 rounded"><X className="w-6 h-6" /></button>
               </div>
             </div>
             <div className="p-4 space-y-3">
               <div className="flex items-center space-x-3">
-                <Clock className="w-5 h-5 text-blue-500" />
+                <Clock className="w-5 h-5 text-green-500" />
                 <span>{formatTime(selectedEvent.start)} - {formatTime(selectedEvent.end)}</span>
               </div>
               {selectedEvent.location && (
@@ -365,7 +365,7 @@ const GoogleCalendarPage = () => {
                 </div>
               )}
               {selectedEvent.html_link && (
-                <a href={selectedEvent.html_link} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center space-x-2 w-full p-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100">
+                <a href={selectedEvent.html_link} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center space-x-2 w-full p-2 bg-green-50 text-green-600 rounded-lg hover:bg-green-100">
                   <Edit className="w-4 h-4" /><span>Chỉnh sửa trên Google Calendar</span>
                 </a>
               )}
@@ -375,7 +375,7 @@ const GoogleCalendarPage = () => {
                 <Trash2 className="w-4 h-4 inline mr-1" />Xóa
               </button>
               {selectedEvent.html_link && (
-                <a href={selectedEvent.html_link} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600">
+                <a href={selectedEvent.html_link} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center px-4 py-2 bg-green-500 text-white rounded-xl hover:bg-green-600">
                   <ExternalLink className="w-4 h-4 mr-1" />Mở Calendar
                 </a>
               )}
@@ -388,7 +388,7 @@ const GoogleCalendarPage = () => {
       {showCreateModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
-            <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-4 text-white flex justify-between items-center">
+            <div className="bg-gradient-to-r from-green-500 to-emerald-500 p-4 text-white flex justify-between items-center">
               <h2 className="text-xl font-bold">Tạo sự kiện</h2>
               <button onClick={() => setShowCreateModal(false)} className="p-1 hover:bg-white/20 rounded"><X className="w-6 h-6" /></button>
             </div>
@@ -450,7 +450,7 @@ const GoogleCalendarPage = () => {
             </div>
             <div className="border-t p-4 flex space-x-3">
               <button onClick={() => setShowCreateModal(false)} className="flex-1 px-4 py-2 border rounded-xl hover:bg-gray-50">Hủy</button>
-              <button onClick={handleCreateEvent} disabled={creating || !newEvent.summary.trim()} className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 disabled:opacity-50">
+              <button onClick={handleCreateEvent} disabled={creating || !newEvent.summary.trim()} className="flex-1 px-4 py-2 bg-green-500 text-white rounded-xl hover:bg-green-600 disabled:opacity-50">
                 {creating ? 'Đang tạo...' : 'Tạo'}
               </button>
             </div>

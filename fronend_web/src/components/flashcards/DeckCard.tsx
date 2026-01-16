@@ -58,8 +58,8 @@ const DeckCard: React.FC<Props> = ({ deck, onUpdate, onDelete }) => {
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-2 mb-4">
-        <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-2 text-center">
-          <div className="text-xl font-bold text-blue-600 dark:text-blue-400">{deck.newCards}</div>
+        <div className="bg-green-50 dark:bg-blue-900/20 rounded-lg p-2 text-center">
+          <div className="text-xl font-bold text-green-600 dark:text-blue-400">{deck.newCards}</div>
           <div className="text-xs text-gray-600 dark:text-gray-400">Mới</div>
         </div>
         <div className="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-2 text-center">
@@ -79,7 +79,7 @@ const DeckCard: React.FC<Props> = ({ deck, onUpdate, onDelete }) => {
         <button
           onClick={handleStudy}
           disabled={!hasCardsToStudy}
-          className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           <Play size={16} />
           <span className="font-medium">Học ngay</span>

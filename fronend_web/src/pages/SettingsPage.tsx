@@ -55,7 +55,7 @@ const CATEGORY_ICONS = {
 };
 
 const CATEGORY_COLORS = {
-  EDUCATION: 'bg-blue-100 text-blue-800 border-blue-200',
+  EDUCATION: 'bg-green-100 text-green-800 border-green-200',
   ENTERTAINMENT: 'bg-purple-100 text-purple-800 border-purple-200',
   SOCIAL: 'bg-green-100 text-green-800 border-green-200',
   WORK: 'bg-orange-100 text-orange-800 border-orange-200',
@@ -241,7 +241,7 @@ const SettingsPage = () => {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-3xl p-8 md:p-12 mb-8 overflow-hidden"
+          className="relative bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 rounded-3xl p-8 md:p-12 mb-8 overflow-hidden"
         >
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" />
@@ -431,7 +431,7 @@ const SettingsPage = () => {
             {/* Color Settings */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-pink-400 to-purple-500 rounded-xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl flex items-center justify-center">
                   <Palette className="w-6 h-6 text-white" />
                 </div>
                 <div>
@@ -663,8 +663,8 @@ const SettingsPage = () => {
             {/* Google Cloud Integration Section */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg border border-gray-100 dark:border-gray-700 mb-8">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-14 h-14 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
-                  <Cloud className="w-7 h-7 text-blue-600" />
+                <div className="w-14 h-14 bg-green-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
+                  <Cloud className="w-7 h-7 text-green-600" />
                 </div>
                 <div>
                   <h2 className="text-2xl font-bold dark:text-white">Google Cloud Integration</h2>
@@ -687,9 +687,9 @@ const SettingsPage = () => {
                 />
               )}
 
-              <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-                <h3 className="font-semibold text-blue-900 dark:text-blue-300 mb-2">💬 Sử dụng trong Chat:</h3>
-                <ul className="text-sm text-blue-800 dark:text-blue-400 space-y-1">
+              <div className="mt-4 p-4 bg-green-50 dark:bg-blue-900/20 border border-green-200 dark:border-blue-800 rounded-lg">
+                <h3 className="font-semibold text-green-900 dark:text-blue-300 mb-2">💬 Sử dụng trong Chat:</h3>
+                <ul className="text-sm text-green-800 dark:text-blue-400 space-y-1">
                   <li>• <strong>Dịch thuật:</strong> "Dịch sang tiếng Anh: Xin chào"</li>
                   <li>• <strong>Phân tích cảm xúc:</strong> "Phân tích cảm xúc: Tôi rất vui!"</li>
                   <li>• <strong>Nhận diện ảnh:</strong> "Phân tích ảnh này [URL]"</li>
@@ -1031,7 +1031,7 @@ const SettingsPage = () => {
                             {cred.tags.map((tag, idx) => (
                               <span
                                 key={idx}
-                                className="text-xs px-2 py-1 bg-blue-50 text-blue-700 rounded"
+                                className="text-xs px-2 py-1 bg-green-50 text-green-700 rounded"
                               >
                                 #{tag}
                               </span>
@@ -1050,7 +1050,7 @@ const SettingsPage = () => {
                           <div className="flex space-x-2">
                             <button
                               onClick={() => handleEdit(cred.id)}
-                              className="text-blue-600 hover:text-blue-700"
+                              className="text-green-600 hover:text-green-700"
                               title="Chỉnh sửa"
                             >
                               <Edit2 className="w-4 h-4" />
@@ -1074,7 +1074,7 @@ const SettingsPage = () => {
         )}
 
         {/* Instructions */}
-        <div className="card mt-6 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20">
+        <div className="card mt-6 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-blue-900/20 dark:to-purple-900/20">
           <h3 className="text-lg font-bold mb-4 dark:text-white">🤖 AI Agent Tự Động</h3>
           <div className="space-y-3 text-sm text-gray-700 dark:text-gray-300">
             <p>

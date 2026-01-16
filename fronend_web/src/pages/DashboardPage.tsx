@@ -50,8 +50,8 @@ const DashboardPage = () => {
       value: stats.enrolledCourses,
       subtext: `${stats.completedCourses} hoàn thành`,
       gradient: 'from-blue-500 to-cyan-500',
-      iconBg: 'bg-blue-500/10',
-      iconColor: 'text-blue-600',
+      iconBg: 'bg-green-500/10',
+      iconColor: 'text-green-600',
     },
     {
       icon: MessageSquare,
@@ -83,7 +83,7 @@ const DashboardPage = () => {
   ];
 
   const activityIcons: Record<string, any> = {
-    course: { icon: BookOpen, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+    course: { icon: BookOpen, color: 'text-green-500', bg: 'bg-green-500/10' },
     chat: { icon: MessageSquare, color: 'text-purple-500', bg: 'bg-purple-500/10' },
     flashcard: { icon: CreditCard, color: 'text-amber-500', bg: 'bg-amber-500/10' },
     quiz: { icon: Trophy, color: 'text-green-500', bg: 'bg-green-500/10' },
@@ -106,7 +106,7 @@ const DashboardPage = () => {
             </div>
             {stats.enrolledCourses > 0 && (
               <div className="mt-4 md:mt-0">
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-medium">
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-medium">
                   <Zap className="w-4 h-4" />
                   {stats.enrolledCourses} khóa học
                 </div>
@@ -147,7 +147,7 @@ const DashboardPage = () => {
                   <h2 className="text-2xl font-bold mb-1">Tiếp tục học</h2>
                   <p className="text-gray-600 text-sm">Tiến độ các khóa học của bạn</p>
                 </div>
-                <Link to="/courses" className="flex items-center gap-2 px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors font-medium">
+                <Link to="/courses" className="flex items-center gap-2 px-4 py-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors font-medium">
                   Xem tất cả <ChevronRight className="w-4 h-4" />
                 </Link>
               </div>
@@ -156,9 +156,9 @@ const DashboardPage = () => {
                 {coursesWithProgress.length > 0 ? (
                   coursesWithProgress.map((course: CourseProgressSummary, index: number) => (
                     <motion.div key={course.courseId} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }} whileHover={{ scale: 1.02 }}>
-                      <Link to={`/courses/${course.courseId}`} className="flex items-center gap-4 p-4 rounded-xl border-2 border-gray-100 hover:border-blue-200 hover:shadow-md transition-all duration-300 group">
+                      <Link to={`/courses/${course.courseId}`} className="flex items-center gap-4 p-4 rounded-xl border-2 border-gray-100 hover:border-green-200 hover:shadow-md transition-all duration-300 group">
                         <div className="relative">
-                          <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-lg">
+                          <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-lg">
                             {course.courseTitle.charAt(0)}
                           </div>
                           {course.progressPercentage >= 100 && (
@@ -168,7 +168,7 @@ const DashboardPage = () => {
                           )}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-bold text-lg mb-1 group-hover:text-blue-600 transition-colors truncate">{course.courseTitle}</h3>
+                          <h3 className="font-bold text-lg mb-1 group-hover:text-green-600 transition-colors truncate">{course.courseTitle}</h3>
                           <div className="flex items-center gap-4 text-sm text-gray-500">
                             <span className="flex items-center gap-1">
                               <BookOpen className="w-4 h-4" />
@@ -176,13 +176,13 @@ const DashboardPage = () => {
                             </span>
                             <div className="flex-1 max-w-xs">
                               <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
-                                <div className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all" style={{ width: `${course.progressPercentage}%` }} />
+                                <div className="h-full bg-gradient-to-r from-green-500 to-emerald-500 rounded-full transition-all" style={{ width: `${course.progressPercentage}%` }} />
                               </div>
                             </div>
-                            <span className="text-blue-600 font-medium">{Math.round(course.progressPercentage)}%</span>
+                            <span className="text-green-600 font-medium">{Math.round(course.progressPercentage)}%</span>
                           </div>
                         </div>
-                        <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" />
+                        <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-green-600 group-hover:translate-x-1 transition-all" />
                       </Link>
                     </motion.div>
                   ))
@@ -193,7 +193,7 @@ const DashboardPage = () => {
                     </div>
                     <p className="text-gray-600 mb-4 font-medium">Chưa có khóa học nào</p>
                     <p className="text-gray-500 text-sm mb-6">Bắt đầu hành trình học tập ngay!</p>
-                    <Link to="/courses" className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all">
+                    <Link to="/courses" className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all">
                       <BookOpen className="w-5 h-5" /> Khám phá khóa học
                     </Link>
                   </div>
@@ -225,7 +225,7 @@ const DashboardPage = () => {
             {/* Quick Actions */}
             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
               <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 bg-blue-100 rounded-lg"><Zap className="w-5 h-5 text-blue-600" /></div>
+                <div className="p-2 bg-green-100 rounded-lg"><Zap className="w-5 h-5 text-green-600" /></div>
                 <h2 className="text-xl font-bold">Truy cập nhanh</h2>
               </div>
               <div className="space-y-3">
@@ -240,10 +240,10 @@ const DashboardPage = () => {
                 <Link to="/courses" className="flex items-center gap-4 p-4 rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-blue-100 hover:border-blue-300 hover:shadow-md transition-all group">
                   <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center text-white shadow-lg"><BookOpen className="w-6 h-6" /></div>
                   <div className="flex-1">
-                    <h3 className="font-bold group-hover:text-blue-700 transition-colors">Khóa học</h3>
+                    <h3 className="font-bold group-hover:text-green-700 transition-colors">Khóa học</h3>
                     <p className="text-sm text-gray-600">Khám phá nội dung</p>
                   </div>
-                  <ChevronRight className="w-5 h-5 text-blue-600 group-hover:translate-x-1 transition-transform" />
+                  <ChevronRight className="w-5 h-5 text-green-600 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link to="/flashcards" className="flex items-center gap-4 p-4 rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-100 hover:border-purple-300 hover:shadow-md transition-all group">
                   <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center text-white shadow-lg"><BarChart3 className="w-6 h-6" /></div>
@@ -298,7 +298,7 @@ const DashboardPage = () => {
 
         {/* Progress Overview */}
         {stats.enrolledCourses > 0 && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-2xl p-8 shadow-2xl text-white relative overflow-hidden">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 rounded-2xl p-8 shadow-2xl text-white relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32" />
             <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" />
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">

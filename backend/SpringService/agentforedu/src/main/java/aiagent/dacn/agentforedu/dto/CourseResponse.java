@@ -13,6 +13,7 @@ public class CourseResponse {
     private Long id;
     private String title;
     private String description;
+    private String thumbnailUrl; // Ảnh đại diện khóa học
     private Long createdBy;
     private String creatorName;
     private Boolean isPublic;

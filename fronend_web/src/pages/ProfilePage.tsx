@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { User, Mail, Shield, Calendar, Edit2, Save, X, Award, BookOpen, Trophy, TrendingUp, Clock, Target, Sparkles, Camera } from 'lucide-react';
+import { User, Mail, Shield, Calendar, Edit2, Save, X, Award, BookOpen, Trophy, TrendingUp, Clock, Target, Sparkles } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Layout from '../components/Layout';
+import AvatarUpload from '../components/AvatarUpload';
 import { useAuthStore } from '../store/authStore';
 import { authService } from '../services/authService';
 
@@ -44,21 +45,21 @@ const ProfilePage = () => {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-3xl p-8 md:p-12 mb-8 overflow-hidden"
+          className="relative bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 rounded-3xl p-8 md:p-12 mb-8 overflow-hidden"
         >
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" />
           
           <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
-            {/* Profile Avatar */}
-            <div className="relative group">
-              <div className="w-32 h-32 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center border-4 border-white/30 shadow-2xl text-white text-5xl font-bold">
-                {user?.fullName.charAt(0).toUpperCase()}
-              </div>
-              <button className="absolute bottom-0 right-0 w-10 h-10 bg-white text-purple-600 rounded-xl flex items-center justify-center shadow-lg hover:scale-110 transition-transform opacity-0 group-hover:opacity-100">
-                <Camera className="w-5 h-5" />
-              </button>
-            </div>
+            {/* Profile Avatar with Upload */}
+            <AvatarUpload 
+              currentAvatarUrl={user?.avatarUrl}
+              size="lg"
+              fallbackInitial={user?.fullName?.charAt(0)}
+              onAvatarChange={(newUrl) => {
+                updateUser({ ...user!, avatarUrl: newUrl });
+              }}
+            />
 
             {/* Profile Info */}
             <div className="flex-1 text-white text-center md:text-left">
@@ -127,10 +128,10 @@ const ProfilePage = () => {
           className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-8"
         >
           <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 text-center">
-            <div className="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-3">
-              <BookOpen className="w-7 h-7 text-blue-600" />
+            <div className="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+              <BookOpen className="w-7 h-7 text-green-600" />
             </div>
-            <div className="text-3xl font-bold text-blue-600 mb-1">0</div>
+            <div className="text-3xl font-bold text-green-600 mb-1">0</div>
             <p className="text-gray-600 text-sm font-medium">Courses Completed</p>
           </div>
           
@@ -168,8 +169,8 @@ const ProfilePage = () => {
             className="lg:col-span-2 bg-white rounded-2xl p-8 shadow-lg border border-gray-100"
           >
             <div className="flex items-center gap-3 mb-8">
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                <User className="w-6 h-6 text-blue-600" />
+              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                <User className="w-6 h-6 text-green-600" />
               </div>
               <div>
                 <h2 className="text-2xl font-bold">Profile Information</h2>
@@ -180,7 +181,7 @@ const ProfilePage = () => {
             <div className="space-y-6">
               <div>
                 <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
-                  <User className="w-4 h-4 text-blue-600" />
+                  <User className="w-4 h-4 text-green-600" />
                   <span>Full Name</span>
                 </label>
                 {editing ? (
@@ -188,7 +189,7 @@ const ProfilePage = () => {
                     type="text"
                     value={formData.fullName}
                     onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                    className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all"
+                    className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all"
                     placeholder="Enter your full name"
                   />
                 ) : (
@@ -200,7 +201,7 @@ const ProfilePage = () => {
 
               <div>
                 <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
-                  <Mail className="w-4 h-4 text-blue-600" />
+                  <Mail className="w-4 h-4 text-green-600" />
                   <span>Email Address</span>
                 </label>
                 {editing ? (
@@ -208,7 +209,7 @@ const ProfilePage = () => {
                     type="email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all"
+                    className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all"
                     placeholder="Enter your email"
                   />
                 ) : (
@@ -220,7 +221,7 @@ const ProfilePage = () => {
 
               <div>
                 <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
-                  <User className="w-4 h-4 text-blue-600" />
+                  <User className="w-4 h-4 text-green-600" />
                   <span>Username</span>
                 </label>
                 <div className="px-4 py-3 bg-gray-50 rounded-xl border-2 border-gray-200">
@@ -231,13 +232,13 @@ const ProfilePage = () => {
 
               <div>
                 <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
-                  <Shield className="w-4 h-4 text-blue-600" />
+                  <Shield className="w-4 h-4 text-green-600" />
                   <span>Account Role</span>
                 </label>
-                <div className="px-4 py-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border-2 border-blue-200">
+                <div className="px-4 py-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border-2 border-green-200">
                   <div className="flex items-center gap-2">
                     <span className="text-gray-900 font-medium">{user?.role}</span>
-                    <Award className="w-4 h-4 text-blue-600" />
+                    <Award className="w-4 h-4 text-green-600" />
                   </div>
                 </div>
               </div>

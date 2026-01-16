@@ -93,7 +93,7 @@ const FlashcardStudyPage: React.FC = () => {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto mb-4"></div>
           <p className="text-gray-600 dark:text-gray-400">Đang tải thẻ...</p>
         </div>
       </div>
@@ -109,7 +109,7 @@ const FlashcardStudyPage: React.FC = () => {
           <p className="text-gray-600 dark:text-gray-400 mb-6">Quay lại sau nhé</p>
           <button
             onClick={() => navigate('/flashcards')}
-            className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+            className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600"
           >
             Quay về trang chính
           </button>
@@ -136,7 +136,7 @@ const FlashcardStudyPage: React.FC = () => {
             </button>
             <button
               onClick={handleRestart}
-              className="flex items-center gap-2 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+              className="flex items-center gap-2 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600"
             >
               <RotateCcw size={20} />
               Học lại
@@ -151,7 +151,7 @@ const FlashcardStudyPage: React.FC = () => {
   const progress = ((currentIndex + 1) / cards.length) * 100;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-dark-900 dark:to-dark-800 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50 dark:from-dark-900 dark:to-dark-800 p-8">
       {/* Back button */}
       <button
         onClick={() => navigate('/flashcards')}
@@ -169,7 +169,7 @@ const FlashcardStudyPage: React.FC = () => {
         </div>
         <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
           <div
-            className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+            className="bg-green-500 h-2 rounded-full transition-all duration-300"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -209,7 +209,7 @@ const FlashcardStudyPage: React.FC = () => {
 
             {/* Back side */}
             <div
-              className="absolute w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-2xl shadow-2xl p-8 flex flex-col items-center justify-center"
+              className="absolute w-full h-full bg-gradient-to-br from-green-500 to-emerald-600 text-white rounded-2xl shadow-2xl p-8 flex flex-col items-center justify-center"
               style={{
                 backfaceVisibility: 'hidden',
                 transform: 'rotateY(180deg)',
@@ -256,7 +256,7 @@ const FlashcardStudyPage: React.FC = () => {
             </button>
             <button
               onClick={() => handleReview(5)}
-              className="px-4 py-4 bg-blue-500 text-white rounded-xl font-bold hover:bg-blue-600 transition-colors shadow-lg hover:shadow-xl"
+              className="px-4 py-4 bg-green-500 text-white rounded-xl font-bold hover:bg-green-600 transition-colors shadow-lg hover:shadow-xl"
             >
               <div className="text-lg">Dễ</div>
               <div className="text-xs font-normal mt-1">4 ngày</div>

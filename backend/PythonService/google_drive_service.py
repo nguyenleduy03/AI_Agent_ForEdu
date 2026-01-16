@@ -464,6 +464,121 @@ async def list_files(
 
 
 # ============================================================================
+# AVATAR UPLOAD ENDPOINTS
+# ============================================================================
+
+@router.post("/avatar/user")
+async def upload_user_avatar(
+    file: UploadFile = File(...),
+    user_id: int = Form(...),
+    authorization: Optional[str] = Header(None)
+):
+    """
+    Upload ảnh đại diện cho user lên Google Drive
+    
+    - **file**: Ảnh (JPG, PNG, GIF, WEBP)
+    - **user_id**: ID của user
+    
+    Returns: URL ảnh trên Drive
+    """
+    # Validate file type
+    allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+    if file.content_type not in allowed_types:
+        raise HTTPException(status_code=400, detail="Chỉ chấp nhận file ảnh (JPG, PNG, GIF, WEBP)")
+    
+    # Read file content (no size limit)
+    file_content = await file.read()
+    
+    # Get access token
+    access_token = await get_user_access_token(user_id)
+    
+    # Create/get avatars folder
+    root_folder_id = get_or_create_folder(access_token, "AgentForEdu")
+    avatars_folder_id = get_or_create_folder(access_token, "Avatars", root_folder_id)
+    
+    # Generate unique filename
+    ext = file.filename.split('.')[-1] if '.' in file.filename else 'jpg'
+    filename = f"avatar_user_{user_id}_{datetime.now().strftime('%Y%m%d%H%M%S')}.{ext}"
+    
+    # Upload to Drive
+    result = upload_to_drive(
+        access_token=access_token,
+        file_content=file_content,
+        filename=filename,
+        mime_type=file.content_type,
+        folder_id=avatars_folder_id
+    )
+    
+    # Return direct image URL for embedding
+    # Use drive.google.com/thumbnail format which works reliably for public files
+    file_id = result['file_id']
+    direct_url = f"https://drive.google.com/thumbnail?id={file_id}&sz=w400"
+    
+    return {
+        "success": True,
+        "file_id": file_id,
+        "avatar_url": direct_url,
+        "view_link": result['view_link']
+    }
+
+
+@router.post("/avatar/course")
+async def upload_course_thumbnail(
+    file: UploadFile = File(...),
+    user_id: int = Form(...),
+    course_id: int = Form(...),
+    authorization: Optional[str] = Header(None)
+):
+    """
+    Upload ảnh đại diện cho khóa học lên Google Drive
+    
+    - **file**: Ảnh (JPG, PNG, GIF, WEBP)
+    - **user_id**: ID của user (giáo viên)
+    - **course_id**: ID khóa học
+    
+    Returns: URL ảnh trên Drive
+    """
+    # Validate file type
+    allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+    if file.content_type not in allowed_types:
+        raise HTTPException(status_code=400, detail="Chỉ chấp nhận file ảnh (JPG, PNG, GIF, WEBP)")
+    
+    # Read file content (no size limit)
+    file_content = await file.read()
+    
+    # Get access token
+    access_token = await get_user_access_token(user_id)
+    
+    # Create/get course thumbnails folder
+    root_folder_id = get_or_create_folder(access_token, "AgentForEdu")
+    thumbnails_folder_id = get_or_create_folder(access_token, "CourseThumbnails", root_folder_id)
+    
+    # Generate unique filename
+    ext = file.filename.split('.')[-1] if '.' in file.filename else 'jpg'
+    filename = f"course_{course_id}_thumbnail_{datetime.now().strftime('%Y%m%d%H%M%S')}.{ext}"
+    
+    # Upload to Drive
+    result = upload_to_drive(
+        access_token=access_token,
+        file_content=file_content,
+        filename=filename,
+        mime_type=file.content_type,
+        folder_id=thumbnails_folder_id
+    )
+    
+    # Return direct image URL for embedding
+    file_id = result['file_id']
+    direct_url = f"https://drive.google.com/thumbnail?id={file_id}&sz=w800"
+    
+    return {
+        "success": True,
+        "file_id": file_id,
+        "thumbnail_url": direct_url,
+        "view_link": result['view_link']
+    }
+
+
+# ============================================================================
 # UTILITY ENDPOINTS
 # ============================================================================
 

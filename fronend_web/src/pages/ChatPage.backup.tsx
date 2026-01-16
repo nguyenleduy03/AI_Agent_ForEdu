@@ -767,7 +767,7 @@ const ChatPage = () => {
                   <button
                     onClick={() => setChatMode('google-cloud')}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${chatMode === 'google-cloud'
-                        ? 'bg-white text-blue-600 shadow-sm'
+                        ? 'bg-white text-green-600 shadow-sm'
                         : 'text-gray-600 hover:text-gray-900'
                       }`}
                     title="Google Cloud APIs: Translation, Vision, Sentiment"
@@ -801,7 +801,7 @@ const ChatPage = () => {
                   <button
                     onClick={() => setAiProvider('gemini')}
                     className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${aiProvider === 'gemini'
-                        ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md'
+                        ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-md'
                         : 'text-purple-600 hover:bg-white/50'
                       }`}
                     title="Google Gemini 2.5 Flash"
@@ -1102,8 +1102,8 @@ const ChatPage = () => {
                   <div className="flex items-start space-x-2">
                     <span className="text-lg">🌐</span>
                     <div>
-                      <p className="font-semibold text-blue-800">Google Cloud Mode</p>
-                      <p className="text-sm text-blue-600">
+                      <p className="font-semibold text-green-800">Google Cloud Mode</p>
+                      <p className="text-sm text-green-600">
                         Try: "Dịch sang tiếng Anh: Hello" • "Phân tích cảm xúc: Amazing!" • "Phân tích ảnh: [URL]"
                       </p>
                     </div>
@@ -1186,7 +1186,7 @@ const ChatPage = () => {
                     <motion.div
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="flex items-center space-x-2 p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800"
+                      className="flex items-center space-x-2 p-2 bg-green-50 dark:bg-blue-900/20 rounded-lg border border-green-200 dark:border-blue-800"
                     >
                       {filePreview ? (
                         <img src={filePreview} alt="Preview" className="w-12 h-12 object-cover rounded" />

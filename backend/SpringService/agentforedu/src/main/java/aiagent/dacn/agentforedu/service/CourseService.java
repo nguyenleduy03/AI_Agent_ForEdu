@@ -188,11 +188,29 @@ public class CourseService {
         enrollmentRepository.delete(enrollment);
     }
     
+    @Transactional
+    public CourseResponse updateThumbnail(Long courseId, String thumbnailUrl, String thumbnailDriveId, User user) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy khóa học"));
+        
+        // Check if user is the creator
+        if (!course.getCreatedBy().equals(user.getId())) {
+            throw new RuntimeException("Bạn không có quyền cập nhật khóa học này");
+        }
+        
+        course.setThumbnailUrl(thumbnailUrl);
+        course.setThumbnailDriveId(thumbnailDriveId);
+        
+        Course updated = courseRepository.save(course);
+        return toResponse(updated, user);
+    }
+    
     private CourseResponse toResponse(Course course, User currentUser) {
         CourseResponse response = new CourseResponse();
         response.setId(course.getId());
         response.setTitle(course.getTitle());
         response.setDescription(course.getDescription());
+        response.setThumbnailUrl(course.getThumbnailUrl());
         response.setCreatedBy(course.getCreatedBy());
         response.setIsPublic(course.getIsPublic());
         response.setCreatedAt(course.getCreatedAt());
@@ -210,6 +228,65 @@ public class CourseService {
             // Check if current user is the creator
             boolean isCreator = course.getCreatedBy().equals(currentUser.getId());
             response.setIsCreator(isCreator);
+        }
+        
+        // Get enrollment count
+        long enrollmentCount = enrollmentRepository.countByCourseId(course.getId());
+        response.setEnrollmentCount(enrollmentCount);
+        
+        // Get total lessons count
+        int totalLessons = (int) lessonRepository.findByCourseIdOrderByOrderIndexAsc(course.getId()).size();
+        response.setTotalLessons(totalLessons);
+        
+        return response;
+    }
+    
+    // ============================================================================
+    // PUBLIC METHODS - For internal API (no authentication)
+    // ============================================================================
+    
+    @Transactional(readOnly = true)
+    public List<CourseResponse> getAllCoursesPublic() {
+        return courseRepository.findAll().stream()
+                .map(this::toResponsePublic)
+                .collect(Collectors.toList());
+    }
+    
+    @Transactional(readOnly = true)
+    public CourseResponse getCourseByIdPublic(Long id) {
+        Course course = courseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy khóa học"));
+        return toResponsePublic(course);
+    }
+    
+    @Transactional(readOnly = true)
+    public List<?> getLessonsByCoursePublic(Long courseId) {
+        return lessonRepository.findByCourseIdOrderByOrderIndexAsc(courseId).stream()
+                .map(lesson -> {
+                    var map = new java.util.HashMap<String, Object>();
+                    map.put("id", lesson.getId());
+                    map.put("title", lesson.getTitle());
+                    map.put("content", lesson.getContent());
+                    map.put("orderIndex", lesson.getOrderIndex());
+                    map.put("courseId", lesson.getCourseId());
+                    return map;
+                })
+                .collect(Collectors.toList());
+    }
+    
+    private CourseResponse toResponsePublic(Course course) {
+        CourseResponse response = new CourseResponse();
+        response.setId(course.getId());
+        response.setTitle(course.getTitle());
+        response.setDescription(course.getDescription());
+        response.setThumbnailUrl(course.getThumbnailUrl());
+        response.setCreatedBy(course.getCreatedBy());
+        response.setIsPublic(course.getIsPublic());
+        response.setCreatedAt(course.getCreatedAt());
+        response.setUpdatedAt(course.getUpdatedAt());
+        
+        if (course.getCreator() != null) {
+            response.setCreatorName(course.getCreator().getUsername());
         }
         
         // Get enrollment count

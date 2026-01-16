@@ -4,6 +4,7 @@ import aiagent.dacn.agentforedu.entity.QuizDifficulty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -17,6 +18,16 @@ public class CreateQuizRequest {
     private String description;
     
     private QuizDifficulty difficulty;
+    
+    private LocalDateTime deadline; // Hạn làm bài - null = không giới hạn
+    
+    private Integer timeLimitMinutes; // Thời gian làm bài (phút) - null = không giới hạn
+    
+    private Integer maxAttempts; // Số lần làm bài tối đa - null = không giới hạn
+    
+    private Boolean shuffleQuestions; // Xáo trộn thứ tự câu hỏi
+    
+    private Boolean shuffleOptions; // Xáo trộn thứ tự đáp án
     
     @NotNull(message = "Danh sách câu hỏi không được để trống")
     private List<QuestionRequest> questions;

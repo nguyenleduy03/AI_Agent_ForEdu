@@ -19,6 +19,7 @@ import {
 import { useState } from 'react';
 import { useAuthStore } from '../store/authStore';
 import toast from 'react-hot-toast';
+import WormAssistant from './WormAssistant';
 
 interface LayoutProps {
   children: ReactNode;
@@ -141,6 +142,9 @@ const Layout = ({ children }: LayoutProps) => {
           onClick={() => setSidebarOpen(false)}
         />
       )}
+
+      {/* Worm Assistant */}
+      <WormAssistant />
     </div>
   );
 };

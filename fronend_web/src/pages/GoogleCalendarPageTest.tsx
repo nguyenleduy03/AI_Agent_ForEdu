@@ -5,7 +5,7 @@ const GoogleCalendarPageTest: React.FC = () => {
   return (
     <div className="container mx-auto p-8">
       <div className="text-center">
-        <Calendar size={64} className="mx-auto text-blue-500 mb-4" />
+        <Calendar size={64} className="mx-auto text-green-500 mb-4" />
         <h1 className="text-3xl font-bold dark:text-white mb-4">
           Google Calendar Test Page
         </h1>

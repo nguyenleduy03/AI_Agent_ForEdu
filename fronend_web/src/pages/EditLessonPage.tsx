@@ -115,7 +115,7 @@ const EditLessonPage = () => {
     return (
       <Layout>
         <div className="flex items-center justify-center h-64">
-          <Loader className="w-8 h-8 animate-spin text-blue-600" />
+          <Loader className="w-8 h-8 animate-spin text-green-600" />
         </div>
       </Layout>
     );
@@ -146,7 +146,7 @@ const EditLessonPage = () => {
 
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center text-white">
+              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center text-white">
                 <FileText className="w-6 h-6" />
               </div>
               <div>
@@ -190,7 +190,7 @@ const EditLessonPage = () => {
                 value={formData.title}
                 onChange={handleChange}
                 placeholder="Ví dụ: Chapter 1: Introduction to Python"
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
                 disabled={loading}
                 required
               />
@@ -208,7 +208,7 @@ const EditLessonPage = () => {
                 value={formData.orderIndex}
                 onChange={handleChange}
                 min="1"
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
                 disabled={loading}
               />
               <p className="mt-1 text-sm text-gray-500">
@@ -228,7 +228,7 @@ const EditLessonPage = () => {
                 onChange={handleChange}
                 placeholder="Nhập nội dung bài học..."
                 rows={20}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none font-mono text-sm"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all resize-none font-mono text-sm"
                 disabled={loading}
                 required
               />
@@ -238,13 +238,13 @@ const EditLessonPage = () => {
             </div>
 
             {/* Markdown Tips */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h3 className="font-semibold text-blue-900 mb-2">💡 Markdown Tips:</h3>
-              <div className="text-sm text-blue-800 grid grid-cols-2 gap-2">
-                <p><code className="bg-blue-100 px-1 rounded"># Heading</code> - Tiêu đề</p>
-                <p><code className="bg-blue-100 px-1 rounded">**bold**</code> - Chữ đậm</p>
-                <p><code className="bg-blue-100 px-1 rounded">*italic*</code> - Chữ nghiêng</p>
-                <p><code className="bg-blue-100 px-1 rounded">```code```</code> - Code block</p>
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <h3 className="font-semibold text-green-900 mb-2">💡 Markdown Tips:</h3>
+              <div className="text-sm text-green-800 grid grid-cols-2 gap-2">
+                <p><code className="bg-green-100 px-1 rounded"># Heading</code> - Tiêu đề</p>
+                <p><code className="bg-green-100 px-1 rounded">**bold**</code> - Chữ đậm</p>
+                <p><code className="bg-green-100 px-1 rounded">*italic*</code> - Chữ nghiêng</p>
+                <p><code className="bg-green-100 px-1 rounded">```code```</code> - Code block</p>
               </div>
             </div>
 
@@ -261,7 +261,7 @@ const EditLessonPage = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all disabled:opacity-50"
+                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all disabled:opacity-50"
               >
                 {loading ? (
                   <>

@@ -125,7 +125,7 @@ const EditCoursePage = () => {
     return (
       <Layout>
         <div className="flex items-center justify-center h-64">
-          <Loader className="w-8 h-8 animate-spin text-blue-600" />
+          <Loader className="w-8 h-8 animate-spin text-green-600" />
         </div>
       </Layout>
     );
@@ -156,7 +156,7 @@ const EditCoursePage = () => {
 
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center text-white">
+              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center text-white">
                 <BookOpen className="w-6 h-6" />
               </div>
               <div>
@@ -185,8 +185,8 @@ const EditCoursePage = () => {
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
           <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                <Users className="w-5 h-5 text-blue-600" />
+              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                <Users className="w-5 h-5 text-green-600" />
               </div>
               <div>
                 <p className="text-2xl font-bold text-gray-900">{course.enrollmentCount || 0}</p>
@@ -207,7 +207,7 @@ const EditCoursePage = () => {
           </div>
           <Link 
             to={`/teacher/courses/${courseId}`}
-            className="bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl p-4 text-white hover:shadow-lg transition-all"
+            className="bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl p-4 text-white hover:shadow-lg transition-all"
           >
             <p className="font-semibold">Xem báo cáo</p>
             <p className="text-sm opacity-90">Thống kê chi tiết →</p>
@@ -233,7 +233,7 @@ const EditCoursePage = () => {
                 value={formData.title}
                 onChange={handleChange}
                 placeholder="Ví dụ: Python Programming for Beginners"
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
                 disabled={loading}
                 required
               />
@@ -251,7 +251,7 @@ const EditCoursePage = () => {
                 onChange={handleChange}
                 placeholder="Mô tả chi tiết về khóa học..."
                 rows={6}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all resize-none"
                 disabled={loading}
                 required
               />
@@ -307,7 +307,7 @@ const EditCoursePage = () => {
                   value={formData.accessPassword}
                   onChange={handleChange}
                   placeholder="Nhập mật khẩu mới cho khóa học"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
                   disabled={loading}
                 />
                 <p className="mt-1 text-sm text-gray-500">
@@ -329,7 +329,7 @@ const EditCoursePage = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all disabled:opacity-50"
+                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all disabled:opacity-50"
               >
                 {loading ? (
                   <>

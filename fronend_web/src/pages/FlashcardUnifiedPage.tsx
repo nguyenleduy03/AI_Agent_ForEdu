@@ -358,7 +358,7 @@ const FlashcardUnifiedPage: React.FC = () => {
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600 dark:text-gray-400">Thẻ mới</span>
-                    <span className="font-bold text-xl text-blue-600">{newCards}</span>
+                    <span className="font-bold text-xl text-green-600">{newCards}</span>
                   </div>
                 </div>
               </div>

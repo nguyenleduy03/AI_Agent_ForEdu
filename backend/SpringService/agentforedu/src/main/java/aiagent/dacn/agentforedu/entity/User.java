@@ -43,6 +43,9 @@ public class User implements UserDetails {
     @Column(name = "avatar_url")
     private String avatarUrl;
     
+    @Column(name = "avatar_drive_id")
+    private String avatarDriveId; // ID file trên Drive để xóa khi cần
+    
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

@@ -35,6 +35,7 @@ import EditLessonPage from './pages/EditLessonPage';
 import EditCoursePage from './pages/EditCoursePage';
 import EmailDraftPage from './pages/EmailDraftPage';
 import AdminPage from './pages/AdminPage';
+import GuestChatPage from './pages/GuestChatPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -57,6 +58,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/demo" element={<GuestChatPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           

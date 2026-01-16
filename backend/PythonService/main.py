@@ -81,6 +81,24 @@ IMAGE_OCR_AVAILABLE = True  # Always available via API
 IMAGE_CAPTION_AVAILABLE = False
 print("✅ OCR.space API available for Groq image reading")
 
+# MySQL Course Service - Direct database access (PREFERRED)
+try:
+    from mysql_course_service import MySQLCourseService, get_mysql_course_service
+    MYSQL_COURSE_AVAILABLE = True
+    print("✅ MySQL Course Service available")
+except ImportError:
+    MYSQL_COURSE_AVAILABLE = False
+    print("⚠️  MySQL Course Service not available.")
+
+# Course RAG Service - Search courses from database (FALLBACK)
+try:
+    from course_rag_service import CourseRAGService, get_course_rag_service
+    COURSE_RAG_AVAILABLE = True
+    print("✅ Course RAG Service available")
+except ImportError:
+    COURSE_RAG_AVAILABLE = False
+    print("⚠️  Course RAG Service not available.")
+
 # ============================================================================
 # VECTOR DATABASE CLASS
 # ============================================================================
@@ -249,6 +267,22 @@ app.add_middleware(
 
 # Initialize Vector Database
 vector_db = SimpleVectorDB(storage_file="knowledge_base.json")
+
+# Initialize MySQL Course Service (PREFERRED - Direct DB access)
+mysql_course_service = None
+if MYSQL_COURSE_AVAILABLE:
+    mysql_course_service = get_mysql_course_service()
+    print("✅ MySQL Course Service initialized")
+else:
+    print("⚠️  MySQL Course Service not initialized")
+
+# Initialize Course RAG Service (FALLBACK)
+course_rag_service = None
+if COURSE_RAG_AVAILABLE:
+    course_rag_service = get_course_rag_service(vector_db)
+    print("✅ Course RAG Service initialized")
+else:
+    print("⚠️  Course RAG Service not initialized")
 
 # Initialize Agent Features
 if AGENT_FEATURES_AVAILABLE:
@@ -452,6 +486,7 @@ class ChatRequest(BaseModel):
     image_base64: Optional[str] = None  # Base64 encoded image for vision analysis
     image_mime_type: Optional[str] = None  # e.g., "image/jpeg", "image/png"
     session_id: Optional[int] = None  # Chat session ID for conversation context
+    system_prompt: Optional[str] = None  # Custom system prompt for assistant personality
     
     model_config = ConfigDict(
         json_schema_extra={
@@ -462,7 +497,8 @@ class ChatRequest(BaseModel):
                 "use_rag": True,
                 "image_base64": None,
                 "image_mime_type": None,
-                "session_id": None
+                "session_id": None,
+                "system_prompt": None
             }
         }
     )
@@ -511,6 +547,21 @@ class EmailDraft(BaseModel):
         # Ensure snake_case in JSON output
     )
 
+class CourseCard(BaseModel):
+    """Course card for display in chat"""
+    id: int
+    title: str
+    description: str
+    creator_name: str
+    enrollment_count: int
+    lesson_count: int
+    thumbnail_url: Optional[str] = None
+    url: str  # Link to course detail page
+    
+    model_config = ConfigDict(
+        populate_by_name=True,
+    )
+
 class ChatResponse(BaseModel):
     response: str
     model: str
@@ -519,6 +570,7 @@ class ChatResponse(BaseModel):
     suggested_actions: Optional[List[ActionLink]] = None  # Links gợi ý
     tool_action: Optional[ToolAction] = None  # Action tự động thực thi
     email_draft: Optional[EmailDraft] = None  # Email draft for preview
+    course_cards: Optional[List[CourseCard]] = None  # Course cards for display
     
     model_config = ConfigDict(
         populate_by_name=True,
@@ -823,6 +875,101 @@ async def test_tvu_schedule(request: TVUTestRequest):
         return {"success": False, "message": f"❌ Lỗi: {str(e)}"}
 
 
+# ============================================================================
+# GUEST CHAT ENDPOINT - No authentication required
+# ============================================================================
+
+class GuestChatRequest(BaseModel):
+    message: str
+    use_rag: bool = False
+    ai_provider: str = "gemini"
+    
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "message": "Machine Learning là gì?",
+                "use_rag": False,
+                "ai_provider": "gemini"
+            }
+        }
+    )
+
+@app.post("/api/chat/guest", tags=["Chat"])
+async def guest_chat(request: GuestChatRequest):
+    """
+    Guest Chat - Cho phép khách dùng thử AI mà không cần đăng nhập
+    
+    Giới hạn:
+    - Không lưu lịch sử chat
+    - Không có Agent Features (TKB, điểm, email)
+    - Không có RAG (tài liệu)
+    - Chỉ chat cơ bản với AI
+    
+    Args:
+        message: Tin nhắn của khách
+        use_rag: Luôn False cho guest
+        ai_provider: "gemini" hoặc "groq"
+    """
+    try:
+        print(f"\n{'='*60}")
+        print(f"👤 GUEST CHAT REQUEST")
+        print(f"Message: {request.message}")
+        print(f"AI Provider: {request.ai_provider}")
+        print(f"{'='*60}\n")
+        
+        # System prompt cho guest - đơn giản hơn
+        system_prompt = """🎓 Bạn là AI Learning Assistant - Trợ lý học tập thông minh!
+
+Bạn đang ở chế độ DEMO cho khách dùng thử.
+
+**Vai trò:**
+- Trả lời câu hỏi về học tập, kiến thức
+- Giải thích rõ ràng, dễ hiểu
+- Thân thiện và hữu ích
+
+**Lưu ý:**
+- Đây là phiên bản demo, một số tính năng bị giới hạn
+- Khuyến khích người dùng đăng ký để trải nghiệm đầy đủ
+
+Trả lời ngắn gọn, súc tích nhưng đầy đủ thông tin."""
+
+        # Use Gemini by default for guest
+        if request.ai_provider == "groq" and groq_client:
+            # Use Groq
+            response_text = groq_client.chat(
+                message=request.message,
+                system_prompt=system_prompt,
+                model="llama-3.3-70b-versatile"
+            )
+        else:
+            # Use Gemini
+            model = genai.GenerativeModel(
+                model_name="gemini-2.0-flash-exp",
+                system_instruction=system_prompt
+            )
+            
+            response = model.generate_content(request.message)
+            response_text = response.text
+        
+        return {
+            "response": response_text,
+            "model": "gemini-2.0-flash-exp" if request.ai_provider == "gemini" else "llama-3.3-70b-versatile",
+            "rag_enabled": False,
+            "guest_mode": True
+        }
+        
+    except Exception as e:
+        print(f"❌ Guest chat error: {e}")
+        # Return friendly error for guest
+        return {
+            "response": "Xin lỗi, tôi đang gặp sự cố kỹ thuật. Vui lòng thử lại sau hoặc đăng ký tài khoản để trải nghiệm đầy đủ! 🙏",
+            "model": "error",
+            "rag_enabled": False,
+            "guest_mode": True,
+            "error": str(e)
+        }
+
+
 @app.post("/api/chat", tags=["Chat"])
 async def chat(request: ChatRequest, authorization: Optional[str] = Header(None)):
     """
@@ -1092,34 +1239,29 @@ async def chat(request: ChatRequest, authorization: Optional[str] = Header(None)
                 rag_enabled=False
             ).model_dump()
         
-        # System prompt - Personality của AI
-        system_prompt = """🎓 Bạn là AI Learning Assistant - Trợ lý học tập thông minh và thân thiện!
+        # System prompt - Use custom if provided, otherwise default
+        if request.system_prompt:
+            system_prompt = request.system_prompt
+            print(f"🎭 Using custom system prompt for assistant personality")
+        else:
+            system_prompt = """Bạn là Sâu Sách 🐛 - trợ lý học tập dễ thương.
 
-**Vai trò của bạn:**
-- Giáo viên ảo kiên nhẫn, nhiệt tình 👨‍🏫
-- Giải thích kiến thức rõ ràng, dễ hiểu
-- Khuyến khích học sinh tư duy và đặt câu hỏi
-- Luôn tích cực và động viên
-- Nhớ context của cuộc trò chuyện (như ChatGPT)
+QUAN TRỌNG - CÁCH TRẢ LỜI:
+- Trả lời NGẮN GỌN, tối đa 2-3 câu
+- Nói chuyện tự nhiên như bạn bè, không formal
+- Dùng 1-2 emoji thôi, đừng lạm dụng
+- Không liệt kê dài dòng, không bullet points trừ khi cần thiết
+- Nếu không biết thì nói "Mình không rõ lắm" thay vì giải thích dài
 
-**Phong cách giao tiếp:**
-- Thân thiện, gần gũi như người bạn 😊
-- Sử dụng emoji phù hợp để sinh động: 📚 ✨ 💡 🎯 ✅
-- Chia nhỏ kiến thức phức tạp thành các phần dễ hiểu
-- Đưa ra ví dụ thực tế, gần gũi với cuộc sống
+VÍ DỤ CÁCH TRẢ LỜI TỐT:
+- "Hay quá! Mình thích nghe nhạc khi học 🎵"
+- "Ừ, quiz đó hạn mai đấy, làm sớm đi nha!"
+- "Mình không rõ lắm, thử hỏi thầy cô xem 😅"
 
-**Cách trả lời:**
-1. Tóm tắt ngắn gọn câu hỏi (nếu cần)
-2. Giải thích chi tiết với cấu trúc rõ ràng
-3. Đưa ra 1-2 ví dụ minh họa
-4. Hỏi lại xem còn thắc mắc gì không
-
-**Lưu ý:**
-- Nếu không chắc chắn, hãy thừa nhận và đề xuất tìm hiểu thêm
-- Khuyến khích học sinh tự suy nghĩ trước khi đưa ra đáp án
-- Sử dụng ngôn ngữ phù hợp với trình độ học sinh
-- Nhớ thông tin từ các tin nhắn trước trong phiên chat này
-"""
+KHÔNG trả lời kiểu này:
+- "Tôi rất vui khi biết rằng bạn thích..."
+- "Tuy nhiên, tôi phải thừa nhận rằng..."
+- Liệt kê 5-6 gạch đầu dòng"""
         
         context_docs = []
         prompt = request.message
@@ -1128,40 +1270,108 @@ async def chat(request: ChatRequest, authorization: Optional[str] = Header(None)
         conversation_context = ""
         if conversation_history:
             print(f"📝 Building conversation context from {len(conversation_history)} messages...")
-            conversation_context = "\n\n**Lịch sử cuộc trò chuyện:**\n"
+            conversation_context = "\n\n**📜 Lịch sử cuộc trò chuyện:**\n"
             for msg in conversation_history:
-                role_label = "Học sinh" if msg["role"] == "user" else "AI"
+                role_label = "👤 Học sinh" if msg["role"] == "user" else "🤖 AI"
                 conversation_context += f"{role_label}: {msg['content']}\n"
             conversation_context += "\n"
         
+        # Check for course search intent FIRST (MySQL Direct Access)
+        course_search_result = None
+        if request.use_rag and (MYSQL_COURSE_AVAILABLE or COURSE_RAG_AVAILABLE):
+            course_search_result = handle_course_search(request.message)
+            if course_search_result and course_search_result.get('total_results', 0) > 0:
+                source = course_search_result.get('source', 'unknown')
+                print(f"📚 Found {course_search_result.get('total_results')} courses from {source.upper()}")
+        
         # Nếu bật RAG, tìm kiếm context từ vector DB
         if request.use_rag and vector_db.get_count() > 0:
-            search_results = vector_db.search(request.message, n_results=3)
+            search_results = vector_db.search(request.message, n_results=5)
             context_docs = search_results['documents']
+            distances = search_results.get('distances', [])
+            metadatas = search_results.get('metadatas', [])
+            
+            # Build detailed course context from MySQL
+            course_context = ""
+            if course_search_result and course_search_result.get('total_results', 0) > 0:
+                source = course_search_result.get('source', 'database')
+                course_context = f"\n\n**🔍 KẾT QUẢ TÌM KIẾM KHÓA HỌC TỪ {source.upper()}:**\n"
+                
+                courses = course_search_result.get('courses', [])
+                if courses:
+                    course_context += "\n📚 **Khóa học phù hợp:**\n"
+                    for i, course in enumerate(courses[:5], 1):
+                        # Handle both MySQL and RAG format
+                        title = course.get('title', 'Unknown')
+                        course_id = course.get('id') or course.get('course_id', '')
+                        description = course.get('description', '')[:150]
+                        creator = course.get('creator_full_name') or course.get('creator_name', 'Unknown')
+                        enrollment_count = course.get('enrollment_count', 0)
+                        lesson_count = course.get('lesson_count', 0)
+                        similarity = course.get('similarity', 100)  # MySQL không có similarity, mặc định 100%
+                        
+                        course_context += f"{i}. **{title}** (ID: {course_id})\n"
+                        course_context += f"   📝 Mô tả: {description}{'...' if len(description) >= 150 else ''}\n"
+                        course_context += f"   👨‍🏫 Giảng viên: {creator}\n"
+                        course_context += f"   👥 Học viên: {enrollment_count} | 📚 Bài học: {lesson_count}\n\n"
+                
+                lessons = course_search_result.get('lessons', [])
+                if lessons:
+                    course_context += "\n📖 **Bài học liên quan:**\n"
+                    for i, lesson in enumerate(lessons[:5], 1):
+                        title = lesson.get('title', 'Unknown')
+                        course_title = lesson.get('course_title', '')
+                        similarity = lesson.get('similarity', 0)
+                        course_context += f"{i}. **{title}** (Thuộc khóa: {course_title}, Match: {similarity}%)\n"
             
             if context_docs:
-                context_text = "\n\n".join([f"📚 Tài liệu {i+1}: {doc}" for i, doc in enumerate(context_docs)])
+                context_text = "\n\n**📚 TÀI LIỆU THAM KHẢO TỪ HỆ THỐNG:**\n"
+                for i, doc in enumerate(context_docs):
+                    similarity = (1 - distances[i]) * 100 if i < len(distances) else 0
+                    metadata = metadatas[i] if i < len(metadatas) else {}
+                    doc_type = metadata.get('type', 'document')
+                    
+                    context_text += f"\n--- Tài liệu {i+1} ({doc_type}, {similarity:.1f}% match) ---\n"
+                    context_text += f"{doc}\n"
+                
                 prompt = f"""{system_prompt}
 
-{conversation_context}**Tài liệu tham khảo từ khóa học:**
-{context_text}
+{conversation_context}{context_text}
+{course_context}
 
-**Câu hỏi của học sinh:**
+**❓ CÂU HỎI CỦA HỌC SINH:**
 {request.message}
 
-Hãy trả lời dựa trên lịch sử cuộc trò chuyện, tài liệu và kiến thức của bạn. Nếu tài liệu không đủ thông tin, hãy bổ sung từ kiến thức chung."""
+**📝 HƯỚNG DẪN TRẢ LỜI:**
+1. Phân tích câu hỏi và xác định nhu cầu của học sinh
+2. Sử dụng thông tin từ TÀI LIỆU THAM KHẢO để trả lời
+3. **QUAN TRỌNG:** Nếu có khóa học trong "KẾT QUẢ TÌM KIẾM KHÓA HỌC" → PHẢI giới thiệu TẤT CẢ các khóa học đó, bao gồm cả khóa chưa có bài học
+4. Mỗi khóa học cần nêu: Tên, ID, Giảng viên, Số học viên, Số bài học
+5. Trả lời rõ ràng, có cấu trúc, dễ hiểu
+6. Khuyến khích học sinh hỏi thêm nếu cần"""
             else:
                 prompt = f"""{system_prompt}
 
-{conversation_context}**Câu hỏi của học sinh:**
+{conversation_context}{course_context}
+
+**❓ CÂU HỎI CỦA HỌC SINH:**
 {request.message}
 
-Hãy trả lời dựa trên lịch sử cuộc trò chuyện và kiến thức của bạn."""
+**📝 HƯỚNG DẪN TRẢ LỜI:**
+- Trả lời dựa trên kiến thức của bạn
+- **QUAN TRỌNG:** Nếu có khóa học trong "KẾT QUẢ TÌM KIẾM KHÓA HỌC" → PHẢI giới thiệu TẤT CẢ các khóa học đó
+- Giới thiệu chi tiết: Tên khóa học, ID, Giảng viên, Số học viên, Số bài học
+- Không bỏ qua bất kỳ khóa học nào trong danh sách
+- Gợi ý học sinh tìm kiếm thêm nếu cần"""
         else:
             prompt = f"""{system_prompt}
 
-{conversation_context}**Câu hỏi của học sinh:**
-{request.message}"""
+{conversation_context}
+
+**❓ CÂU HỎI CỦA HỌC SINH:**
+{request.message}
+
+Hãy trả lời thân thiện và hữu ích. Nếu học sinh hỏi về khóa học, hãy gợi ý họ bật chế độ RAG để tìm kiếm trong hệ thống."""
         
         # Check if image is provided for vision analysis
         content_parts = []
@@ -1388,12 +1598,39 @@ Xin lỗi! API key của Gemini đã vượt quá giới hạn sử dụng miễ
                 icon="📖"
             ))
         
+        # Build course cards if found
+        course_cards = None
+        if course_search_result and course_search_result.get('total_results', 0) > 0:
+            courses = course_search_result.get('courses', [])
+            if courses:
+                course_cards = []
+                for course in courses[:5]:  # Limit to 5 courses
+                    course_id = course.get('id') or course.get('course_id', 0)
+                    title = course.get('title', 'Unknown')
+                    description = course.get('description', '')
+                    creator = course.get('creator_full_name') or course.get('creator_name', 'Unknown')
+                    enrollment_count = course.get('enrollment_count', 0)
+                    lesson_count = course.get('lesson_count', 0)
+                    thumbnail_url = course.get('thumbnail_url')
+                    
+                    course_cards.append(CourseCard(
+                        id=course_id,
+                        title=title,
+                        description=description[:200],  # Limit description
+                        creator_name=creator,
+                        enrollment_count=enrollment_count,
+                        lesson_count=lesson_count,
+                        thumbnail_url=thumbnail_url,
+                        url=f"/courses/{course_id}"  # Frontend route
+                    ))
+        
         return ChatResponse(
             response=ai_response,
             model=actual_model,
             context_used=context_docs if request.use_rag else None,
             rag_enabled=request.use_rag,
-            suggested_actions=suggested_actions
+            suggested_actions=suggested_actions,
+            course_cards=course_cards
         ).model_dump()
     
     except Exception as e:
@@ -1462,6 +1699,251 @@ async def send_email_confirmed(request: SendEmailRequest, authorization: Optiona
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Lỗi: {str(e)}")
+
+
+# ============================================================================
+# COURSE RAG ENDPOINTS - Search courses from database
+# ============================================================================
+
+@app.post("/api/courses/sync-rag", tags=["Course RAG"])
+async def sync_courses_to_rag():
+    """
+    Sync all courses and lessons from database to RAG
+    Call this after adding new courses to make them searchable
+    """
+    if not COURSE_RAG_AVAILABLE or not course_rag_service:
+        raise HTTPException(status_code=503, detail="Course RAG Service not available")
+    
+    result = course_rag_service.sync_courses_to_rag()
+    return result
+
+
+@app.get("/api/courses/search-rag", tags=["Course RAG"])
+async def search_courses_rag(query: str, n_results: int = 5):
+    """
+    Search courses using RAG (semantic search)
+    
+    Args:
+        query: Search query (e.g., "khoa hoc ve Machine Learning")
+        n_results: Number of results to return
+    
+    Returns:
+        Matching courses and lessons with similarity scores
+    """
+    if not COURSE_RAG_AVAILABLE or not course_rag_service:
+        # Fallback to direct database search
+        try:
+            result = course_rag_service.search_courses_direct(query) if course_rag_service else {}
+            return result
+        except:
+            raise HTTPException(status_code=503, detail="Course search not available")
+    
+    # Check if RAG has course data
+    rag_count = vector_db.get_count() if vector_db else 0
+    
+    if rag_count == 0:
+        # No data in RAG, use direct search
+        return course_rag_service.search_courses_direct(query)
+    
+    # Search using RAG
+    return course_rag_service.search_courses(query, n_results)
+
+
+def detect_course_search_intent(message: str) -> bool:
+    """Detect if user wants to search for courses - IMPROVED"""
+    message_lower = message.lower()
+    
+    # Vietnamese keywords (with and without diacritics)
+    course_keywords = [
+        # Tìm khóa học
+        'tim khoa hoc', 'tìm khóa học', 'khoa hoc ve', 'khóa học về',
+        'khoa hoc nao', 'khóa học nào', 'co khoa hoc', 'có khóa học',
+        'goi y khoa hoc', 'gợi ý khóa học', 'de xuat khoa hoc', 'đề xuất khóa học',
+        
+        # Học về
+        'hoc ve', 'học về', 'muon hoc', 'muốn học', 'can hoc', 'cần học',
+        'bat dau hoc', 'bắt đầu học', 'hoc gi', 'học gì',
+        
+        # Tìm bài học
+        'tim bai hoc', 'tìm bài học', 'bai hoc ve', 'bài học về',
+        'noi dung ve', 'nội dung về', 'tai lieu ve', 'tài liệu về',
+        
+        # English keywords
+        'course about', 'find course', 'search course', 'recommend course',
+        'want to learn', 'lesson about', 'tutorial about', 'learn about',
+        'courses for', 'study about', 'training about',
+        
+        # Questions
+        'khoa hoc gi', 'khóa học gì', 'hoc cai gi', 'học cái gì',
+        'nen hoc gi', 'nên học gì', 'hoc o dau', 'học ở đâu',
+        
+        # Topics (common learning topics)
+        'day toi', 'dạy tôi', 'huong dan', 'hướng dẫn',
+        'lam sao de hoc', 'làm sao để học', 'cach hoc', 'cách học'
+    ]
+    
+    # Also check for common tech topics that might indicate course search
+    tech_topics = [
+        'python', 'javascript', 'java', 'react', 'nodejs', 'node.js',
+        'machine learning', 'ai', 'data science', 'web development',
+        'database', 'sql', 'mysql', 'docker', 'devops', 'cloud',
+        'flutter', 'mobile', 'typescript', 'linux', 'git', 'blockchain',
+        'cybersecurity', 'testing', 'ui/ux', 'design'
+    ]
+    
+    # Check direct keywords
+    if any(keyword in message_lower for keyword in course_keywords):
+        return True
+    
+    # Check if asking about tech topics with question words
+    question_words = ['là gì', 'la gi', 'what is', 'how to', 'làm sao', 'lam sao', 'cách', 'cach']
+    has_question = any(q in message_lower for q in question_words)
+    has_tech_topic = any(topic in message_lower for topic in tech_topics)
+    
+    if has_question and has_tech_topic:
+        return True
+    
+    return False
+
+
+def handle_course_search(message: str) -> Optional[Dict]:
+    """
+    Handle course search request - MySQL Direct Access
+    
+    Returns:
+        Dict with search results or None if not a course search
+    """
+    if not detect_course_search_intent(message):
+        return None
+    
+    # Prefer MySQL direct access over RAG
+    if MYSQL_COURSE_AVAILABLE and mysql_course_service:
+        # Extract search query from message
+        query = message.lower()
+        
+        # Remove common prefixes (Vietnamese with and without diacritics)
+        prefixes_to_remove = [
+            'tim khoa hoc ve', 'tìm khóa học về',
+            'tim khoa hoc', 'tìm khóa học',
+            'khoa hoc ve', 'khóa học về',
+            'co khoa hoc nao ve', 'có khóa học nào về',
+            'goi y khoa hoc ve', 'gợi ý khóa học về',
+            'de xuat khoa hoc ve', 'đề xuất khóa học về',
+            'toi muon hoc', 'tôi muốn học',
+            'toi can hoc', 'tôi cần học',
+            'day toi ve', 'dạy tôi về',
+            'huong dan ve', 'hướng dẫn về',
+            'i want to learn', 'find course about',
+            'search course', 'course about',
+            'how to learn', 'teach me about',
+            'ban co khoa hoc gi', 'bạn có khóa học gì'
+        ]
+        
+        for prefix in prefixes_to_remove:
+            if query.startswith(prefix):
+                query = query[len(prefix):].strip()
+                break
+        
+        # Remove question suffixes
+        suffixes_to_remove = [
+            'la gi', 'là gì', 'nhu the nao', 'như thế nào',
+            'o dau', 'ở đâu', 'the nao', 'thế nào', 'khong', 'không'
+        ]
+        
+        for suffix in suffixes_to_remove:
+            if query.endswith(suffix):
+                query = query[:-len(suffix)].strip()
+                break
+        
+        # Clean up query
+        query = query.strip('?!.,')
+        
+        if not query or len(query) < 2:
+            query = message  # Use original message if extraction failed
+        
+        print(f"🔍 MySQL Course search query: '{query}'")
+        
+        # Search directly from MySQL
+        courses = mysql_course_service.search_courses(query, limit=10)
+        
+        if courses:
+            return {
+                "status": "success",
+                "query": query,
+                "courses": courses,
+                "total_results": len(courses),
+                "source": "mysql"
+            }
+        else:
+            # No results, try getting all courses
+            all_courses = mysql_course_service.get_all_courses(limit=5)
+            return {
+                "status": "success",
+                "query": query,
+                "courses": all_courses,
+                "total_results": len(all_courses),
+                "source": "mysql",
+                "message": "Không tìm thấy khóa học phù hợp, đây là các khóa học phổ biến"
+            }
+    
+    # Fallback to RAG if MySQL not available
+    elif COURSE_RAG_AVAILABLE and course_rag_service:
+        # Extract search query from message
+        query = message.lower()
+        
+        # Remove common prefixes (Vietnamese with and without diacritics)
+        prefixes_to_remove = [
+            'tim khoa hoc ve', 'tìm khóa học về',
+            'tim khoa hoc', 'tìm khóa học',
+            'khoa hoc ve', 'khóa học về',
+            'co khoa hoc nao ve', 'có khóa học nào về',
+            'goi y khoa hoc ve', 'gợi ý khóa học về',
+            'de xuat khoa hoc ve', 'đề xuất khóa học về',
+            'toi muon hoc', 'tôi muốn học',
+            'toi can hoc', 'tôi cần học',
+            'day toi ve', 'dạy tôi về',
+            'huong dan ve', 'hướng dẫn về',
+            'i want to learn', 'find course about',
+            'search course', 'course about',
+            'how to learn', 'teach me about'
+        ]
+        
+        for prefix in prefixes_to_remove:
+            if query.startswith(prefix):
+                query = query[len(prefix):].strip()
+                break
+        
+        # Remove question suffixes
+        suffixes_to_remove = [
+            'la gi', 'là gì', 'nhu the nao', 'như thế nào',
+            'o dau', 'ở đâu', 'the nao', 'thế nào'
+        ]
+        
+        for suffix in suffixes_to_remove:
+            if query.endswith(suffix):
+                query = query[:-len(suffix)].strip()
+                break
+        
+        # Clean up query
+        query = query.strip('?!.,')
+        
+        if not query or len(query) < 2:
+            query = message  # Use original message if extraction failed
+        
+        print(f"🔍 Course search query (RAG fallback): '{query}'")
+        
+        # Search courses
+        rag_count = vector_db.get_count() if vector_db else 0
+        
+        if rag_count > 0:
+            results = course_rag_service.search_courses(query, n_results=5)
+        else:
+            results = course_rag_service.search_courses_direct(query)
+        
+        return results
+    
+    return None
+
 
 @app.post("/api/rag/prompt/auto", tags=["RAG - Knowledge Base"])
 async def add_prompt_auto(request: SimplePromptRequest):

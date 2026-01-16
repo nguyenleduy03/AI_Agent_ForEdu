@@ -1,0 +1,121 @@
+version: '3.8'
+
+services:
+  # ============================================
+  # MySQL Database
+  # ============================================
+  mysql:
+    image: mysql:8.0
+    container_name: agentforedu-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root123}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-agentforedu}
+      MYSQL_USER: ${MYSQL_USER:-agentuser}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-agent123}
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./backend/SpringService/agentforedu/database_schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    networks:
+      - agentforedu-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # ============================================
+  # Spring Boot - Core Service
+  # ============================================
+  spring-service:
+    build:
+      context: ./backend/SpringService/agentforedu
+      dockerfile: Dockerfile
+    container_name: agentforedu-spring
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      # Database
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/agentforedu?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Ho_Chi_Minh
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER:-agentuser}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD:-agent123}
+      # JPA
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "false"
+      # JWT
+      JWT_SECRET: ${JWT_SECRET:-mySecretKey123456789012345678901234567890}
+      JWT_EXPIRATION: 86400000
+      # FastAPI Service URL
+      FASTAPI_SERVICE_URL: http://fastapi-service:8000
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - agentforedu-network
+
+  # ============================================
+  # FastAPI - AI Service
+  # ============================================
+  fastapi-service:
+    build:
+      context: ./backend/PythonService
+      dockerfile: Dockerfile
+    container_name: agentforedu-fastapi
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      # AI APIs
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      DEFAULT_AI_MODEL: ${DEFAULT_AI_MODEL:-gemini}
+      # Google OAuth
+      GOOGLE_OAUTH_CLIENT_ID: ${GOOGLE_OAUTH_CLIENT_ID:-}
+      GOOGLE_OAUTH_CLIENT_SECRET: ${GOOGLE_OAUTH_CLIENT_SECRET:-}
+      GOOGLE_OAUTH_REDIRECT_URI: ${GOOGLE_OAUTH_REDIRECT_URI:-http://localhost:8080/api/auth/google/callback}
+      # Service URLs
+      SPRING_BOOT_URL: http://spring-service:8080
+      FRONTEND_URL: http://localhost:5173
+      # Encryption
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:-}
+    volumes:
+      - chroma_data:/app/chroma_db
+    networks:
+      - agentforedu-network
+
+  # ============================================
+  # React Frontend
+  # ============================================
+  frontend:
+    build:
+      context: ./fronend_web
+      dockerfile: Dockerfile
+    container_name: agentforedu-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - spring-service
+      - fastapi-service
+    networks:
+      - agentforedu-network
+
+# ============================================
+# Volumes
+# ============================================
+volumes:
+  mysql_data:
+    driver: local
+  chroma_data:
+    driver: local
+
+# ============================================
+# Networks
+# ============================================
+networks:
+  agentforedu-network:
+    driver: bridge

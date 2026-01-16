@@ -32,8 +32,8 @@ const MaterialList = ({ materials, onDelete, canDelete = false, showLesson = fal
   const getFileIcon = (type: string) => {
     const iconMap: Record<string, JSX.Element> = {
       PDF: <FileText className="w-5 h-5 text-red-500" />,
-      DOC: <FileText className="w-5 h-5 text-blue-500" />,
-      DOCX: <FileText className="w-5 h-5 text-blue-500" />,
+      DOC: <FileText className="w-5 h-5 text-green-500" />,
+      DOCX: <FileText className="w-5 h-5 text-green-500" />,
       PPT: <FileText className="w-5 h-5 text-orange-500" />,
       PPTX: <FileText className="w-5 h-5 text-orange-500" />,
       TXT: <FileText className="w-5 h-5 text-gray-500" />,
@@ -123,7 +123,7 @@ const MaterialList = ({ materials, onDelete, canDelete = false, showLesson = fal
                   href={material.driveEmbedLink || material.fileUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                  className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
                   title="Xem"
                 >
                   <Eye className="w-4 h-4" />
@@ -224,7 +224,7 @@ const MaterialList = ({ materials, onDelete, canDelete = false, showLesson = fal
                       href={selectedVideo.fileUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium transition-colors flex items-center gap-2"
+                      className="px-6 py-3 bg-green-600 hover:bg-green-700 rounded-lg font-medium transition-colors flex items-center gap-2"
                     >
                       <ExternalLink className="w-5 h-5" />
                       Mở trong Google Drive

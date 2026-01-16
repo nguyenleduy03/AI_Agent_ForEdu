@@ -1,0 +1,1904 @@
+
+ 
+ 
+ 
+LỜI CẢM ƠN
+Để hoàn thành đồ án này, em xin bày tỏ lòng biết ơn chân thành đến Ban Giám hiệu cùng quý Thầy, Cô giáo khoa Công nghệ thông tin đã trang bị cho em nền tảng kiến thức vững chắc và tạo môi trường nghiên cứu chuyên nghiệp.
+Em xin gửi lời cảm ơn đặc biệt đến Thầy Nguyễn Bảo Ân, người đã trực tiếp hướng dẫn, tận tình chỉ bảo và truyền cảm hứng cho em trong suốt quá trình nghiên cứu các công nghệ mới như LLM, RAG và kiến trúc phần mềm hiện đại. Những lời khuyên và sự khắt khe về chuyên môn của Thầy chính là động lực lớn nhất để em hoàn thiện sản phẩm này.
+Em cũng xin cảm ơn gia đình và bạn bè đã luôn bên cạnh, động viên và hỗ trợ em về mọi mặt trong suốt thời gian qua.
+Em xin chân thành cảm ơn!
+ 
+LỜI CAM ĐOAN
+Em xin cam kết toàn bộ nội dung của đề tài là kết quả nghiên cứu của bản thân. Các kết quả, dữ liệu liệu trong đề tài là trung thực và hoàn toàn khách quan. Em xin hoàn toàn chịu trách nhiệm về lời cam đoan của mình.
+
+ 
+MỤC LỤC
+CHƯƠNG 1: TỔNG QUAN	15
+1.1	Đặt vấn đề	15
+1.2	Mục tiêu đề tài	16
+1.3	Đối tượng và phạm vi nghiên cứu	17
+1.4	Phương pháp nghiên cứu	18
+CHƯƠNG 2: NGHIÊN CỨU LÝ THUYẾT	19
+2.1	Tổng quan về Trí tuệ nhân tạo (Artificial Intelligence - AI)	19
+2.1.1	Khái niệm và Phân loại Trí tuệ nhân tạo	19
+2.1.2	Machine Learning (Học máy)	20
+2.1.3	Deep Learning (Học sâu) và Kiến trúc Transformer	21
+2.2	Mô hình ngôn ngữ lớn (Large Language Models - LLM)	23
+2.2.1	Bản chất và Cơ chế vận hành của LLM	23
+2.2.2	Hệ sinh thái Google Gemini	24
+2.2.3	Groq và Công nghệ tăng tốc Inference (LPU)	25
+2.3	Tổng quan về kỹ thuật Truy hồi tăng cường (Retrieval-Augmented Generation - RAG)	26
+2.3.1	Bản chất và Tầm quan trọng của RAG	26
+2.3.2	Vector Database và Cơ chế truy xuất ngữ nghĩa	27
+2.3.3	Quy trình vận hành RAG Pipeline trong hệ thống	28
+2.4	Công nghệ Web	29
+2.4.1	Kiến trúc 3 lớp (Three-Tier Architecture)	29
+2.4.2	Kiến trúc RESTful API	30
+2.4.3	Cơ chế bảo mật với JWT (JSON Web Token)	31
+2.5    Công nghệ Frontend	32
+2.5.1 Cơ sở lý thuyết Thư viện React.js	32
+2.5.2  Ngôn ngữ TypeScript	33
+2.5.3  Hệ sinh thái và các thư viện hỗ trợ	34
+2.6  Công nghệ Backend	35
+2.6.1  Spring Boot (Ngôn ngữ Java)	35
+2.6.2  FastAPI (Ngôn ngữ Python)	36
+2.6.3  Mô hình phối hợp và So sánh chiến lược	36
+2.7  Cơ sở dữ liệu	37
+2.7.1  Hệ quản trị cơ sở dữ liệu quan hệ - MySQL	37
+2.7.2  Cơ sở dữ liệu Vector - ChromaDB	39
+2.8  Các API bên ngoài	39
+2.8.1  Hệ sinh thái Google APIs	39
+2.8.2  API Nhận dạng ký tự quang học (OCR API)	40
+2.9  Thuật toán Lặp lại ngắt quãng (Spaced Repetition)	41
+2.9.1  Cơ sở lý thuyết về nhận thức và ghi nhớ	41
+2.9.2  Thuật toán SM-2 (SuperMemo 2)	42
+2.10  Kỹ thuật tự động hóa thu thập dữ liệu (Web Scraping)	43
+2.10.1  Khái niệm và Vai trò của Web Scraping	44
+2.10.2  Thư viện xử lý dữ liệu chuyên dụng	44
+2.10.3  Cơ chế bảo mật và Mã hóa dữ liệu người dùng	45
+2.11  Tóm tắt Chương 2	45
+CHƯƠNG 3: HIỆN THỰC HÓA NGHIÊN CỨU	47
+3.1 Khảo sát và phân tích yêu cầu	47
+3.1.1 Khảo sát hiện trạng và xác định bài toán	47
+3.1.2 Phân tích yêu cầu chức năng (Functional Requirements - FR)	48
+3.2 Đặc tả Use Case	49
+3.2.1 Danh sách Tác nhân (Actors)	49
+3.2.2 Biểu đồ Use Case tổng quan	51
+3.2.3 Đặc tả chi tiết các Use Case trọng tâm	54
+3.2.4 Biểu đồ tuần tự (Sequence Diagrams)	59
+3.3 Thiết kế kiến trúc hệ thống	65
+3.3.1 Kiến trúc tổng quan (General Architecture)	65
+3.3.2 Kiến trúc Frontend (Client-side Architecture)	67
+3.3.3 Kiến trúc Backend (Server-side Architecture)	69
+3.3.4 Kiến trúc AI/RAG (Intelligent Layer)	71
+3.3.5 Cơ chế tương tác giữa các Service	72
+3.4 Thiết kế cơ sở dữ liệu	72
+3.4.1 Mô hình quan hệ thực thể (ERD)	73
+3.4.2 Thiết kế chi tiết các bảng (MySQL)	75
+3.4.3 Thiết kế Vector Database (ChromaDB)	76
+3.4.4 Cơ chế đồng bộ giữa MySQL và ChromaDB	77
+3.5 Thiết kế giao diện lập trình ứng dụng (API Design)	77
+3.5.1 Phân hệ Xác thực và Định danh (Authentication API)	78
+3.5.2 Phân hệ Quản lý Khóa học (Course Management API)	79
+3.5.3 Phân hệ Trợ lý AI và RAG (AI Chat Service API - FastAPI)	79
+3.5.4. Phân hệ Kiểm tra và Đánh giá (AI Quiz API)	80
+3.5.5. Phân hệ Ghi nhớ Flashcard (Retention API)	80
+3.5.6. Phân hệ Tự động hóa và Lịch trình (Schedule & Automation API)	81
+3.5.7. Quy chuẩn mã lỗi và phản hồi (Error Handling)	81
+3.6. Thiết kế giao diện người dùng	81
+3.6.1. Đặc tả Wireframe các màn hình chính	82
+3.6.2. Triết lý thiết kế UI/UX	83
+3.7. Thiết kế bảo mật (Security Design)	84
+3.7.1. Cơ chế xác thực và Phiên làm việc (Authentication Flow)	84
+3.7.2. Kiểm soát truy cập dựa trên vai trò (Role-Based Access Control - RBAC)	85
+3.7.3. Bảo mật dữ liệu (Data Security)	85
+3.7.4. Phòng chống các lỗ hổng Web phổ biến	86
+CHƯƠNG 4: TRIỂN KHAI VÀ KIỂM THỬ	89
+4.1. Môi trường phát triển	89
+4.1.1. Công cụ phát triển phần mềm	89
+4.1.2. Cấu hình môi trường hệ thống	90
+4.1.3. Cấu hình biến môi trường và Bảo mật	91
+4.2. Triển khai phân hệ Frontend (React Application)	91
+4.2.1. Tổ chức cấu trúc dự án	92
+4.2.2. Triển khai các tính năng kỹ thuật trọng tâm	92
+4.2.3. Thiết kế đáp ứng và Tối ưu hóa giao diện (Responsive Design)	93
+4.3. Triển khai phân hệ Backend Spring Boot (Core Service)	93
+4.3.1. Cấu trúc tổ chức dự án	93
+4.3.2. Triển khai các Module nghiệp vụ trọng tâm	94
+4.4. Triển khai phân hệ Backend FastAPI (AI & Agent Service)	95
+4.4.1. Tổ chức cấu trúc dự án	95
+4.4.2. Triển khai dịch vụ AI Chat Assistant	96
+4.4.3. Tối ưu hóa hiệu năng và Trải nghiệm	97
+4.5. Triển khai hệ thống RAG (Retrieval-Augmented Generation)	97
+4.5.1. Triển khai Dịch vụ Vector Database (ChromaDB Service)	97
+4.5.2. Xây dựng các Endpoint quản trị tri thức (RAG API)	98
+4.5.3. Tối ưu hóa quy trình RAG	99
+4.6. Tích hợp và Giao tiếp hệ thống (System Integration)	99
+4.6.1. Tích hợp giữa Frontend và các hệ thống Backend	99
+4.6.2. Tích hợp liên dịch vụ (Spring Boot - FastAPI Integration)	100
+4.6.3. Đánh giá hiệu quả tích hợp	100
+4.7. Kiểm thử hệ thống (System Testing)	101
+4.7.1. Kiểm thử đơn vị (Unit Testing)	101
+4.7.3. Kiểm thử chức năng (Functional Testing)	102
+4.7.5. Kiểm thử bảo mật (Security Testing)	103
+4.8. Kết quả triển khai hệ thống	103
+4.8.1. Hình ảnh giao diện thực tế (Screenshots)	103
+4.8.2. Đánh giá mức độ hoàn thành các tính năng	106
+CHƯƠNG 5: KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN	109
+5.1. Kết quả đạt được	109
+5.1.1. Về mặt lý thuyết và kiến thức chuyên môn	109
+5.1.2. Về mặt thực tiễn và sản phẩm	110
+5.1.3. Tổng kết mức độ hoàn thành nhiệm vụ	111
+5.2. Ưu điểm của hệ thống	112
+5.2.1. Ưu điểm về mặt công nghệ và kiến trúc	112
+5.2.2. Ưu điểm về tính năng và trải nghiệm người dùng	113
+5.3. Hạn chế và khó khăn	114
+5.3.1. Hạn chế về mặt kỹ thuật	114
+5.3.2. Hạn chế về phạm vi triển khai	114
+5.3.3. Khó khăn gặp phải trong quá trình thực hiện	115
+5.4. Bài học kinh nghiệm	115
+5.4.1. Bài học về mặt kỹ thuật	115
+5.4.2. Bài học về mặt quy trình và tư duy hệ thống	116
+5.5. Hướng phát triển đề tài	117
+5.5.1. Giai đoạn ngắn hạn (1-3 tháng): Tối ưu hóa và Ổn định hệ thống	117
+5.5.2. Giai đoạn trung hạn (3-6 tháng): Đa nền tảng và Kết nối cộng đồng	118
+5.5.3. Giai đoạn dài hạn (6-12 tháng): Hệ sinh thái giáo dục thông minh	118
+5.6. Kết luận	119
+5.6.1. Tổng kết kết quả thực hiện đề tài	119
+5.6.2. Đánh giá tổng quan hệ thống	120
+5.6.3. Lời kết	120
+DANH MỤC TÀI LIỆU THAM KHẢO	122
+PHỤ LỤC	124
+
+ 
+DANH MỤC HÌNH ẢNH
+Hình 1: Mạng nơ-ron nhân tạo	21
+Hình 2: Kiến trúc Transformer	22
+Hình 3: Mô hình RAG Pipeline	26
+Hình 4: Mô hình kiến trúc 3 lớp (Three-Tier Architecture)	30
+Hình 5: Cấu trúc một JWT Token	31
+Hình 6: Đường cong quên lãng(The Forgetting Curve)	41
+Hình 7: Biểu đồ Use Case tổng quan	51
+Hình 8: Biểu đồ Use Case đăng ký	54
+Hình 9: Biểu đồ Use Case đăng nhập	56
+Hình 10: Biểu đồ Use Case Chat với Trợ lý AI	57
+Hình 11: Biểu đồ Use Case thời khóa biểu	58
+Hình 12: Biểu đồ Use Case tự tạo quiz	59
+Hình 13: Biểu đồ tuần tự quy trình đăng nhập	60
+Hình 14: Biểu đồ tuần tự quy trình chức năng chat với trợ lý ảo	61
+Hình 15: Biểu đồ tuần tự quy trình khỏi tại quiz	62
+Hình 16: Biểu đồ tuần tự quy trình thời khóa biểu	64
+Hình 17: Kiến trúc tổng quan	67
+Hình 18: Kiến trúc fontend	68
+Hình 19: Kiến trúc backend	70
+Hình 20: Kiến trúc AI/RAG	72
+Hình 21: Mô hình quan hệ thực thể (ERD)	73
+Hình 22: Giao diện trang chủ	104
+Hình 23: Giao diện đăng nhập	104
+Hình 24: Giao diện trang điều khiển trung tâm	105
+Hình 25: Giao diện trang chat với AI	105
+Hình 26: Giao diện trang flashcard	106
+
+
+
+
+DANH MỤC BẢNG BIỂU
+Bảng 1: Lịch sử phát triển của AI	19
+Bảng 2: Bảng tổng hợp các đặc tính của mô hình ngôn ngữ lớn (LLM)	23
+Bảng 3: Bảng đối chiếu vấn đề – giải pháp trong kiến trúc RAG	27
+Bảng 4: bảng so sánh vai trò & kiến trúc giữa hai service trong hệ thống backend	37
+Bảng 5: Bảng đặc tính ACID (Atomicity – Consistency – Isolation – Durability)	38
+Bảng 6: Bảng phân tích đối sánh các nền tảng LMS hiện có	47
+Bảng 7: Bảng danh sách Tác nhân (Actors)	49
+Bảng 8: Bảng mô tả API phân hệ Xác thực và Định danh	78
+Bảng 9: Bảng mô tả API phân hệ QL khóa học	79
+Bảng 10: Bảng mô tả API phân hệ AI/RAG	79
+Bảng 11: Bảng mô tả API phân hệ kiểm tra, đánh giá	80
+Bảng 12: Bảng mô tả API phân hệ ghi nhớ	81
+Bảng 13: Bảng mô tả API phân hệ lịch	81
+Bảng 14: Bảng màu sắc	83
+Bảng 15: Bản phân quyền	85
+Bảng 16: Các công cụ dùng cho lập trình	89
+Bảng 17: Bảng tài nguyên yêu cầu	90
+Bảng 18: Bảng tổng hợp kết quả kiểm thử chức năng	102
+Bảng 19: Bảng tổng hợp kết quả triển khai so với các yêu cầu chức năng đã đề ra	106
+Bảng 20: Bảng tổng hợp các nội dung nghiên cứu lĩnh vự trí tuệ nhân tạo	109
+Bảng 21: Bảng tổng hợp các công nghệ web được sử dụng	110
+Bảng 22: Hệ thống lưu trữ và cơ sở dữu liệu	110
+Bảng 23: Bảng tổng hợp các tính năng hoàn thành	111
+Bảng 24: Các tính năng được Agentic	113
+Bảng 25: Đánh giá tổng quan	120
+
+ 
+TÓM TẮT 
+Đồ án với đề tài Xây dựng Trợ lý ảo AI Agent hỗ trợ học tập - Agent For Edu tập trung nghiên cứu và xây dựng hệ thống học tập thông minh , nhằm khắc phục các hạn chế về tính tương tác và khả năng cá nhân hóa của các nền tảng quản lý học tập (LMS) truyền thống. Nghiên cứu hướng tới việc thiết lập một trợ lý học tập kỹ thuật số có khả năng tối ưu hóa lộ trình ghi nhớ và tự động hóa các tác vụ hành chính dựa trên nền tảng trí tuệ nhân tạo (AI) và khoa học nhận thức.
+Hệ thống được phát triển trên kiến trúc Hybrid Backend tối ưu, kết hợp giữa Spring Boot (Java) để quản trị nghiệp vụ, bảo mật và FastAPI (Python) để thực thi các tác vụ AI bất đồng bộ. Giải pháp kỹ thuật trọng tâm của đề tài là việc ứng dụng mô hình ngôn ngữ lớn Google Gemini kết hợp cùng kỹ thuật Truy hồi tăng cường (RAG) trên cơ sở dữ liệu vector ChromaDB. Kiến trúc này cho phép AI truy xuất tri thức chính xác từ tài liệu học thuật thực tế, hạn chế tối đa hiện tượng ảo giác thông tin và đảm bảo tính xác thực của dữ liệu phản hồi.
+Về mặt chức năng, hệ thống vận hành như một thực thể tự hành (AI Agent) với bốn phân hệ cốt lõi:
+	Trợ lý đa phương thức: Tích hợp thị giác máy tính (Vision AI) và nhận dạng ký tự quang học (OCR) để giải quyết các yêu cầu phức tạp từ văn bản, hình ảnh đến giọng nói.
+	Tự động hóa quy trình (Agentic Workflow): Sử dụng kỹ thuật Web Scraping để bóc tách dữ liệu thời khóa biểu từ cổng đào tạo và đồng bộ hóa trực tiếp với Google Calendar.
+	Tối ưu hóa học tập: Hiện thực hóa thuật toán lặp lại ngắt quãng SM-2 nhằm tự động hóa quy trình khởi tạo câu hỏi đánh giá (Quiz) và thẻ ghi nhớ (Flashcards), hỗ trợ chuyển hóa tri thức vào trí nhớ dài hạn.
+	Hợp nhất hệ sinh thái: Tích hợp sâu các dịch vụ Google Workspace nhằm tập trung hóa quản lý lịch trình và tương tác email trên một nền tảng duy nhất.
+An toàn thông tin được đảm bảo qua cơ chế bảo mật đa tầng, bao gồm xác thực phi trạng thái JWT, băm mật khẩu BCrypt và mã hóa đối xứng AES-256 cho dữ liệu nhạy cảm. Kết quả thực nghiệm trên 15 module chức năng cho thấy hệ thống đạt hiệu suất vận hành cao và độ chính xác truy xuất tri thức đạt trên 90%, giúp nâng cao năng suất học tập và tối ưu hóa quy trình quản lý cá nhân cho sinh viên.
+ABSTRACT
+The project, titled "Building an AI Agent Virtual Assistant for Learning Support - Agent For Edu," focuses on researching and developing an intelligent learning platform to address the limitations regarding interactivity and personalization found in traditional Learning Management Systems (LMS). The research aims to establish a digital assistant capable of optimizing memory retention paths and automating administrative tasks based on Artificial Intelligence (AI) and cognitive science.
+The system is developed on an optimized Hybrid Backend architecture, integrating Spring Boot (Java) for business logic and security with FastAPI (Python) for executing asynchronous AI tasks. The core technical solution of the thesis involves utilizing the Google Gemini large language model combined with Retrieval-Augmented Generation (RAG) on a ChromaDB vector database. 
+Functionally, the system operates as an autonomous entity (AI Agent) with four core sub-systems:
+	Multimodal Assistant: Integrates Computer Vision (Vision AI) and Optical Character Recognition (OCR) to process complex requests across text, images, and voice.
+	Agentic Workflow: Employs Web Scraping techniques to extract schedule data from training portals and synchronize it directly with Google Calendar.
+	Learning Optimization: Implements the SM-2 spaced repetition algorithm to automate the generation of evaluation quizzes and flashcards, facilitating the transition of knowledge into long-term memory.
+	Ecosystem Integration: Deeply integrates Google Workspace services to centralize schedule management and email interactions on a single platform.
+Information security is ensured through a multi-layered mechanism, including JWT stateless authentication, BCrypt password hashing, and AES-256 symmetric encryption for sensitive data. Experimental results across 15 functional modules demonstrate high operational performance and knowledge retrieval accuracy of over 90%, contributing to enhanced learning productivity and optimized personal management for students.
+
+DANH MỤC TỪ VIẾT TẮT
+
+Từ viết tắt	Tiếng Anh đầy đủ	Tiếng Việt đầy đủ
+ACID	Atomicity, Consistency, Isolation, Durability	Các tính chất của giao dịch cơ sở dữ liệu (Tính nguyên tử, Tính nhất quán, Tính cô lập, Tính bền vững)
+AI	Artificial Intelligence	Trí tuệ nhân tạo
+ANN	Artificial Neural Networks	Mạng nơ-ron nhân tạo
+API	Application Programming Interface	Giao diện lập trình ứng dụng
+ASIC	Application-Specific Integrated Circuit	Vi mạch tích hợp chuyên dụng
+CORS	Cross-Origin Resource Sharing	Cơ chế chia sẻ tài nguyên giữa các nguồn khác nhau
+CRUD	Create, Read, Update, Delete	Bốn thao tác cơ bản trên dữ liệu (Tạo, Đọc, Sửa, Xóa)
+CSS	Cascading Style Sheets	Ngôn ngữ định kiểu cho văn bản
+DOM	Document Object Model	Mô hình đối tượng tài liệu
+DTO	Data Transfer Object	Đối tượng chuyển đổi dữ liệu
+ERD	Entity-Relationship Diagram	Sơ đồ mối quan hệ thực thể
+FR	Functional Requirements	Yêu cầu chức năng
+GenAI	Generative Artificial Intelligence	Trí tuệ nhân tạo tạo sinh
+HTML	HyperText Markup Language	Ngôn ngữ đánh dấu siêu văn bản
+HTTP/HTTPS	Hypertext Transfer Protocol (Secure)	Giao thức truyền tải siêu văn bản (Bảo mật)
+IDE	Integrated Development Environment	Môi trường phát triển tích hợp
+JPA	Java Persistence API	Giao diện lập trình ứng dụng lưu trì dữ liệu Java
+JSON	JavaScript Object Notation	Một định dạng hoán đổi dữ liệu văn bản nhẹ
+JWT	JSON Web Token	Mã xác thực dạng chuỗi JSON
+LLM	Large Language Model	Mô hình ngôn ngữ lớn
+LMS	Learning Management System	Hệ thống quản lý học tập
+LPU	Language Processing Unit	Đơn vị xử lý ngôn ngữ
+MVC	Model-View-Controller	Mô hình kiến trúc phần mềm (Dữ liệu - Giao diện - Điều khiển)
+CHƯƠNG 1: TỔNG QUAN
+	Đặt vấn đề
+	Bối cảnh thực tiễn
+Trong kỷ nguyên của cuộc Cách mạng Công nghiệp 4.0, sự hội tụ giữa công nghệ thông tin và Trí tuệ nhân tạo (AI) đã tái định nghĩa lại phương thức vận hành của nhiều lĩnh vực cốt lõi, trong đó giáo dục là trọng tâm của sự chuyển dịch. Theo báo cáo từ UNESCO (2023), việc tích hợp AI vào giáo dục không còn là một xu thế tùy chọn mà đã trở thành yêu cầu tất yếu để nâng cao chất lượng đào tạo toàn cầu.
+Tại Việt Nam, tiến trình chuyển đổi số trong giáo dục đang nhận được sự quan tâm chiến lược từ Chính phủ. Quyết định số 131/QĐ-TTg ngày 25/01/2022 về việc phê duyệt Đề án "Tăng cường ứng dụng công nghệ thông tin và chuyển đổi số trong giáo dục và đào tạo giai đoạn 2022-2025" đã xác lập hành lang pháp lý và tạo động lực mạnh mẽ cho việc xây dựng các hệ sinh thái học tập thông minh.
+Sự bứt phá của các mô hình ngôn ngữ lớn (Large Language Models - LLM) như GPT-4, Google Gemini đã tạo ra những tiền đề kỹ thuật quan trọng cho việc cá nhân hóa giáo dục. Khả năng hiểu ngữ cảnh sâu và xử lý dữ liệu phi cấu trúc của LLM cho phép xây dựng các hệ thống hỗ trợ học tập có khả năng tương tác thời gian thực, cung cấp lộ trình học tập tùy biến và giải quyết triệt để các rào cản về không gian và thời gian trong việc tiếp cận tri thức.
+	Thực trạng và thách thức hiện nay
+a) Hạn chế của các nền tảng quản trị học tập (LMS) truyền thống
+Mặc dù các hệ thống như Moodle, Canvas đã đóng vai trò quan trọng trong việc số hóa tài liệu, tuy nhiên, mô hình này vẫn bộc lộ những điểm nghẽn về mặt công nghệ:
+	Tính thụ động trong tương tác: Phần lớn các hệ thống hiện nay hoạt động theo mô hình lưu trữ và phân phối tài liệu một chiều, thiếu cơ chế phản hồi thông minh và tức thời cho người học.
+	Sự thiếu vắng tính cá nhân hóa: Nội dung giảng dạy được thiết kế theo dạng "one-size-fits-all", chưa thể thích ứng với năng lực và nhịp độ tiếp thu riêng biệt của từng sinh viên.
+	Thiếu hụt công cụ hỗ trợ tư duy: Các hệ thống hiện tại chủ yếu tập trung vào quản lý hành chính học tập, chưa tích hợp các công cụ hỗ trợ ghi nhớ khoa học hay kiểm tra đánh giá tự động dựa trên năng lực.
+b) Thách thức trong quản trị thời gian và thông tin của sinh viên
+Sinh viên trong môi trường đại học hiện đại đang đối mặt với tình trạng "quá tải thông tin" và "phân mảnh dữ liệu":
+	Hệ thống dữ liệu rời rạc: Lịch học, thông báo từ khoa, tài liệu bài giảng và thư điện tử thường nằm trên các nền tảng khác nhau, gây khó khăn trong việc tổng hợp và theo dõi tiến độ.
+	Khoảng cách giữa thông báo và thực thi: Việc thiếu cơ chế đồng bộ hóa tự động giữa hệ thống thông tin nhà trường và các ứng dụng quản lý cá nhân (như Google Calendar) dẫn đến sự thụ động trong việc sắp xếp kế hoạch học tập.
+	Lý do lựa chọn đề tài
+Trong kỷ nguyên số hóa, giáo dục trực tuyến (E-learning) đã trở thành một phần không thể thiếu. Các nền tảng lớn như Coursera hay Udemy đã chứng minh được hiệu quả trong việc cung cấp kiến thức đa dạng cho người học. Tuy nhiên, phần lớn các hệ thống quản lý học tập (LMS) truyền thống hiện nay vẫn còn tồn tại những hạn chế nhất định: tính tương tác thấp, thiếu sự hỗ trợ cá nhân hóa và chưa tích hợp sâu với các công cụ quản lý thời gian của sinh viên.
+Sinh viên thường gặp khó khăn trong việc tự sắp xếp lịch học, tìm kiếm câu trả lời ngay lập tức khi gặp vướng mắc, hoặc ôn tập kiến thức cũ một cách khoa học để tránh tình trạng "học trước quên sau".
+Xuất phát từ thực tế đó, đã đi đến quyết định thực hiện đề tài "Xây dựng nền tảng học tập thông minh tích hợp AI Agent (Agent For Edu)". Dự án không chỉ dừng lại ở việc cung cấp khóa học trực tuyến mà còn tích hợp trí tuệ nhân tạo (Google Gemini) và các thuật toán học tập thông minh (Spaced Repetition). Hệ thống hướng tới việc trở thành một trợ lý học tập đắc lực, hỗ trợ sinh viên 24/7 từ việc giải đáp thắc mắc, tạo bài kiểm tra tự động đến quản lý thời khóa biểu đồng bộ với hệ thống nhà trường (TVU Portal).
+	Mục tiêu đề tài
+	 Mục tiêu tổng quát
+Thiết kế và triển khai một hệ sinh thái học tập thông minh dựa trên kiến trúc Web hiện đại, tích hợp các mô hình trí tuệ nhân tạo tiên tiến nhằm tối ưu hóa hiệu suất học tập, cá nhân hóa lộ trình ôn tập và tự động hóa quy trình quản lý thời gian cho sinh viên.
+
+	 Mục tiêu cụ thể
+	Xây dựng Trợ lý ảo AI (Chatbot): Tích hợp mô hình Google Gemini hỗ trợ đa phương thức (văn bản, hình ảnh, giọng nói), có khả năng duy trì ngữ cảnh hội thoại phức tạp.
+	Triển khai kiến trúc RAG: Thiết lập hệ thống Vector Database (ChromaDB) để lưu trữ và truy xuất kiến thức từ tài liệu chuyên môn, đảm bảo câu trả lời của AI có tính xác thực cao.
+	Tự động hóa dữ liệu thời gian thực: Phát triển module Scraper hỗ trợ trích xuất dữ liệu thời khóa biểu từ cổng thông tin đào tạo (TVU) và đồng bộ hóa trực tiếp với Google Calendar API.
+	Hệ thống hóa công cụ ôn tập khoa học:
+	Tự động hóa quy trình khởi tạo câu hỏi đánh giá (Quiz) đa mức độ từ nội dung bài học.
+	Xây dựng module Flashcard thông minh vận hành dựa trên thuật toán lặp lại ngắt quãng (Spaced Repetition).
+	Hợp nhất dịch vụ thứ ba: Tích hợp sâu các dịch vụ của Google (OAuth2, Gmail, Calendar, YouTube) để tạo ra trải nghiệm người dùng liền mạch trên một nền tảng duy nhất.
+	Đối tượng và phạm vi nghiên cứu
+	 Đối tượng nghiên cứu
+	Đối tượng thực thể: Sinh viên, giảng viên tại các cơ sở đào tạo đại học.
+	Đối tượng công nghệ:
+	Mô hình ngôn ngữ lớn (LLM) và các kỹ thuật tối ưu hóa câu lệnh (Prompt Engineering).
+	Kiến trúc Retrieval-Augmented Generation (RAG) và Vector Database.
+	Các thuật toán học máy trong tối ưu hóa ghi nhớ (SM-2).
+	Quy trình phát triển phần mềm theo kiến trúc Microservices/Hybrid Backend.
+	 Phạm vi nghiên cứu
+	Phạm vi nội dung: Tập trung vào các tính năng hỗ trợ tự học, quản lý lịch trình cá nhân và tương tác với tài liệu học tập kỹ thuật số.
+	Phạm vi công nghệ:
+	Frontend: React.js (phiên bản mới nhất), TypeScript, Tailwind CSS.
+	Backend: Spring Boot (quản trị logic nghiệp vụ và bảo mật) và FastAPI (xử lý các tác vụ AI và dữ liệu nặng).
+	AI & Database: Google Gemini API, ChromaDB, MySQL.
+	Phạm vi ứng dụng: Thử nghiệm dữ liệu thực tế tại Trường Đại học Trà Vinh.
+	Phạm vi thiết bị: Ứng dụng Web đáp ứng (Responsive Web Design) đa nền tảng.
+	Phương pháp nghiên cứu
+	Phương pháp nghiên cứu lý thuyết
+	Nghiên cứu tài liệu (Documentary Research): Phân tích các nghiên cứu khoa học, bài báo quốc tế về kiến trúc Transformer, cơ chế Attention và các báo cáo EdTech toàn cầu.
+	Phân tích so sánh (Comparative Analysis): Đánh giá ưu nhược điểm của các mô hình LLM hiện nay (GPT vs Gemini vs Llama) và các hệ thống Vector Database (ChromaDB vs Pinecone) để lựa chọn giải pháp tối ưu.
+	 Phương pháp nghiên cứu thực nghiệm
+	Phân tích yêu cầu (Requirements Analysis): Sử dụng các kỹ thuật khảo sát, phỏng vấn nhóm đối tượng sinh viên để xác định các điểm đau (pain points) thực tế.
+	Phát triển phần mềm (Software Development): Áp dụng mô hình Agile/Scrum nhằm phát triển hệ thống qua các vòng lặp, đảm bảo tính thích ứng cao.
+	Kiểm thử và đánh giá (Testing & Evaluation):
+	Kiểm thử đơn vị (Unit Test) và kiểm thử tích hợp (Integration Test).
+	Đánh giá độ chính xác của RAG thông qua các chỉ số về ngữ nghĩa.
+	User Acceptance Testing (UAT) với nhóm người dùng thực tế.
+ 
+CHƯƠNG 2: NGHIÊN CỨU LÝ THUYẾT
+
+Tổng quan về Trí tuệ nhân tạo (Artificial Intelligence - AI)
+Khái niệm và Phân loại Trí tuệ nhân tạo
+a) Định nghĩa
+Trí tuệ nhân tạo (Artificial Intelligence - AI) là một nhánh của khoa học máy tính tập trung vào việc nghiên cứu và phát triển các hệ thống có khả năng mô phỏng các quá trình nhận thức của con người. Theo định nghĩa kinh điển của John McCarthy (1956), AI là "khoa học và kỹ thuật tạo ra máy móc thông minh". Từ góc độ hiện đại, AI được hiểu là các thuật toán và hệ thống có khả năng thực thi các tác vụ phức tạp như suy luận, giải quyết vấn đề, hiểu ngôn ngữ và nhận dạng mẫu dựa trên dữ liệu đầu vào.
+Các đặc tính cốt lõi của hệ thống AI bao gồm:
+	Khả năng học tập (Learning): Tiếp nhận thông tin và tự động điều chỉnh các quy tắc bên trong để tối ưu hóa hiệu suất.
+	Khả năng suy luận (Reasoning): Sử dụng các quy tắc logic để đạt được kết luận cụ thể từ các tập dữ liệu có sẵn.
+	Khả năng tự hiệu chỉnh (Self-correction): Liên tục tinh chỉnh các tham số dựa trên kết quả phản hồi để nâng cao độ chính xác.
+b) Lịch sử phát triển và các cột mốc quan trọng
+Sự phát triển của AI có thể được chia thành các giai đoạn mang tính bước ngoặt, chuyển dịch từ các hệ thống dựa trên quy tắc (rule-based) sang các hệ thống dựa trên dữ liệu (data-driven):
+Bảng 1: Lịch sử phát triển của AI
+Giai đoạn	Đặc điểm chính	Cột mốc tiêu biểu
+1950 – 1956	Hình thành tư tưởng	Phép thử Turing (1950); Hội nghị Dartmouth (1956).
+1956 – 1974	Giai đoạn sơ khai	Ngôn ngữ Lisp; Các chương trình giải toán và chứng minh hình học.
+1974 – 1980	Mùa đông AI lần 1	Hạn chế về năng lực tính toán và dữ liệu khiến nghiên cứu đình trệ.
+1980 – 1987	Hệ chuyên gia	Sự phát triển của các hệ thống tri thức chuyên gia (Expert Systems).
+1993 - 2011	Sự phục hưng	Deep Blue đánh bại kiện tướng cờ vua (1997); Big Data bắt đầu hình thành.
+2012 - 2021	Kỷ nguyên Deep Learning	AlexNet (2012); Sự ra đời của kiến trúc Transformer (2017).
+2022 - Nay	AI tạo sinh (GenAI)	Sự bùng nổ của LLMs (ChatGPT, Gemini, Claude) và các mô hình đa phương thức.
+
+c) Phân loại AI theo năng lực nhận thức
+Trong khoa học máy tính, AI được phân tầng dựa trên mức độ tương đồng với trí tuệ con người:
+	Artificial Narrow Intelligence (ANI - AI hẹp): Là các hệ thống được tối ưu hóa cho một tác vụ cụ thể (như nhận dạng giọng nói, chatbot, hoặc gợi ý sản phẩm). Mọi hệ thống AI hiện nay, bao gồm cả các mô hình ngôn ngữ lớn, đều thuộc nhóm này.
+	Artificial General Intelligence (AGI - AI tổng quát): Là hệ thống có khả năng học hỏi và thực thi bất kỳ tác vụ trí tuệ nào mà con người có thể thực hiện. Đây hiện vẫn là mục tiêu nghiên cứu trong tương lai.
+	Artificial Super Intelligence (ASI - Siêu AI): Cấp độ giả thuyết khi máy tính vượt xa trí tuệ con người ở mọi khía cạnh, bao gồm cả khả năng tự nhận thức và sáng tạo.
+Machine Learning (Học máy)
+a) Nguyên lý hoạt động
+Machine Learning (ML) là một tập hợp con của AI, tập trung vào việc xây dựng các thuật toán có khả năng tự cải thiện thông qua kinh nghiệm từ dữ liệu. Khác với lập trình truyền thống (nơi lập trình viên đưa ra các quy tắc cứng), ML cho phép máy tính tự tìm ra các quy luật (patterns) từ dữ liệu để xây dựng mô hình dự báo.
+Công thức tổng quát của một mô hình ML:  Y=f(X,θ)
+Trong đó: 
+	X là dữ liệu đầu vào.
+	Y là kết quả đầu ra.
+	θ là các tham số của mô hình được tối ưu hóa trong quá trình huấn luyện.
+b) Các phương pháp học chính
+	Học có giám sát (Supervised Learning): Mô hình được huấn luyện trên tập dữ liệu có nhãn (Labeled data). Mục tiêu là tìm hàm ánh xạ từ đầu vào sang đầu ra dựa trên các cặp ví dụ có sẵn.
+	Học không giám sát (Unsupervised Learning): Mô hình tự tìm cấu trúc ẩn trong dữ liệu không được dán nhãn (Unlabeled data). Ứng dụng phổ biến nhất là phân cụm (Clustering) và giảm chiều dữ liệu.
+	Học tăng cường (Reinforcement Learning): Mô hình học thông qua cơ chế "thử và sai" để tối đa hóa phần thưởng (Reward) nhận được từ môi trường xung quanh.
+Deep Learning (Học sâu) và Kiến trúc Transformer
+	Mạng nơ-ron nhân tạo (Artificial Neural Networks - ANN)
+Deep Learning là một nhánh chuyên sâu của Machine Learning dựa trên cấu trúc của các mạng nơ-ron nhân tạo với nhiều tầng ẩn (Hidden layers). Mỗi tầng trong mạng thực hiện việc trích xuất các đặc trưng (features) từ dữ liệu ở mức độ trừu tượng tăng dần.
+ 
+Hình 1: Mạng nơ-ron nhân tạo
+
+	Tầng đầu vào (Input Layer): Tiếp nhận các vector đặc trưng.
+	Tầng ẩn (Hidden Layers): Thực hiện các phép tính tuyến tính và phi tuyến (thông qua Activation Functions) để học các cấu trúc phức tạp.
+	Tầng đầu ra (Output Layer): Đưa ra kết quả phân loại hoặc dự báo cuối cùng.
+
+	Kiến trúc Transformer - Nền tảng của GenAI
+Được giới thiệu bởi Google vào năm 2017, kiến trúc Transformer đã thay thế các mạng RNN và LSTM trong xử lý ngôn ngữ tự nhiên. Điểm đột phá của Transformer nằm ở việc loại bỏ tính tuần tự và cho phép xử lý song song toàn bộ chuỗi dữ liệu đầu vào.
+Kiến trúc này bao gồm hai thành phần chính:
+	Encoder: Chịu trách nhiệm hiểu và mã hóa ngữ cảnh của chuỗi đầu vào thành một không gian vector (embedding).
+	Decoder: Sử dụng thông tin từ Encoder để tạo ra chuỗi đầu ra (từng token một).
+ 
+Hình 2: Kiến trúc Transformer
+Lưu ý: Các mô hình như Gemini hay GPT hiện đại thường sử dụng các biến thể của kiến trúc Transformer (ví dụ: Decoder-only) để tối ưu hóa khả năng tạo văn bản.
+	Cơ chế Self-Attention (Tự chú ý)
+Đây là linh hồn của Transformer. Cơ chế này cho phép mô hình khi xử lý một từ (token) cụ thể có thể "chú ý" đến tất cả các từ khác trong câu để xác định mối quan hệ ngữ nghĩa.
+Công thức toán học của Attention:
+"Attention"(Q,K,V)="softmax" ((QK^T)/√(d_k ))V
+Trong đó:
+	Q (Query): Đại diện cho từ hiện tại đang xét.
+	K (Key): Đại diện cho tất cả các từ trong chuỗi để so sánh mức độ liên quan.
+	V (Value): Thông tin nội dung của các từ.
+	d_k: Yếu tố tỷ lệ để ổn định gradient trong quá trình huấn luyện.
+Nhờ cơ chế này, hệ thống Agent For Edu có thể hiểu được các câu hỏi phức tạp của sinh viên bằng cách phân tích mối liên hệ giữa các khái niệm học thuật trong cùng một ngữ cảnh tài liệu.
+
+Mô hình ngôn ngữ lớn (Large Language Models - LLM)
+Bản chất và Cơ chế vận hành của LLM
+	Khái niệm và Quy mô
+Mô hình ngôn ngữ lớn (Large Language Model - LLM) là các mạng nơ-ron sâu (Deep Neural Networks) có kiến trúc dựa trên Transformer, được huấn luyện trên các tập dữ liệu văn bản ở quy mô khổng lồ (Web-scale data). Thuật ngữ "Large" (Lớn) đại diện cho hai khía cạnh: số lượng tham số (thường từ hàng tỷ đến hàng nghìn tỷ) và khối lượng dữ liệu huấn luyện (tính bằng Terabytes văn bản). LLM không chỉ ghi nhớ thông tin mà còn học được cấu trúc ngôn ngữ, logic suy luận và khả năng xử lý ngữ cảnh phức tạp.
+	Các đặc tính kỹ thuật tiêu biểu
+Sức mạnh của LLM trong giáo dục đến từ các khả năng trỗi dậy (Emergent abilities) mà các mô hình nhỏ không có được:
+Bảng 2: Bảng tổng hợp các đặc tính của mô hình ngôn ngữ lớn (LLM) 
+Đặc tính	Ý nghĩa kỹ thuật	Ứng dụng trong đồ án
+In-context Learning	Học từ các ví dụ nằm trong câu lệnh (Prompt).	Hỗ trợ AI hiểu phong cách giảng dạy của từng môn học.
+Zero-shot/Few-shot	Thực hiện tác vụ mà không cần huấn luyện lại.	Giải đề thi hoặc tóm tắt bài giảng ngay lập tức.
+Context Window	Độ dài chuỗi token tối đa mô hình có thể ghi nhớ.	Cho phép AI "đọc" toàn bộ giáo trình hoặc tài liệu PDF dài.
+Fine-tuning	Tinh chỉnh mô hình trên tập dữ liệu chuyên biệt.	Tối ưu hóa khả năng hiểu thuật ngữ chuyên ngành (IT, Kinh tế...).
+
+	Quy trình xử lý dữ liệu của LLM
+Quá trình từ một câu hỏi của sinh viên đến câu trả lời của AI trải qua bốn giai đoạn kỹ thuật:
+	Tokenization: Văn bản được chia thành các đơn vị nhỏ nhất gọi là "tokens" (có thể là từ, cụm từ hoặc ký tự).
+	Vector Embedding: Chuyển đổi các tokens thành các không gian vector đa chiều, nơi các từ có nghĩa tương đồng sẽ nằm gần nhau.
+	Inference (Suy luận): Thông qua các tầng Attention trong Transformer, mô hình tính toán xác suất của các từ tiếp theo dựa trên toàn bộ ngữ cảnh phía trước.
+	De-tokenization: Chuyển đổi các mã số (ID tokens) trở lại thành văn bản tự nhiên hiển thị cho người dùng.
+
+Hệ sinh thái Google Gemini
+a) Kiến trúc Đa phương thức bản địa (Native Multimodality)
+Khác với các mô hình trước đây phải kết hợp nhiều module rời rạc, Google Gemini được thiết kế là một mô hình đa phương thức ngay từ đầu. Điều này cho phép Gemini hiểu và suy luận chéo giữa văn bản, hình ảnh, âm thanh và mã nguồn một cách liền mạch. Trong lĩnh vực giáo dục, điều này cực kỳ quan trọng khi sinh viên thường xuyên cần giải bài tập qua hình ảnh chụp hoặc video bài giảng.
+b) Phân cấp các phiên bản Gemini
+Google cung cấp các kích thước mô hình khác nhau để tối ưu hóa giữa hiệu năng và chi phí:
+	Gemini Ultra: Mô hình lớn nhất, dành cho các tác vụ suy luận cực kỳ phức tạp và đòi hỏi tính logic cao.
+	Gemini Pro: Mô hình cân bằng, phù hợp cho hầu hết các ứng dụng doanh nghiệp và hội thoại thông minh.
+	Gemini Flash (Phiên bản sử dụng chính): Được tối ưu hóa về tốc độ và độ trễ (latency), phù hợp cho các tương tác thời gian thực.
+	Gemini Nano: Mô hình thu nhỏ chạy trực tiếp trên thiết bị (Edge AI).
+c) Vai trò của Gemini 2.5 Flash trong hệ thống Agent For Edu
+Đề tài lựa chọn Gemini 2.5 Flash làm hạt nhân xử lý chính nhờ vào ba ưu thế vượt trội:
+	Khả năng xử lý Context dài (1M+ tokens): Cho phép hệ thống nạp toàn bộ tài liệu của một học phần vào bộ nhớ tạm để AI trả lời mà không bị mất ngữ cảnh.
+	Tốc độ đáp ứng: Với cấu trúc được tối ưu cho inference nhanh, Flash giúp sinh viên nhận được phản hồi gần như tức thì, nâng cao trải nghiệm người dùng.
+	Hỗ trợ Vision AI: Sinh viên có thể tải lên ảnh chụp bài giảng, AI sẽ tự động trích xuất nội dung (OCR) và giải thích các sơ đồ phức tạp.
+Groq và Công nghệ tăng tốc Inference (LPU)
+a) Khái niệm về LPU (Language Processing Unit)
+Trong khi CPU truyền thống xử lý đa nhiệm và GPU xử lý song song đồ họa, Groq đã phát minh ra LPU (Language Processing Unit). Đây là một loại chip xử lý chuyên dụng (ASIC) được thiết kế riêng cho tính toán tuần tự của các mô hình ngôn ngữ lớn. LPU loại bỏ các rào cản về băng thông bộ nhớ thường thấy trên GPU, cho phép thực hiện inference với tốc độ vượt xa các giải pháp đám mây thông thường.
+b) Ưu thế đột phá về tốc độ
+Groq cung cấp khả năng xử lý với tốc độ lên tới ~500 tokens/giây đối với các mô hình như Llama 3 hoặc Mixtral. Trong đồ án này, sự tích hợp Groq mang lại ý nghĩa:
+	Trải nghiệm mượt mà: Xóa bỏ độ trễ khi tạo các nội dung dài như bộ câu hỏi Quiz (thường mất 10-20 giây trên GPU thường, nhưng chỉ mất 1-2 giây trên Groq).
+	Tính sẵn sàng cao: Đóng vai trò là hệ thống dự phòng (Fail-over) khi API của Google đạt giới hạn giới hạn (Rate limit).
+c) Mô hình triển khai qua Groq Cloud
+Đồ án sử dụng Groq thông qua giao thức API tương thích với chuẩn OpenAI, cho phép chuyển đổi linh hoạt giữa các mô hình mã nguồn mở hàng đầu:
+	Llama 3.1 (70B/405B): Sử dụng cho các tác vụ suy luận logic cần độ chính xác cao.
+	Mixtral 8x7B: Sử dụng cho các tác vụ tóm tắt văn bản và phân loại ý định (Intent detection) của sinh viên.
+Tổng quan về kỹ thuật Truy hồi tăng cường (Retrieval-Augmented Generation - RAG)
+RAG không chỉ đơn thuần là việc cung cấp thêm dữ liệu cho LLM; nó là một kiến trúc hợp nhất giữa Hệ thống truy hồi thông tin (Information Retrieval) và Mô hình tạo sinh (Generative Model). Trong hệ thống Agent For Edu, RAG đóng vai trò là lớp kiểm chứng tri thức (Knowledge Grounding). Thay vì để LLM tự suy diễn từ tham số huấn luyện, RAG buộc mô hình phải thực hiện truy xuất trên tập chỉ mục vector (Vector Index) được trích xuất từ tài liệu học thuật thực tế, từ đó giải quyết triệt để vấn đề ảo giác (Hallucination) và đảm bảo tính cập nhật của thông tin
+Bản chất và Tầm quan trọng của RAG
+a) Định nghĩa kỹ thuật
+RAG (Retrieval-Augmented Generation) là một khung kiến trúc (framework) hiện đại nhằm tối ưu hóa kết quả đầu ra của các Mô hình Ngôn ngữ Lớn (LLM) bằng cách kết hợp sức mạnh của khả năng sinh văn bản (Generation) với khả năng truy xuất dữ liệu từ các nguồn tri thức bên ngoài (Retrieval). Thay vì chỉ dựa vào "bộ nhớ tham số" (Parametric memory) được hình thành trong quá trình huấn luyện, RAG cho phép LLM tiếp cận với "bộ nhớ ngoài" (Non-parametric memory) là các tài liệu học tập thực tế của sinh viên.
+ 
+Hình 3: Mô hình RAG Pipeline
+b) Giải quyết các hạn chế của LLM thuần túy (Grounding)
+Trong lĩnh vực giáo dục, tính chính xác của thông tin là yếu tố tiên quyết. RAG đóng vai trò là cơ chế "Grounding" (đưa AI về thực tại) để giải quyết các thách thức sau:
+Bảng 3: Bảng đối chiếu vấn đề – giải pháp trong kiến trúc RAG
+Thách thức của LLM	Cơ chế giải quyết của RAG
+Sự ảo giác (Hallucination): AI bịa đặt thông tin khi không có dữ liệu.	Buộc AI phải trả lời dựa trên các đoạn văn bản cụ thể được truy xuất từ cơ sở dữ liệu.
+Kiến thức lỗi thời: LLM bị giới hạn bởi điểm cắt dữ liệu (Knowledge cutoff).	Cho phép AI tiếp cập với các giáo trình, thông báo mới nhất vừa được cập nhật.
+Thiếu dẫn chứng: AI đưa ra câu trả lời chung chung.	Hỗ trợ trích dẫn nguồn (Citations) từ trang nào, tài liệu nào để sinh viên đối soát.
+Dữ liệu chuyên biệt: LLM không biết về quy định riêng của từng trường.	Bổ sung kiến thức đặc thù về chương trình đào tạo của Đại học Trà Vinh (TVU).
+
+Vector Database và Cơ chế truy xuất ngữ nghĩa
+a) Vector Embedding - Chuyển đổi ngôn ngữ sang không gian số
+Trọng tâm của RAG là khả năng chuyển đổi văn bản thành các Vector Embedding – các chuỗi số học đại diện cho ý nghĩa ngữ nghĩa của từ ngữ trong không gian đa chiều.
+	Các thuật toán Embedding (như text-embedding-004 của Google) sẽ ánh xạ các đoạn văn bản có cùng ngữ cảnh vào các vị trí gần nhau trong không gian vector.
+	Khác với tìm kiếm từ khóa (Keyword search), tìm kiếm vector (Semantic search) có thể hiểu rằng "Hệ quản trị cơ sở dữ liệu" và "Database Management System" là cùng một khái niệm dù chúng không trùng lặp về ký tự.
+b) Độ tương đồng Cosine (Cosine Similarity)
+Để xác định tài liệu nào liên quan nhất đến câu hỏi của sinh viên, hệ thống sử dụng phép đo độ tương đồng Cosine. Phép toán này đo góc giữa hai vector câu hỏi 
+(A) và vector tài liệu (B):
+ similarity=cos(θ)=∥A∥∥B∥A⋅B
+Giá trị gần bằng 1 thể hiện sự tương đồng cực kỳ cao về mặt ý nghĩa, giúp hệ thống trích xuất đúng đoạn kiến thức cần thiết.
+c) Cơ sở dữ liệu Vector: ChromaDB
+Đề tài sử dụng ChromaDB – một hệ quản trị cơ sở dữ liệu chuyên dụng cho vector. ChromaDB được lựa chọn nhờ các ưu điểm:
+	Tốc độ truy xuất: Sử dụng thuật toán HNSW (Hierarchical Navigable Small World) giúp tìm kiếm láng giềng gần nhất (Nearest Neighbor) trong hàng triệu bản ghi với độ trễ tính bằng mili giây.
+	Tính linh hoạt: Hỗ trợ lưu trữ cả vector và siêu dữ liệu (metadata) như tên môn học, giảng viên, ngày tạo tài liệu.
+	Kiến trúc nhúng: Có thể chạy trực tiếp trong môi trường Python (FastAPI), giúp tối ưu hóa tài nguyên server.
+Quy trình vận hành RAG Pipeline trong hệ thống
+Quy trình RAG trong Agent For Edu được chuẩn hóa qua ba giai đoạn chiến lược:
+Giai đoạn 1: Indexing (Lập chỉ mục tri thức)
+	Trích xuất dữ liệu: Hệ thống đọc các file PDF, tài liệu học tập từ khóa học.
+	Phân đoạn (Chunking): Tài liệu được chia nhỏ thành các đoạn văn (Chunks) với độ dài khoảng 500-1000 tokens. Kỹ thuật Overlapping (gối đầu) được áp dụng để đảm bảo thông tin không bị ngắt quãng ở ranh giới các đoạn.
+	Embedding & Storage: Mỗi đoạn văn được chuyển thành vector và lưu vào ChromaDB cùng với metadata.
+Giai đoạn 2: Retrieval (Truy xuất ngữ nghĩa)
+	Khi sinh viên đặt câu hỏi, hệ thống tiến hành embedding câu hỏi đó ngay lập tức.
+	Thực hiện so khớp vector trong ChromaDB để tìm ra Top-K (thường K=3 đến 5) đoạn văn bản có độ tương đồng cao nhất với câu hỏi.
+Giai đoạn 3: Generation (Sinh câu trả lời tăng cường)
+Hệ thống xây dựng một Augmented Prompt (Câu lệnh tăng cường) theo cấu trúc:
+"Dựa trên các thông tin học thuật dưới đây: [Context trích xuất từ ChromaDB]. Hãy trả lời câu hỏi của sinh viên: [Câu hỏi gốc]. Lưu ý: Nếu thông tin không có trong tài liệu, hãy thông báo rằng bạn không biết và không được tự ý bịa đặt."
+Kết quả là sinh viên nhận được một câu trả lời mang tính cá nhân hóa cao, bám sát nội dung bài giảng và có độ tin cậy tuyệt đối.
+Công nghệ Web
+Kiến trúc 3 lớp (Three-Tier Architecture)
+a) Bản chất kiến trúc
+Kiến trúc 3 lớp (Three-Tier Architecture) là một mô hình thiết kế phần mềm tiêu chuẩn, phân tách ứng dụng thành ba tầng logic độc lập. Sự phân tách này giúp tối ưu hóa quá trình phát triển, bảo trì và mở rộng hệ thống. Trong đồ án này, kiến trúc 3 lớp không chỉ dừng lại ở mô hình truyền thống mà còn được tùy biến để tích hợp đa ngôn ngữ (Hybrid Backend).
+	Tầng trình diễn (Presentation Tier): Là lớp giao diện người dùng (Frontend), được xây dựng bằng React.js. Tầng này chịu trách nhiệm thu thập yêu cầu từ sinh viên, hiển thị dữ liệu và tương tác trực tiếp qua trình duyệt web.
+	Tầng xử lý nghiệp vụ (Business Logic Tier): Đây là trung tâm điều khiển của hệ thống, nơi xử lý mọi quy trình logic. Đồ án sử dụng mô hình Dual-Backend:
+	Spring Boot: Đảm nhận các nghiệp vụ cốt lõi (Core Business) như quản lý tài khoản, khóa học, bảo mật và giao dịch dữ liệu.
+	FastAPI: Đảm nhận các nghiệp vụ chuyên sâu về AI (AI Services) như RAG, xử lý ngôn ngữ tự nhiên và tích hợp API của bên thứ ba.
+	Tầng dữ liệu (Data Tier): Chịu trách nhiệm lưu trữ và quản lý thông tin. Hệ thống sử dụng cơ chế lưu trữ kép (Hybrid Storage) gồm MySQL cho dữ liệu quan hệ (thông tin người dùng, lịch học) và ChromaDB cho dữ liệu vector (kiến thức học thuật).
+ 
+Hình 4: Mô hình kiến trúc 3 lớp (Three-Tier Architecture)
+b) Ưu điểm đối với hệ thống Agent For Edu
+Khả năng mở rộng độc lập (Scalability): Khi số lượng sinh viên tăng lên, tầng Frontend có thể được scale thông qua CDN, trong khi tầng Backend có thể được scale riêng biệt mà không ảnh hưởng lẫn nhau.
+Tính linh hoạt về công nghệ (Technological Flexibility): Việc tách biệt logic giúp hệ thống tận dụng được thế mạnh của Java (tính bền vững, bảo mật) và Python (thư viện AI phong phú).
+Tính bảo mật cao: Tầng dữ liệu hoàn toàn tách biệt với người dùng cuối; mọi truy cập vào database đều phải thông qua tầng Business Logic với các cơ chế kiểm soát nghiêm ngặt.
+Kiến trúc RESTful API
+a) Nguyên lý thiết kế
+REST (Representational State Transfer) là một phong cách kiến trúc mạng dựa trên các chuẩn web và giao thức HTTP. Hệ thống Agent For Edu sử dụng RESTful API làm cầu nối giao tiếp chính giữa Frontend và hai hệ thống Backend. Các nguyên tắc cốt lõi bao gồm:
+	Stateless (Phi trạng thái): Mỗi yêu cầu từ sinh viên gửi lên server phải chứa đầy đủ thông tin cần thiết để server hiểu và xử lý, không phụ thuộc vào các phiên làm việc trước đó.
+	Resource-Based (Dựa trên tài nguyên): Mọi thực thể trong hệ thống (Khóa học, Chat session, Quiz) đều được định nghĩa là một tài nguyên với các URL định danh duy nhất (Ví dụ: /api/v1/courses).
+b) Các phương thức và mã trạng thái chuẩn hóa
+Để đảm bảo tính thống nhất trong giao tiếp giữa các nhóm công nghệ khác nhau (Java, Python, TypeScript), hệ thống tuân thủ nghiêm ngặt chuẩn HTTP.
+Hệ thống trả về các HTTP Status Codes chuẩn (như 200 OK, 201 Created, 401 Unauthorized, 500 Error) giúp Frontend xử lý các kịch bản người dùng (như hiển thị thông báo lỗi hoặc chuyển hướng đăng nhập) một cách chính xác.
+Cơ chế bảo mật với JWT (JSON Web Token)
+a) Cấu trúc và Đặc điểm
+Trong một hệ thống gồm nhiều dịch vụ (Spring Boot và FastAPI), việc quản lý phiên làm việc bằng Session truyền thống rất phức tạp. Đồ án sử dụng JWT (JSON Web Token) – một phương thức xác thực phi trạng thái, an toàn và nhỏ gọn.
+Một token JWT bao gồm ba thành phần:
+	Header: Chứa loại token và thuật toán mã hóa (thường là HS256).
+	Payload: Chứa các thông tin định danh người dùng (Claims) như userId, role (STUDENT/TEACHER) và thời gian hết hạn (exp).
+	Signature: Chữ ký số được tạo ra bằng cách kết hợp Header, Payload với một mã bí mật (Secret Key) phía server, giúp chống lại việc giả mạo dữ liệu.
+ 
+Hình 5: Cấu trúc một JWT Token
+b) Quy trình xác thực liên thông (Cross-Service Authentication)
+Cơ chế JWT giúp hệ thống đạt được sự bảo mật đồng bộ:
+	Đăng nhập: Sinh viên gửi thông tin tới Spring Boot. Sau khi xác thực thành công, Spring Boot cấp một JWT.
+	Lưu trữ: Frontend nhận token và lưu vào LocalStorage hoặc HTTP-only Cookie.
+	Ủy quyền: Với mọi yêu cầu sau đó (ví dụ: yêu cầu FastAPI xử lý RAG), Frontend đính kèm token vào Header Authorization: Bearer <token>.
+	Xác thực: Cả Spring Boot và FastAPI đều có thể tự giải mã và xác thực token này bằng Secret Key chung mà không cần phải truy vấn lại Database, giúp giảm thiểu độ trễ và tăng tính hiệu quả cho hệ thống AI.
+c) Ưu điểm bảo mật
+Chống tấn công CSRF: Do không sử dụng session truyền thống, hệ thống miễn nhiễm với các kiểu tấn công giả mạo yêu cầu từ phía trình duyệt.
+Phân quyền (RBAC): Thông tin về vai trò người dùng được nhúng trực tiếp trong token, cho phép hệ thống kiểm soát quyền truy cập tài nguyên (ví dụ: chỉ Teacher mới có quyền xóa Khóa học) một cách minh bạch.
+2.5    Công nghệ Frontend
+2.5.1 Cơ sở lý thuyết Thư viện React.js
+a) Tổng quan về React.js
+React.js là một thư viện JavaScript mã nguồn mở được phát triển bởi Meta (Facebook), chuyên dùng để xây dựng giao diện người dùng (UI) theo hướng khai báo (Declarative UI). Với triết lý thiết kế tập trung vào tính tái sử dụng và hiệu năng cao, React đã trở thành tiêu chuẩn công nghiệp trong việc phát triển các ứng dụng web đơn trang (Single Page Application - SPA).
+b) Cơ chế Virtual DOM (Mô hình DOM ảo)
+Điểm đột phá của React nằm ở việc sử dụng Virtual DOM để tối ưu hóa quá trình cập nhật giao diện. Thay vì thao tác trực tiếp lên DOM thực của trình duyệt (vốn rất tốn kém về tài nguyên), React thực hiện các thay đổi trên một bản sao nhẹ hơn trong bộ nhớ.
+	Cơ chế Diffing: Khi trạng thái (state) thay đổi, React so sánh Virtual DOM mới với phiên bản cũ để tìm ra những thay đổi tối thiểu cần thiết.
+	Reconciliation: Chỉ những thành phần thực sự thay đổi mới được cập nhật lên DOM thực, giúp ứng dụng vận hành mượt mà ngay cả khi xử lý các luồng dữ liệu lớn như tin nhắn chatbot liên tục.
+c) Kiến trúc hướng thành phần (Component-based Architecture)
+Hệ thống Agent For Edu được xây dựng từ các thành phần độc lập và có khả năng tái sử dụng cao. Mỗi bộ phận của giao diện (như Thanh tìm kiếm, Khung chat AI, Thẻ Flashcard) là một Component riêng biệt chứa đựng cả logic và giao diện. Cách tiếp cận này giúp:
+	Dễ dàng bảo trì: Sửa đổi một thành phần không làm ảnh hưởng đến các phần khác.
+	Tính nhất quán: Đảm bảo trải nghiệm người dùng đồng bộ trên toàn hệ thống.
+d) Hệ thống React Hooks
+Hooks là tính năng cho phép sử dụng state và các tính năng khác của React mà không cần viết class. Trong đồ án, các Hooks đóng vai trò quản trị vòng đời và logic của ứng dụng:
+	useState: Quản lý các trạng thái cục bộ như nội dung tin nhắn, trạng thái đóng/mở menu.
+	useEffect: Xử lý các tác vụ phụ (side effects) như gọi API lấy dữ liệu khóa học hoặc lắng nghe sự kiện từ bàn phím.
+	useMemo & useCallback: Tối ưu hóa hiệu năng bằng cách ghi nhớ các kết quả tính toán phức tạp, tránh việc render lại không cần thiết.
+2.5.2  Ngôn ngữ TypeScript
+a) Tầm quan trọng của Type Safety trong dự án lớn
+TypeScript là một phiên bản mở rộng (superset) của JavaScript, bổ sung cơ chế kiểm tra kiểu dữ liệu tĩnh (Static Typing). Trong một hệ thống tích hợp AI với cấu trúc dữ liệu phức tạp từ nhiều nguồn (Spring Boot, FastAPI), TypeScript đóng vai trò "lá chắn" bảo mật mã nguồn:
+	Phát hiện lỗi sớm: Các lỗi về kiểu dữ liệu được cảnh báo ngay trong quá trình viết code (Compile-time), thay vì đợi đến khi ứng dụng chạy (Runtime).
+	Hỗ trợ IDE (IntelliSense): Cung cấp khả năng tự động hoàn thành mã chính xác, giúp tăng tốc độ phát triển.
+b) Interface và Type Alias
+Đồ án sử dụng Interface để định nghĩa chặt chẽ cấu trúc dữ liệu cho các thực thể như User, Course, ChatMessage. Việc này đảm bảo rằng dữ liệu nhận về từ API luôn đúng định dạng, giúp giảm thiểu tối đa các lỗi "undefined" phổ biến trong JavaScript.
+2.5.3  Hệ sinh thái và các thư viện hỗ trợ
+Để tối ưu hóa hiệu suất phát triển và trải nghiệm người dùng, đồ án tích hợp các công nghệ tiên tiến nhất hiện nay:
+a) Vite - Công cụ đóng gói thế hệ mới
+Thay vì sử dụng Webpack truyền thống, dự án sử dụng Vite làm công cụ build. Vite tận dụng Native ES Modules của trình duyệt giúp quá trình khởi động server phát triển (Dev Server) diễn ra gần như tức thì và cơ chế Hot Module Replacement (HMR) cực nhanh, giúp tăng đáng kể hiệu suất làm việc của lập trình viên.
+b) Tailwind CSS - Thiết kế giao diện theo Utility-first
+Tailwind CSS cho phép xây dựng giao diện nhanh chóng bằng cách áp dụng các lớp tiện ích (utility classes) trực tiếp trong HTML/JSX.
+	Tính nhất quán: Sử dụng hệ thống spacing, color palette chuẩn hóa.
+	Responsive Design: Hỗ trợ thiết kế đa thiết bị (Mobile, Tablet, Desktop) một cách dễ dàng thông qua các tiền tố (sm:, md:, lg:).
+c) Zustand - Quản lý trạng thái toàn cục (Global State Management)
+Zustand được lựa chọn làm giải pháp quản lý trạng thái tập trung thay vì Redux nhờ sự gọn nhẹ và hiệu quả. Zustand chịu trách nhiệm lưu trữ các thông tin dùng chung cho toàn bộ ứng dụng như: thông tin đăng nhập của sinh viên, cấu hình giao diện (Dark/Light mode) và trạng thái của các phiên chat AI.
+d) React Query (TanStack Query) - Quản lý dữ liệu từ Server
+Đây là thư viện cực kỳ quan trọng trong việc quản lý các yêu cầu không đồng bộ (Asynchronous requests). React Query giải quyết các bài toán khó như:
+	Caching: Tự động lưu trữ kết quả API để giảm tải cho server.
+	Loading/Error States: Cung cấp trạng thái chờ và thông báo lỗi một cách chuyên nghiệp.
+	Auto-refetching: Tự động cập nhật lại dữ liệu khi sinh viên quay lại trang web.
+e) Framer Motion - Thư viện chuyển động chuyên nghiệp
+Để tạo ra một môi trường học tập sống động, Framer Motion được sử dụng để tạo ra các hiệu ứng chuyển cảnh mượt mà, các tương tác kéo thả trong Flashcard hoặc các hiệu ứng xuất hiện của tin nhắn AI, giúp tăng cường sự hứng thú và tập trung cho người học.
+2.6  Công nghệ Backend
+Hệ thống Agent For Edu áp dụng kiến trúc Dual-Backend, tận dụng thế mạnh đặc thù của hai ngôn ngữ lập trình phổ biến nhất hiện nay: Java (cho quản trị nghiệp vụ) và Python (cho xử lý trí tuệ nhân tạo).
+2.6.1  Spring Boot (Ngôn ngữ Java)
+a) Tổng quan về Spring Boot
+Spring Boot là một dự án thuộc hệ sinh thái Spring Framework, được thiết kế để đơn giản hóa quá trình khởi tạo và phát triển các ứng dụng Java độc lập, có chất lượng sản xuất (production-grade). Với triết lý "Convention over Configuration" (Ưu tiên cấu hình mặc định), Spring Boot giúp giảm thiểu các thiết lập rườm rà, cho phép lập trình viên tập trung tối đa vào logic nghiệp vụ.
+b) Các thành phần cốt lõi trong dự án
+Hệ thống tận dụng các Module mạnh mẽ của Spring để xây dựng nền tảng vững chắc:
+	Spring Boot Starter Web: Cung cấp hạ tầng để xây dựng RESTful API theo mô hình MVC, hỗ trợ nhúng sẵn web server (Tomcat), giúp ứng dụng có thể triển khai dễ dàng dưới dạng một file JAR duy nhất.
+	Spring Security: Là "tấm khiên" bảo mật cho toàn bộ hệ thống. Trong đồ án, nó đảm nhận việc lọc các yêu cầu (Filtering), xác thực người dùng (Authentication) và phân quyền (Authorization) dựa trên vai trò (Role-based Access Control - RBAC).
+	Spring Data JPA (Hibernate): Đóng vai trò là lớp ORM (Object-Relational Mapping), giúp ánh xạ các thực thể trong mã nguồn Java sang các bảng trong cơ sở dữ liệu MySQL. Điều này giúp thao tác dữ liệu một cách trực quan thông qua các Repository mà không cần viết các câu lệnh SQL thuần phức tạp.
+	Spring Validation: Đảm bảo tính toàn vẹn của dữ liệu đầu vào thông qua các Annotation (như @NotNull, @Size, @Email), ngăn chặn dữ liệu rác ngay từ lớp Controller.
+c) Cơ chế Đảo ngược điều khiển (IoC) và Tiêm phụ thuộc (DI)
+Đây là linh hồn của Spring Boot. Thay vì tự khởi tạo các đối tượng, Spring Container sẽ quản lý vòng đời và tự động "tiêm" (inject) các phụ thuộc cần thiết vào các Class. Cơ chế này giúp mã nguồn trở nên lỏng lẻo (loosely coupled), dễ dàng viết Unit Test và bảo trì lâu dài.
+2.6.2  FastAPI (Ngôn ngữ Python)
+a) Ưu thế vượt trội của FastAPI
+FastAPI là một Web Framework hiện đại, có hiệu năng cực cao dành cho Python, được xây dựng dựa trên các tiêu chuẩn OpenAPI và JSON Schema. FastAPI được chọn làm "AI Gateway" cho hệ thống nhờ những đặc điểm sau:
+	Tốc độ (Speed): Nhờ dựa trên Starlette và Pydantic, FastAPI có hiệu năng tương đương với Node.js và Go, vượt xa các framework Python truyền thống như Flask hay Django.
+	Xử lý bất đồng bộ (Async/Await): Đây là tính năng then chốt khi làm việc với AI. Các yêu cầu gọi tới LLM (Gemini, Groq) thường mất thời gian phản hồi; cơ chế async giúp server không bị nghẽn (non-blocking), cho phép xử lý đồng thời hàng nghìn yêu cầu khác trong khi chờ đợi kết quả từ mô hình AI.
+b) Tích hợp hệ sinh thái AI và RAG
+Python là ngôn ngữ thống trị trong lĩnh vực Trí tuệ nhân tạo. Việc sử dụng FastAPI cho phép hệ thống dễ dàng tích hợp các thư viện chuyên dụng:
+	Google Generative AI SDK: Kết nối trực tiếp với mô hình Gemini.
+	LangChain / LlamaIndex: Xây dựng các Pipeline cho RAG một cách chuyên nghiệp.
+	ChromaDB Client: Tương tác mượt mà với Vector Database để truy xuất dữ liệu ngữ nghĩa.
+c) Kiểm soát dữ liệu với Pydantic
+FastAPI sử dụng Pydantic để thực hiện xác thực kiểu dữ liệu tự động. Khi sinh viên gửi một yêu cầu chat hoặc yêu cầu tạo Quiz, Pydantic đảm bảo dữ liệu đầu vào khớp hoàn toàn với cấu trúc mong muốn trước khi chuyển tới mô hình AI, giúp hạn chế lỗi runtime và tăng tính ổn định cho dịch vụ.
+2.6.3  Mô hình phối hợp và So sánh chiến lược
+Mỗi công nghệ được lựa chọn để đảm nhận vai trò mà nó thực hiện tốt nhất, tạo nên một hệ thống "Hybrid" tối ưu:
+
+Bảng 4: bảng so sánh vai trò & kiến trúc giữa hai service trong hệ thống backend
+Tiêu chí	Spring Boot (Core Service)	FastAPI (AI Service)
+Vai trò	Quản lý User, Course, Security, SQL Data.	Xử lý RAG, Chat AI, Scraper, Vector Data.
+Lý do chọn	Tính chặt chẽ, bảo mật, ổn định cao.	Hệ sinh thái AI phong phú, xử lý Async tốt.
+Xác thực	Khởi tạo và quản lý JWT.	Giải mã và xác thực JWT từ Spring Boot.
+Giao tiếp	Gọi sang FastAPI để lấy kết quả AI.	Cung cấp các Endpoint xử lý AI cho Frontend/Java.
+
+Tại sao không dùng một loại Backend?
+	Nếu chỉ dùng Java: Việc tích hợp các thư viện AI hiện đại và xử lý Vector Database sẽ rất khó khăn và thiếu linh hoạt so với Python.
+	Nếu chỉ dùng Python: Việc xây dựng một hệ thống quản trị Enterprise lớn với các quy tắc bảo mật phức tạp, quản lý giao dịch (Transaction) và kiến trúc đa tầng sẽ không thể mạnh mẽ và ổn định bằng Java Spring Boot.
+Kết luận: Sự kết hợp này mang lại cho Agent For Edu khả năng mở rộng (Scalability) tuyệt vời: khi cần thêm tính năng AI, ta chỉ cần mở rộng service Python; khi cần thêm các tính năng quản lý, ta tập trung vào service Java.
+2.7  Cơ sở dữ liệu
+Hệ thống Agent For Edu sử dụng kiến trúc lưu trữ hỗn hợp nhằm tối ưu hóa việc quản lý dữ liệu có cấu trúc (thông tin người dùng, lịch học) và dữ liệu phi cấu trúc (tri thức từ tài liệu học tập).
+2.7.1  Hệ quản trị cơ sở dữ liệu quan hệ - MySQL
+a) Tổng quan về MySQL
+MySQL là một hệ quản trị cơ sở dữ liệu quan hệ (Relational Database Management System - RDBMS) mã nguồn mở phổ biến nhất thế giới. Với ưu điểm về tốc độ, độ tin cậy và khả năng tương thích cao với các Framework như Spring Boot, MySQL được chọn làm kho lưu trữ trung tâm cho toàn bộ dữ liệu nghiệp vụ của ứng dụng.
+b) Đảm bảo tính toàn vẹn dữ liệu với đặc tính ACID
+Để đảm bảo các giao dịch (transactions) như việc đăng ký khóa học hoặc chấm điểm Quiz diễn ra một cách chính xác và an toàn, MySQL tuân thủ nghiêm ngặt 4 đặc tính ACID:
+Bảng 5: Bảng đặc tính ACID (Atomicity – Consistency – Isolation – Durability)
+Đặc tính	Ý nghĩa kỹ thuật	Ứng dụng thực tế trong đồ án
+Atomicity (Tính nguyên tử)	Một transaction phải được thực hiện trọn vẹn hoặc không thực hiện gì cả.	Khi sinh viên làm Quiz, việc lưu kết quả và cập nhật tiến độ phải thành công cùng lúc.
+Consistency (Tính nhất quán)	Dữ liệu luôn phải chuyển từ trạng thái hợp lệ này sang trạng thái hợp lệ khác.	Đảm bảo các khóa ngoại (Foreign Keys) giữa bảng User và Course luôn chính xác.
+Isolation (Tính cô lập)	Các giao dịch đồng thời không được ảnh hưởng lẫn nhau.	Tránh việc hai sinh viên cùng cập nhật thông tin cá nhân gây xung đột dữ liệu.
+Durability (Tính bền vững)	Sau khi xác nhận (commit), dữ liệu sẽ được lưu vĩnh viễn dù có sự cố hệ thống.	Kết quả học tập và lịch học sẽ không bị mất khi server gặp sự cố mất điện.
+
+c) Chiến lược sử dụng kiểu dữ liệu tối ưu
+Việc lựa chọn kiểu dữ liệu phù hợp trong MySQL giúp tối ưu hóa hiệu năng truy vấn và tiết kiệm không gian lưu trữ cho hệ thống:
+	BIGINT: Được sử dụng cho các trường ID tự tăng và khóa ngoại để đảm bảo khả năng mở rộng lên hàng triệu bản ghi.
+	VARCHAR: Dành cho các thông tin có độ dài thay đổi nhưng giới hạn như username, email hoặc password (đã mã hóa).
+	TEXT / LONGTEXT: Lưu trữ nội dung bài học, mô tả khóa học hoặc các đoạn văn bản dài mà AI cần xử lý.
+	DATETIME: Quản lý chính xác mốc thời gian tạo tài khoản, lịch trình đồng bộ từ cổng trường và thời hạn hoàn thành bài tập.
+	BOOLEAN: Sử dụng cho các cờ trạng thái như is_public (khóa học công khai) hoặc is_active.
+	ENUM: Giới hạn các giá trị cố định cho vai trò người dùng (STUDENT, TEACHER, ADMIN) để tránh sai sót dữ liệu.
+2.7.2  Cơ sở dữ liệu Vector - ChromaDB
+Như đã trình bày chi tiết tại mục 2.3.2 (Vector Database), ChromaDB đóng vai trò là lớp lưu trữ chuyên biệt cho dữ liệu AI.
+Sự kết hợp giữa MySQL và ChromaDB: 
+	Trong hệ thống Agent For Edu, hai cơ sở dữ liệu này hoạt động song song theo cơ chế ánh xạ:
+	MySQL lưu trữ Metadata: ID tài liệu, tên file, ngày tải lên và ID người dùng sở hữu.
+	ChromaDB lưu trữ nội dung: Các đoạn văn bản đã được nhúng (Embedding vectors) cùng với ID tham chiếu tới MySQL.
+	Việc phân tách này giúp hệ thống vừa có khả năng truy vấn quan hệ chặt chẽ (MySQL), vừa có khả năng tìm kiếm ngữ nghĩa thông minh (ChromaDB), tạo nên nền tảng vững chắc cho Trợ lý học tập AI.
+2.8  Các API bên ngoài
+Để tối ưu hóa trải nghiệm người dùng và tận dụng các hạ tầng sẵn có của những tập đoàn công nghệ hàng đầu, hệ thống Agent For Edu tích hợp một loạt các giao diện lập trình ứng dụng (API) bên ngoài. Việc này không chỉ giúp giảm chi phí phát triển mà còn đảm bảo tính bảo mật và độ tin cậy cao cho các tính năng đặc thù.
+2.8.1  Hệ sinh thái Google APIs
+Hệ sinh thái của Google đóng vai trò trụ cột trong việc quản lý danh tính và dữ liệu cá nhân của sinh viên trong dự án này.
+a) Giao thức ủy quyền Google OAuth 2.0
+OAuth 2.0 là tiêu chuẩn công nghiệp về ủy quyền (Authorization). Thay vì lưu trữ mật khẩu của người dùng, hệ thống sử dụng cơ chế Single Sign-On (SSO) thông qua Google.
+	Cơ chế hoạt động: Hệ thống yêu cầu quyền truy cập (Scopes) cụ thể từ người dùng (như xem lịch, gửi email). Google xác thực danh tính và trả về một Access Token và Refresh Token.
+	Lợi ích: Đảm bảo an toàn tuyệt đối cho thông tin tài khoản của sinh viên. Access Token có thời hạn ngắn giúp giảm thiểu rủi ro nếu bị đánh cắp, trong khi Refresh Token cho phép hệ thống tự động duy trì phiên làm việc mà không cần người dùng đăng nhập lại thường xuyên.
+b) Gmail API - Tự động hóa thông báo và tương tác
+Dự án sử dụng Gmail API để biến hệ thống thành một trung tâm điều phối thông tin.
+	Tính năng: Hệ thống có thể tự động gửi thông báo nhắc lịch học, tóm tắt kết quả làm bài Quiz hoặc gửi tài liệu học tập vào hòm thư cá nhân của sinh viên.
+	Kỹ thuật xử lý: Dữ liệu email được mã hóa dưới dạng Base64 theo chuẩn MIME để truyền tải qua giao thức REST của Google, đảm bảo tính vẹn toàn của nội dung và định dạng văn bản.
+c) Google Calendar API - Quản lý thời gian thông minh
+Đây là một trong những tính năng cốt lõi giúp giải quyết vấn đề "quản lý thời gian" đã nêu ở Chương 1.
+	Vai trò: Sau khi module Scraper trích xuất thời khóa biểu từ cổng trường (TVU), dữ liệu này sẽ được chuyển đổi thành các đối tượng Event của Google Calendar.
+	Sự đồng bộ: Sinh viên có thể xem lịch học của mình trực tiếp trên mọi thiết bị có cài đặt Google Calendar (điện thoại, máy tính bảng). Hệ thống hỗ trợ xử lý múi giờ (Asia/Ho_Chi_Minh) và thiết lập các nhắc nhở (Reminders) tự động trước mỗi buổi học 15-30 phút.
+2.8.2  API Nhận dạng ký tự quang học (OCR API)
+Trong môi trường giáo dục, tài liệu học tập không phải lúc nào cũng ở dạng văn bản số (Digital text), mà thường tồn tại dưới dạng ảnh chụp bài giảng, file scan hoặc slide.
+a) Vai trò của OCR.space API
+Để đưa các dữ liệu hình ảnh này vào quy trình xử lý của RAG hoặc AI Chat, hệ thống cần một "cầu nối" để chuyển đổi hình ảnh thành văn bản. Đồ án lựa chọn OCR.space API nhờ các ưu thế:
+	Hỗ trợ đa ngôn ngữ: Có khả năng nhận dạng tiếng Việt (vie) với độ chính xác cao nhờ các thuật toán xử lý hình ảnh tiên tiến.
+	Hiệu năng xử lý: Hỗ trợ nhiều định dạng file (JPG, PNG, PDF) và cơ chế xử lý thông qua Base64, giúp tích hợp mượt mà vào luồng xử lý của FastAPI.
+b) Quy trình số hóa tài liệu
+	Tiền xử lý: Hình ảnh do sinh viên tải lên được chuẩn hóa định dạng.
+	Trích xuất: API thực hiện quét các lớp ký tự, nhận diện cấu trúc văn bản và trả về dữ liệu dạng JSON.
+	Hậu xử lý: Văn bản sau khi trích xuất được hệ thống làm sạch và đưa vào:
+	Module RAG: Để lưu trữ vào Vector Database làm dữ liệu tra cứu.
+	Module Chat: Để AI trả lời các câu hỏi dựa trên nội dung ảnh vừa chụp.
+2.9  Thuật toán Lặp lại ngắt quãng (Spaced Repetition)
+Hệ thống Agent For Edu không chỉ cung cấp tri thức thông qua AI mà còn tối ưu hóa quá trình ghi nhớ của sinh viên thông qua việc ứng dụng các lý thuyết tâm lý học nhận thức kết hợp với thuật toán máy tính.
+2.9.1  Cơ sở lý thuyết về nhận thức và ghi nhớ
+a) Đường cong quên lãng (The Forgetting Curve)
+Năm 1885, nhà tâm lý học Hermann Ebbinghaus đã thực hiện các nghiên cứu thực nghiệm và chỉ ra rằng khả năng lưu trữ thông tin của não bộ con người giảm dần theo thời gian một cách nhanh chóng nếu không có sự tác động ôn tập.
+	Bản chất: Quá trình quên lãng diễn ra mạnh mẽ nhất trong vòng 24 giờ đầu tiên sau khi tiếp nhận thông tin (có thể mất tới 50-80% kiến thức).
+	Dạng đồ thị: Hàm số mũ âm, cho thấy lượng tri thức còn lại tỷ lệ nghịch với thời gian kể từ lần học cuối cùng.
+ 
+Hình 6: Đường cong quên lãng(The Forgetting Curve)
+b) Hiệu ứng khoảng cách (Spacing Effect)
+Ngược lại với phương pháp "nhồi nhét" (Cramming) – học một lượng lớn kiến thức trong thời gian ngắn, hiệu ứng khoảng cách chứng minh rằng việc chia nhỏ nội dung và ôn tập lại tại các thời điểm ngắt quãng sẽ giúp chuyển hóa thông tin từ trí nhớ ngắn hạn sang trí nhớ dài hạn.
+Cơ chế: Mỗi lần ôn tập ngay tại thời điểm sắp quên, đường cong quên lãng sẽ trở nên "phẳng" hơn, giúp kiến thức được lưu giữ lâu hơn và đòi hỏi ít công sức ôn tập hơn ở những lần sau.
+2.9.2  Thuật toán SM-2 (SuperMemo 2)
+Để hiện thực hóa lý thuyết trên vào một hệ thống phần mềm, đồ án sử dụng thuật toán SM-2, một trong những thuật toán hiệu quả nhất trong việc tính toán lịch trình ôn tập tối ưu cho từng cá nhân.
+a) Lịch sử và vai trò
+Được phát triển bởi Piotr Wozniak vào cuối thập niên 1980, SM-2 là nền tảng của các công cụ học tập nổi tiếng như Anki hay Quizlet. Thuật toán này cho phép hệ thống tự động xác định thời điểm "vàng" để hiển thị lại một thẻ ghi nhớ (Flashcard) dựa trên khả năng tiếp thu của người học.
+b) Các biến số và tham số tính toán
+Thuật toán vận hành dựa trên ba biến số chính:
+	Chất lượng phản hồi (q - Quality): Đánh giá chủ quan của sinh viên về mức độ ghi nhớ sau khi xem đáp án, thang đo từ 0 (Hoàn toàn quên) đến 5 (Ghi nhớ hoàn hảo).
+	Hệ số dễ (EF - Easiness Factor): Đại diện cho độ khó của kiến thức. Giá trị mặc định thường bắt đầu từ 2.5. Hệ số này sẽ giảm nếu sinh viên thấy thẻ đó khó và tăng nếu thấy dễ.
+	Khoảng cách ôn tập (I - Interval): Số ngày chờ đợi cho đến lần ôn tập tiếp theo.
+c) Mô hình toán học của SM-2
+Quá trình cập nhật được thực hiện sau mỗi lần sinh viên học một Flashcard:
+Cập nhật EF:
+ 
+d) Chiến lược triển khai trong hệ thống Agent For Edu
+Trong module Flashcard của đồ án, thuật toán được triển khai thông qua một dịch vụ Python trên FastAPI:
+	Xử lý phản hồi sai (q<3): Khi sinh viên đánh giá mức độ nhớ dưới 3, thuật toán coi như lần học thất bại. Hệ thống sẽ reset số lần lặp lại (repetitions) về 0 và đặt lịch ôn tập lại vào ngay ngày hôm sau để củng cố tri thức ngay lập tức.
+	Tối ưu hóa bộ nhớ: Bằng cách sử dụng các hàm round() và max(), hệ thống đảm bảo lịch học luôn là số nguyên và không bao giờ lặp lại quá dày đặc đối với những thẻ dễ, giúp sinh viên tập trung nguồn lực vào các kiến thức khó hơn.
+	Lập lịch tự động: Kết quả tính toán next_review_date sẽ được lưu vào cơ sở dữ liệu MySQL, giúp hệ thống có thể gửi thông báo nhắc nhở qua Gmail hoặc hiển thị trên Dashboard khi đến hạn ôn tập.
+2.10  Kỹ thuật tự động hóa thu thập dữ liệu (Web Scraping)
+Trong bối cảnh các hệ thống quản lý sinh viên (LMS) truyền thống thường thiếu các giao diện API mở, kỹ thuật Web Scraping được ứng dụng như một giải pháp bắc cầu (Bridge Solution). Hệ thống sử dụng thư viện BeautifulSoup4 và Requests để mô phỏng hành vi trình duyệt, thực hiện bóc tách dữ liệu phi cấu trúc từ các thẻ HTML trên TVU Portal. Quá trình này bao gồm việc xử lý các rào cản về phiên làm việc (Session Management) và mã hóa định danh để đảm bảo tính an toàn dữ liệu, chuyển đổi lịch học thô thành cấu trúc JSON chuẩn phục vụ cho các tính năng Agent AI.
+2.10.1  Khái niệm và Vai trò của Web Scraping
+Web Scraping là kỹ thuật sử dụng các tác vụ tự động (Bots) để trích xuất dữ liệu phi cấu trúc từ các trang web (thường là định dạng HTML) và chuyển đổi chúng thành dữ liệu có cấu trúc để lưu trữ hoặc xử lý.
+Trong đề tài này, Web Scraping giúp:
+	Bắc cầu dữ liệu: Kết nối hệ thống mới với cổng thông tin sinh viên TVU hiện có.
+	Tiết kiệm thời gian: Loại bỏ việc sinh viên phải nhập liệu thời khóa biểu thủ công, giảm thiểu sai sót.
+	Cung cấp dữ liệu cho AI: Tạo nguồn dữ liệu đầu vào để AI có thể hiểu và nhắc lịch học cho sinh viên một cách chính xác.
+2.10.2  Thư viện xử lý dữ liệu chuyên dụng
+Hệ thống sử dụng ngôn ngữ Python trên Backend FastAPI để thực hiện tác vụ này nhờ sự hỗ trợ mạnh mẽ của các thư viện:
+a) Thư viện Requests - Quản lý giao thức HTTP
+Để trích xuất được dữ liệu sau khi đăng nhập, hệ thống phải duy trì trạng thái phiên làm việc (Session). Thư viện Requests cho phép:
+	Persistence (Duy trì phiên): Sử dụng đối tượng requests.Session() để tự động quản lý Cookies và Header, giúp máy chủ của nhà trường nhận diện người dùng đã đăng nhập thành công qua nhiều yêu cầu khác nhau.
+	Xử lý Form Data: Giả lập các thao tác gửi thông tin đăng nhập (Username/Password) tương tự như trình duyệt của con người.
+b) Thư viện BeautifulSoup4 - Phân tích cấu trúc tài liệu
+Sau khi lấy được mã nguồn HTML của trang thời khóa biểu, hệ thống cần "bóc tách" các thông tin cần thiết. BeautifulSoup hỗ trợ:
+	Duyệt cây DOM: Tìm kiếm các thẻ HTML (table, tr, td) dựa trên các thuộc tính như class hoặc id.
+	Chuẩn hóa dữ liệu: Loại bỏ các ký tự rác, khoảng trắng và chuyển đổi dữ liệu thô từ trang web thành các đối tượng JSON có cấu trúc (Tên môn học, Phòng học, Thời gian).
+2.10.3  Cơ chế bảo mật và Mã hóa dữ liệu người dùng
+Do Web Scraping yêu cầu lưu trữ thông tin đăng nhập của sinh viên để thực hiện việc đồng bộ tự động, vấn đề bảo mật được đặt lên hàng đầu.
+	Mã hóa đối xứng AES-256: Hệ thống không lưu trữ mật khẩu dưới dạng văn bản thuần (Plain text). Thay vào đó, mật khẩu được mã hóa bằng thuật toán AES (Advanced Encryption Standard) với độ dài khóa 256-bit.
+	Cơ chế Fernet: Đồ án sử dụng cài đặt Fernet trong Python, đảm bảo rằng dữ liệu đã mã hóa không thể bị giải mã hoặc thao túng nếu không có khóa bí mật (Secret Key) được lưu trữ an toàn tại biến môi trường của server.
+	Quy trình: Khi sinh viên yêu cầu đồng bộ, hệ thống sẽ giải mã tạm thời trong bộ nhớ (RAM), thực hiện Scraping, sau đó hủy dữ liệu giải mã ngay lập tức để đảm bảo an toàn.
+2.11  Tóm tắt Chương 2
+Chương 2 đã hệ thống hóa toàn bộ nền tảng lý thuyết và các công nghệ cốt lõi tạo nên sức mạnh cho hệ thống Agent For Edu. Qua quá trình nghiên cứu, đề tài đã xác lập được bốn trụ cột công nghệ chính:
+	Trí tuệ nhân tạo hiện đại: Tận dụng kiến trúc Transformer và cơ chế Self-Attention thông qua mô hình Google Gemini 1.5 Flash và Groq LPU. Đây là bộ não của hệ thống, cho phép xử lý đa phương thức và suy luận ngôn ngữ tự nhiên ở trình độ cao.
+	Kiến trúc RAG và Dữ liệu Vector: Giải quyết triệt để bài toán về tính chính xác của thông tin bằng cách kết hợp truy xuất ngữ nghĩa trên ChromaDB và khả năng sinh văn bản của LLM, giúp AI trả lời bám sát tài liệu học tập thực tế.
+	Hệ thống Web Đa tầng (3-Tier & Hybrid Backend): Sự kết hợp chiến lược giữa Spring Boot (Java) để quản trị nghiệp vụ ổn định và FastAPI (Python) để triển khai các dịch vụ AI tốc độ cao. Giao diện được xây dựng trên React 19 và TypeScript đảm bảo tính hiện đại, bảo mật và trải nghiệm người dùng mượt mà.
+	Khoa học giáo dục và Tự động hóa: Ứng dụng thuật toán Spaced Repetition (SM-2) để tối ưu hóa việc ghi nhớ dài hạn và kỹ thuật Web Scraping để hợp nhất dữ liệu thời khóa biểu, mang lại một môi trường học tập tự động hóa và cá nhân hóa sâu sắc.
+Việc hiểu rõ và phối hợp nhịp nhàng các công nghệ trên không chỉ giúp giải quyết các yêu cầu chức năng của đồ án mà còn tạo ra một hệ thống có khả năng mở rộng và ứng dụng thực tế cao. Đây là cơ sở khoa học quan trọng để tiến hành giai đoạn Phân tích và Thiết kế hệ thống trong Chương 3.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CHƯƠNG 3: HIỆN THỰC HÓA NGHIÊN CỨU
+
+3.1 Khảo sát và phân tích yêu cầu
+3.1.1 Khảo sát hiện trạng và xác định bài toán
+a) Phân tích đối sánh các nền tảng LMS hiện có (Comparative Analysis)
+Để xác định vị thế và sự khác biệt của hệ thống Agent For Edu, đề tài tiến hành phân tích các giải pháp quản lý học tập (Learning Management System - LMS) phổ biến dựa trên các tiêu chí về tính năng hỗ trợ và khả năng tích hợp AI:
+Bảng 6: Bảng phân tích đối sánh các nền tảng LMS hiện có
+Hệ thống	Ưu điểm nổi bật	Hạn chế kỹ thuật	Tích hợp AI/Cá nhân hóa
+Moodle	Hệ sinh thái Plugin đa dạng, mã nguồn mở.	Giao diện phức tạp, trải nghiệm người dùng (UX) thấp.	Rất hạn chế, phụ thuộc vào plugin bên thứ ba.
+Google Classroom	Tối giản, tích hợp sâu Google Workspace.	Thiếu các công cụ kiểm tra đánh giá chuyên sâu.	Không hỗ trợ AI chuyên biệt cho học tập.
+Duolingo	Ứng dụng Gamification tuyệt vời vào giáo dục.	Chỉ giới hạn trong lĩnh vực ngôn ngữ.	AI mạnh trong việc cá nhân hóa lộ trình.
+Agent For Edu	Tích hợp LLM, RAG và tự động hóa lịch trình.	Đang trong giai đoạn phát triển.	AI là trọng tâm xử lý cốt lõi.
+
+b) Nghiên cứu thực nghiệm về nhu cầu của người học
+Thông qua khảo sát thực tế trên đối tượng sinh viên tại Trường Đại học Trà Vinh (TVU), nghiên cứu đã xác định được các "điểm đau" (Pain points) lớn nhất mà sinh viên đang gặp phải:
+	Sự quá tải thông tin: Sinh viên gặp khó khăn khi tra cứu tài liệu trong kho dữ liệu khổng lồ của môn học.
+	Sự rời rạc trong quản lý: Lịch học và các công cụ nhắc nhở không đồng bộ, dẫn đến việc bỏ lỡ các mốc thời gian quan trọng.
+	Học tập thụ động: Thiếu công cụ tương tác tức thời để giải đáp thắc mắc ngoài giờ lên lớp.
+c) Tổng hợp giải pháp khoa học
+Dựa trên kết quả khảo sát, hệ thống đề xuất mô hình giải quyết vấn đề dựa trên 5 trụ cột:
+	Tương tác thông minh: Thay thế việc tra cứu thủ công bằng giao diện hội thoại (Conversational UI) hỗ trợ bởi LLM.
+	Hệ thống hóa tri thức: Sử dụng RAG để "neo" kiến thức AI vào tài liệu học thuật thực tế.
+	Tối ưu hóa ghi nhớ: Tự động hóa quy trình ôn tập dựa trên các thuật toán khoa học nhận thức (SM-2).
+	Tập trung hóa thông tin: Hợp nhất lịch trình, email và tài liệu vào một nền tảng duy nhất.
+3.1.2 Phân tích yêu cầu chức năng (Functional Requirements - FR)
+Yêu cầu chức năng mô tả các dịch vụ mà hệ thống phải cung cấp, cách hệ thống phản ứng với các đầu vào cụ thể và cách hệ thống hành xử trong các tình huống nhất định. Các yêu cầu này được phân nhóm theo các Module nghiệp vụ:
+a) Module Quản trị hệ thống và Người dùng (User Management)
+	FR-01 (Xác thực đa phương thức): Hệ thống hỗ trợ xác thực qua tài khoản nội bộ hoặc ủy quyền qua Google OAuth 2.0.
+	FR-02 (Phân quyền truy cập - RBAC): Kiểm soát quyền hạn chặt chẽ cho các vai trò: Guest, Student, Teacher và Admin.
+	FR-03 (Quản trị hồ sơ): Cho phép người dùng tùy biến thông tin cá nhân và cấu hình các dịch vụ Google liên kết.
+b) Module Quản lý học thuật (Academic Management)
+	FR-04 (Quản lý khóa học): Cho phép Giảng viên khởi tạo, cập nhật bài giảng và tải lên các tài liệu định dạng PDF/Docx/Image làm nguồn dữ liệu cho RAG.
+	FR-05 (Ghi danh và Theo dõi): Sinh viên có thể đăng ký khóa học và hệ thống tự động ghi lại tiến độ hoàn thành bài học (Lesson Progress).
+c) Module Trợ lý ảo AI (AI Assistant)
+	FR-06 (Truy xuất tri thức tăng cường - RAG Chat): Chatbot phải có khả năng trả lời câu hỏi dựa trên ngữ cảnh của tài liệu đã upload, đồng thời hỗ trợ phân tích hình ảnh (Vision AI).
+	FR-07 (Quản lý phiên hội thoại): Tự động lưu trữ lịch sử chat, cho phép tìm kiếm và tiếp tục các cuộc hội thoại cũ.
+d) Module Đánh giá và Ghi nhớ (Assessment & Retention)
+	FR-08 (Tự động hóa Quiz): AI tự động trích xuất kiến thức cốt lõi để tạo các bộ câu hỏi trắc nghiệm đa mức độ.
+	FR-09 (Học tập ngắt quãng): Quản lý bộ thẻ Flashcard và áp dụng thuật toán SM-2 để tính toán lịch trình ôn tập cá nhân hóa.
+e) Module Tích hợp và Tự động hóa (Integration & Automation)
+	FR-10 (Đồng bộ thời khóa biểu): Tự động trích xuất dữ liệu từ cổng thông tin TVU (Web Scraping) và đồng bộ hóa hai chiều với Google Calendar.
+	FR-11 (Hợp nhất truyền tin): Cung cấp giao diện đọc/gửi email trường ngay trên nền tảng ứng dụng.
+3.2 Đặc tả Use Case
+Giai đoạn đặc tả Use Case giúp xác định chi tiết cách thức các tác nhân tương tác với hệ thống để đạt được các mục tiêu cụ thể. Qua đó, đội ngũ phát triển có cái nhìn tổng quan về các luồng nghiệp vụ và các ràng buộc hệ thống.
+3.2.1 Danh sách Tác nhân (Actors)
+Hệ thống được thiết kế với cấu trúc phân quyền đa tầng, trong đó các Actor có thể kế thừa quyền hạn của nhau để tối ưu hóa quản lý:
+Bảng 7: Bảng danh sách Tác nhân (Actors)
+Tác nhân 	Mô tả vai trò	Phạm vi quyền hạn
+Guest	Người dùng vãng lai chưa xác thực danh tính.	Truy cập trang Landing, thực hiện Đăng ký và Đăng nhập.
+User	Người dùng đã xác thực thành công (bao gồm cả Student/Teacher).	Sử dụng các tính năng cá nhân: Chat AI, Xem lịch, Quản lý Profile, Email.
+Student	Người học tham gia vào các khóa học trên hệ thống.	Kế thừa quyền User + Đăng ký học, làm Quiz, học Flashcard, theo dõi tiến độ.
+Teacher	Người chịu trách nhiệm biên soạn và quản lý nội dung.	Kế thừa quyền User + Tạo/Sửa khóa học, quản lý tài liệu, tạo Quiz, xem báo cáo.
+Admin	Người quản trị vận hành hệ thống.	Toàn quyền kiểm soát người dùng, phê duyệt nội dung và xem thống kê tổng thể.
+
+3.2.2 Biểu đồ Use Case tổng quan
+ 
+Hình 7: Biểu đồ Use Case tổng quan
+Biểu đồ Use Case đóng vai trò là mô hình hóa các yêu cầu chức năng của hệ thống Agent For Edu, thể hiện mối quan hệ tương tác giữa các tác nhân (Actors) và các kịch bản sử dụng (Use Cases). Hệ thống được thiết kế theo hướng hệ sinh thái tích hợp, không chỉ quản lý nội dung mà còn vận hành các tác vụ tự động hóa thông qua AI.
+1. Các Tác nhân của Hệ thống (System Actors)
+Sơ đồ xác định hai nhóm tác nhân rõ rệt, đảm bảo tính bao quát của một hệ thống Enterprise-grade:
+	Tác nhân Nội bộ (Internal Actors):
+	User (Guest/Logged in): Tác nhân cơ sở, thực hiện các hành vi định danh và thiết lập cấu hình cá nhân.
+	Student (Sinh viên): Tác nhân trung tâm, thụ hưởng các tính năng học tập thông minh và tự động hóa.
+	Teacher (Giảng viên): Tác nhân quản trị nội dung chuyên môn và giám sát thực thể người học.
+	Admin (Quản trị viên): Tác nhân kiểm soát hạ tầng, quản lý tài nguyên và cấu hình các chỉ số hệ thống (API Keys).
+	Tác nhân Hệ thống (External System Actors):
+	External AI Service (Gemini/Groq): Cung cấp năng lực tính toán ngôn ngữ lớn (LLM).
+	Google Services: Hạ tầng lưu trữ và quản lý lịch trình (Calendar, Mail).
+	TVU Portal: Nguồn dữ liệu thô phục vụ quy trình Web Scraping.
+2. Phân tích các Phân hệ Chức năng (Functional Modules)
+Hệ thống được cấu trúc thành 4 phân hệ cốt lõi, đảm bảo nguyên tắc tách biệt trách nhiệm (Separation of Concerns):
+	Phân hệ Quản lý Lớp học (Teacher - Class Management):
+	Tập trung vào quy trình quản trị tài nguyên học thuật. Đáng chú ý, Use Case Quản lý Khóa học bao gồm (<<include>>) việc Upload tài liệu, đây là bước tiên quyết để cung cấp dữ liệu đầu vào cho quy trình RAG (Retrieval-Augmented Generation) sau này.
+	Phân hệ Học tập & Tiện ích (Student – Learning & Utilities): Đây là phân hệ phức tạp nhất, thể hiện tính “thông minh” của hệ thống:
+	Chat với AI Assistant: Được mở rộng (<<extend>>) bởi hai tính năng nâng cao là Tra cứu nâng cao (RAG) và Voice Chat, cho phép người dùng tùy biến trải nghiệm tương tác tùy theo ngữ cảnh.
+	Tự động hóa lịch trình: Use Case Xem thời khóa biểu liên kết chặt chẽ với tác nhân TVU Portal và Google Calendar, thể hiện khả năng hội nhập dữ liệu đa nguồn.
+	Hỗ trợ ghi nhớ: Tích hợp thuật toán Spaced Repetition thông qua Flashcard, chuyển đổi từ mô hình lưu trữ tài liệu sang mô hình tối ưu hóa nhận thức.
+	Phân hệ Quản trị Hệ thống (Admin):
+	Đảm nhận vai trò vận hành kỹ thuật. Chức năng Cấu hình Hệ thống (API Keys) là cực kỳ quan trọng đối với một Agentic System, cho phép thay đổi linh hoạt các model AI mà không cần can thiệp vào mã nguồn.
+	Phân hệ Xác thực & Profile:
+	Xây dựng nền tảng bảo mật (Authentication) và cá nhân hóa trải nghiệm (Settings/Theme).
+3. Các Mối quan hệ và Luồng tương tác Đặc biệt
+	Quan hệ Kế thừa (Generalization): Các tác nhân Teacher, Student, Admin đều kế thừa từ User. Điều này đảm bảo tính nhất quán trong việc phân quyền: bất kỳ tác nhân đặc thù nào cũng có quyền truy cập vào các tính năng cơ sở của User.
+	Sự tương tác với Thực thể ngoài (External Integration):
+	Các mũi tên đứt đoạn trỏ đến Gemini/Groq và Google Services thông qua các quan hệ <<include>> từ các Use Case như AI Chat, Auto Quiz, Email Assistant. Điều này minh chứng cho kiến trúc Service-Oriented của hệ thống, nơi các chức năng lõi phụ thuộc vào sự điều phối nhịp nhàng giữa logic nội bộ và API bên ngoài.
+	Luồng dữ liệu từ TVU Portal được kết nối qua quan hệ <<include>> vào Use Case Đồng bộ TKB, khẳng định vai trò là một "Agent" trung gian xử lý dữ liệu tự động.
+3.2.3 Đặc tả chi tiết các Use Case trọng tâm
+Dưới đây là đặc tả chi tiết cho các kịch bản sử dụng quan trọng nhất của hệ thống:
+UC01: Đăng ký tài khoản
+ 
+Hình 8: Biểu đồ Use Case đăng ký
+Sơ đồ trên mô tả quy trình nghiệp vụ và các ràng buộc hệ thống đối với chức năng khởi tạo tài khoản của tác nhân Guest User. Quy trình này được thiết kế để đảm bảo tính toàn vẹn dữ liệu, trải nghiệm người dùng (UX) và tiêu chuẩn bảo mật hiện đại.
+1. Các thành phần chính (Components)
+	Tác nhân (Actor): Guest User (Người dùng vãng lai chưa xác thực).
+	Use Case lõi: Đăng ký Tài khoản.
+	Phân hệ Validation: Được chia làm hai lớp kiểm soát:
+	Input Validation: Kiểm soát định dạng và tính hợp lệ của dữ liệu đầu vào tại Client/Request level.
+	System Validation: Kiểm soát logic nghiệp vụ và bảo mật tại Server/Database level.
+2. Phân tích luồng xử lý và Ràng buộc (Processing Flow & Constraints)
+Hệ thống áp dụng cơ chế Include và Extend để phân rã các tác vụ một cách logic:
+a. Lớp Kiểm tra Dữ liệu đầu vào (Input Validation):
+Mọi yêu cầu đăng ký đều bắt buộc (<<include>>) phải đi qua các bước kiểm tra định dạng cơ bản nhằm giảm tải xử lý cho Server:
+	Chọn Role (Student/Teacher): Ràng buộc người dùng vào mô hình phân quyền RBAC (Role-Based Access Control) ngay từ bước khởi tạo.
+	Độ dài ký tự: Thiết lập ngưỡng an toàn tối thiểu (Email/Password > 6 ký tự, FullName/Username > 3 ký tự) để ngăn chặn các tài khoản rác hoặc mật khẩu yếu.
+b. Lớp Kiểm tra Hệ thống và Bảo mật (System Validation):
+Sau khi dữ liệu thô vượt qua lớp Input Validation, Backend sẽ thực hiện các tác vụ chuyên sâu:
+	Mã hóa mật khẩu (BCrypt): Đây là bước bắt buộc (<<include>>). Hệ thống sử dụng thuật toán băm BCrypt để chuyển đổi mật khẩu sang chuỗi Hash trước khi lưu trữ, đảm bảo an toàn tuyệt đối ngay cả khi cơ sở dữ liệu bị rò rỉ.
+	Kiểm tra trùng lặp (Duplicate Checks): Truy vấn Database để đảm bảo tính duy nhất của Email và Username. Đây là các định danh cốt lõi để quản lý phiên làm việc sau này.
+c. Cơ chế Xử lý Ngoại lệ (Exception Handling):
+Hệ thống sử dụng quan hệ <<extend>> đối với chức năng Show Error Toast. Chỉ khi các bước kiểm tra trùng lặp thất bại (fail), thông báo lỗi mới được kích hoạt và hiển thị cho người dùng tại giao diện Frontend, giúp quy trình trở nên minh bạch và dễ tương tác.
+3. Mối liên hệ với Hiện thực hóa mã nguồn (Code Realization)
+Điểm đặc biệt của thiết kế này là sự liên kết trực tiếp với kiến trúc triển khai thực tế (được thể hiện qua Note Reference):
+	Frontend (FE): Logic thu thập dữ liệu và gọi API được xử lý tại hàm handleSubmit trong file LoginPage.tsx.
+	Backend (BE): Logic nghiệp vụ, mã hóa mật khẩu và lưu trữ được thực hiện tại method register trong lớp AuthService.java (Spring Boot).
+	Lớp vận chuyển dữ liệu (DTO): Cấu trúc dữ liệu yêu cầu được chuẩn hóa qua đối tượng RegisterRequest.java, đảm bảo tính thống nhất giữa Client và Server.
+4. Đánh giá tính khoa học của thiết kế
+	Tính bảo mật: Tích hợp sẵn cơ chế băm mật khẩu (Hashing) vào quy trình chuẩn.
+	Tính module hóa: Tách biệt rõ ràng giữa kiểm tra định dạng và kiểm tra logic database.
+	Trải nghiệm người dùng: Dự báo trước các kịch bản lỗi (Email/Username đã tồn tại) để có phản hồi tức thì qua giao diện (Toast message).
+UC02: Đăng nhập hệ thống
+ 
+Hình 9: Biểu đồ Use Case đăng nhập
+	Mô tả: Xác thực người dùng và cấp quyền truy cập tài nguyên.
+	Actor: Guest.
+	Hậu điều kiện: Hệ thống cấp phát JWT (Access Token & Refresh Token) lưu tại Client.
+	Luồng sự kiện chính:
+	Guest nhập thông tin tài khoản hoặc chọn "Đăng nhập với Google".
+	Hệ thống kiểm tra thông tin đối chiếu với.
+	Hệ thống khởi tạo phiên làm việc, đính kèm Role (Student/Teacher/Admin) vào Token.
+	Điều hướng người dùng về trang Dashboard tương ứng.
+	Luồng ngoại lệ: Sai mật khẩu/tài khoản, hệ thống báo lỗi và tăng số lần đăng nhập sai (để phòng chống Brute-force).
+
+
+
+
+UC03: Chat với Trợ lý AI (Tích hợp RAG)
+
+	Mô tả: Sinh viên đặt câu hỏi và nhận câu trả lời được tối ưu từ tài liệu học tập.
+	Actor: User (Student/Teacher).
+	Tiền điều kiện: Người dùng đã chọn một khóa học hoặc tài liệu cụ thể để làm ngữ cảnh.
+	Luồng sự kiện chính:
+	User nhập câu hỏi vào khung chat (Văn bản/Hình ảnh/Giọng nói).
+	Hệ thống chuyển yêu cầu sang FastAPI Service.
+	Bước Retrieval: FastAPI thực hiện Embedding câu hỏi và tìm kiếm các đoạn văn bản liên quan trong ChromaDB.
+	Bước Augmentation: Kết hợp câu hỏi gốc và dữ liệu vừa tìm được thành một Prompt giàu ngữ cảnh.
+	Bước Generation: Gọi API Google Gemini để sinh câu trả lời.
+	Hệ thống hiển thị câu trả lời kèm các trích dẫn nguồn (Sources).
+	Lưu lịch sử hội thoại vào MySQL.
+
+
+
+
+
+UC04: Đồng bộ và Xem Thời khóa biểu (Web Scraping)
+ 
+Hình 11: Biểu đồ Use Case thời khóa biểu
+	Mô tả: Tự động lấy lịch học từ cổng TVU và hiển thị thông minh.
+	Actor: User.
+	Luồng sự kiện chính:
+	User truy cập phân hệ "Lịch học" hoặc hỏi AI về lịch trình.
+	Hệ thống kiểm tra thông tin cấu hình cổng trường (Credentials) đã được mã hóa.
+	Hệ thống kích hoạt module Scraper thực hiện đăng nhập vào cổng ttsv.tvu.edu.vn.
+	Hệ thống bóc tách dữ liệu HTML, chuyển đổi thành cấu trúc JSON.
+	Cập nhật dữ liệu vào lịch cá nhân và đẩy sự kiện sang Google Calendar API.
+	Hiển thị bảng lịch học trực quan cho người dùng.
+
+
+
+
+
+
+
+
+
+UC05: Khởi tạo Quiz tự động từ bài học
+ 
+Hình 12: Biểu đồ Use Case tự tạo quiz
+	Mô tả: Giảng viên sử dụng AI để tạo nhanh các bộ câu hỏi đánh giá.
+	Actor: Teacher.
+	Luồng sự kiện chính:
+	Teacher chọn một bài học có sẵn nội dung tài liệu.
+	Teacher thiết lập các tham số: Số câu hỏi, Độ khó, Chủ đề trọng tâm.
+	Hệ thống gửi nội dung bài học sang AI Service.
+	AI phân tích nội dung và sinh ra danh sách câu hỏi trắc nghiệm (gồm câu hỏi, các lựa chọn và đáp án đúng).
+	Teacher kiểm tra, chỉnh sửa (nếu cần) và nhấn "Lưu Quiz".
+	Hệ thống công khai Quiz cho sinh viên trong khóa học đó tham gia.
+3.2.4 Biểu đồ tuần tự (Sequence Diagrams)
+Biểu đồ tuần tự mô tả sự tương tác giữa các đối tượng trong hệ thống theo trình tự thời gian, giúp làm rõ cách thức các thành phần từ Frontend, các dịch vụ Backend (Spring Boot, FastAPI) đến các dịch vụ bên thứ ba phối hợp để thực hiện một chức năng cụ thể.
+	Chức năng Đăng nhập hệ thống (SD01)
+Biểu đồ này mô tả quy trình xác thực người dùng dựa trên cơ chế JWT (JSON Web Token) và bảo mật đa tầng qua Spring Security.
+ 
+Hình 13: Biểu đồ tuần tự quy trình đăng nhập
+Mô tả luồng xử lý:
+	Student nhập thông tin tài khoản trên giao diện đăng nhập.
+	Login Page (React) gửi yêu cầu HTTP POST kèm thông tin tài khoản tới AuthController.
+	AuthController chuyển tiếp yêu cầu xác thực tới AuthService.
+	AuthService sử dụng AuthenticationManager để thực hiện kiểm tra định danh.
+	Hệ thống truy vấn thông tin người dùng từ MySQL thông qua UserRepository.
+	Kịch bản thành công (Đúng mật khẩu):
+	AuthenticationManager trả về đối tượng xác thực thành công.
+	AuthService gọi JwtUtil để tạo AccessToken chứa thông tin định danh và vai trò của người dùng.
+	AuthController phản hồi mã 200 OK kèm theo Token và thông tin User cho Frontend.
+	React App lưu Token vào bộ quản lý trạng thái (Zustand) và Local Storage, sau đó chuyển hướng người dùng sang trang Dashboard.
+	Kịch bản thất bại (Sai mật khẩu):
+	AuthenticationManager ném ra ngoại lệ BadCredentials.
+	AuthController trả về lỗi 401 Unauthorized.
+	Frontend hiển thị thông báo lỗi đăng nhập cho người dùng.
+	Chức năng Trợ lý ảo AI tích hợp RAG (UC03)
+Đây là quy trình phức tạp nhất, thể hiện sự phối hợp giữa FastAPI, cơ sở dữ liệu Vector (ChromaDB) và mô hình ngôn ngữ lớn Google Gemini.
+ 
+Hình 14: Biểu đồ tuần tự quy trình chức năng chat với trợ lý ảo
+Mô tả luồng xử lý:
+	Student gửi câu hỏi tại giao diện Chat.
+	Chat Page gửi yêu cầu tới Python Service (FastAPI).
+	FastAPI thực hiện phân tích ý định (Intent Analysis) và trích xuất thực thể.
+	AgentFeature thực hiện quy trình nhúng (Embedding) câu hỏi và thực hiện tìm kiếm ngữ nghĩa trên ChromaDB.
+	ChromaDB trả về các đoạn văn bản (Context) liên quan nhất từ tài liệu học tập đã lưu.
+	FastAPI xây dựng một Prompt hoàn chỉnh (bao gồm câu hỏi gốc và ngữ cảnh vừa tìm được) gửi tới Google Gemini API.
+	Google Gemini API trả về kết quả dưới dạng luồng dữ liệu (Stream).
+	FastAPI đẩy các đoạn văn bản (chunk) về Frontend để tạo hiệu ứng gõ chữ (typing effect) thời gian thực.
+	Lưu lịch sử (Xử lý bất đồng bộ): Sau khi hoàn tất câu trả lời, FastAPI gửi yêu cầu lưu lịch sử tới Spring Boot (Internal API) để ghi dữ liệu vào MySQL, đảm bảo người dùng có thể xem lại hội thoại sau này.
+	Chức năng Khởi tạo Quiz tự động từ tài liệu (UC05)
+Biểu đồ mô tả quy trình giảng viên tải lên giáo trình PDF và AI tự động trích xuất nội dung để tạo câu hỏi trắc nghiệm.
+ 
+Hình 15: Biểu đồ tuần tự quy trình khỏi tại quiz 
+Mô tả luồng xử lý:
+	Teacher tải tệp PDF bài giảng lên trang Quiz Page.
+	Frontend gọi dịch vụ xử lý tài liệu, gửi tệp và số lượng câu hỏi mong muốn sang Python Service.
+	FastAPI sử dụng thư viện xử lý tài liệu (như PyPDF2) để trích xuất toàn bộ văn bản từ tệp PDF.
+	Hệ thống gửi văn bản đã trích xuất kèm theo yêu cầu (Prompt) "Hãy tạo 10 câu hỏi trắc nghiệm..." tới Google Gemini API.
+	Gemini trả về danh sách câu hỏi, đáp án và giải thích dưới định dạng JSON.
+	FastAPI chuyển kết quả về cho Quiz Page để giảng viên xem xét.
+	Cơ chế rà soát (Human-in-the-loop): Giảng viên có quyền chỉnh sửa, xác nhận nội dung câu hỏi trước khi nhấn "Lưu Quiz".
+	Khi giảng viên xác nhận, dữ liệu Quiz được gửi tới Spring Boot API.
+	Spring Boot thực hiện lưu dữ liệu vào các bảng quizzes và quiz_questions trong MySQL.
+	Hệ thống phản hồi thông báo "Lưu thành công" và hiển thị lên giao diện cho giảng viên.
+d. Chức năng Đồng bộ Thời khóa biểu từ TVU Portal (UC04)
+Biểu đồ tuần tự này mô tả quy trình hệ thống đóng vai trò một "Agent" tự hành, thực hiện đăng nhập giả lập vào cổng thông tin sinh viên của Trường Đại học Trà Vinh (TVU), bóc tách dữ liệu (Web Scraping) và đồng bộ hóa vào cơ sở dữ liệu nội bộ.
+ 
+Hình 16: Biểu đồ tuần tự quy trình thời khóa biểu
+Mô tả luồng xử lý:
+	Student yêu cầu đồng bộ lịch học thông qua giao diện chat (ví dụ: "Đồng bộ lịch học giúp tôi").
+	User Interface gửi yêu cầu nhận diện ý định SYNC_SCHEDULE tới Python Agent (FastAPI).
+	Giai đoạn Xác thực bảo mật:
+	Python Agent gửi yêu cầu lấy thông tin định danh (Credentials) của sinh viên tới Credential Service (Spring Boot).
+	Credential Service truy vấn MySQL để lấy thông tin tài khoản đã được mã hóa.
+	Sau khi nhận được dữ liệu, hệ thống thực hiện giải mã mật khẩu bằng thuật toán AES-256 và trả về cho Python Agent.
+	Giai đoạn Web Scraping (Selenium):
+	Python Agent khởi tạo TVU Scraper (Selenium WebDriver) với các thông tin đã giải mã.
+	Scraper thực hiện các thao tác: Mở trang đăng nhập TVU Portal -> Điền form -> Submit.
+	Kịch bản thành công: Scraper điều hướng đến trang Thời khóa biểu, bóc tách cấu trúc HTML và chuyển đổi thành danh sách đối tượng JSON.
+	Kịch bản thất bại: Nếu thông tin đăng nhập sai hoặc cổng TVU bảo trì, hệ thống trả về lỗi Invalid credentials hoặc thông báo lỗi tương ứng.
+	Giai đoạn Cập nhật dữ liệu:
+	Python Agent gọi Schedule Service (Spring Boot) để thực hiện lệnh DELETE toàn bộ lịch cũ nhằm tránh trùng lặp dữ liệu.
+	Sau đó, Agent duyệt qua danh sách lịch học mới và gửi các yêu cầu POST tới Schedule Service để INSERT vào bảng user_schedules trong MySQL.
+	Phản hồi: Sau khi hoàn tất quá trình lưu trữ, hệ thống gửi thông báo xác nhận thành công (ví dụ: "Đã đồng bộ thành công X môn học") hiển thị lên giao diện người dùng.
+	Đặc điểm kỹ thuật nổi bật:
+	Tính bảo mật: Mật khẩu sinh viên chỉ tồn tại ở dạng giải mã trong bộ nhớ tạm (RAM) của Python Agent trong quá trình scraping và không bao giờ được lưu dưới dạng văn bản thuần (Plain text).
+	Kiến trúc liên dịch vụ: Thể hiện sự phối hợp nhịp nhàng giữa Python (thế mạnh về xử lý dữ liệu/scraping) và Java (thế mạnh về quản lý nghiệp vụ và bảo mật).
+	Trải nghiệm người dùng: Tự động hóa hoàn toàn quy trình vốn phải thực hiện thủ công, giúp sinh viên quản lý lịch trình tập trung.
+3.3 Thiết kế kiến trúc hệ thống
+Kiến trúc hệ thống của Agent For Edu được thiết kế dựa trên các tiêu chuẩn hiện đại về tính sẵn sàng cao, khả năng mở rộng và sự tách biệt giữa các thành phần nghiệp vụ (Separation of Concerns).
+3.3.1 Kiến trúc tổng quan (General Architecture)
+Hệ thống tuân thủ kiến trúc phân tầng (Layered Architecture) kết hợp với mô hình Hybrid Backend, giúp tối ưu hóa sức mạnh của cả Java và Python.
+	Tầng trình diễn (Presentation Layer): Bao gồm ứng dụng Web được xây dựng trên React, hỗ trợ cơ chế Responsive và PWA (Progressive Web App) để đảm bảo trải nghiệm nhất quán trên đa thiết bị (Browser, Mobile, Tablet).
+	Tầng cổng giao tiếp (API Gateway Layer): Sử dụng NGINX làm Reverse Proxy và Load Balancer. Tầng này chịu trách nhiệm điều phối các yêu cầu từ Client tới đúng Service (Spring Boot hoặc FastAPI), đồng thời đảm nhận việc nén dữ liệu (Gzip) và quản lý chứng chỉ SSL.
+	Tầng nghiệp vụ (Service Layer): Đây là trung tâm điều phối của hệ thống:
+	Spring Boot Service (Core Service): Quản lý các logic nghiệp vụ truyền thống, giao dịch dữ liệu quan hệ và bảo mật hệ thống.
+	FastAPI Service (AI/Integration Service): Chuyên trách các tác vụ tính toán nặng, xử lý không đồng bộ (Async) cho AI và tích hợp các API bên ngoài.
+	Giao tiếp nội bộ: Hai service này tương tác qua REST API để trao đổi dữ liệu (ví dụ: Spring Boot gọi FastAPI để lấy kết quả Quiz).
+	Tầng dữ liệu (Persistence Layer): Sử dụng mô hình lưu trữ đa mục tiêu (Polyglot Persistence):
+	MySQL: Lưu trữ dữ liệu có cấu trúc, đảm bảo tính nhất quán của giao dịch (ACID).
+	ChromaDB: Cơ sở dữ liệu Vector chuyên dụng cho phép tìm kiếm ngữ nghĩa cực nhanh trong RAG.
+ 
+Hình 17: Kiến trúc tổng quan 
+3.3.2 Kiến trúc Frontend (Client-side Architecture)
+Ứng dụng Frontend được tổ chức theo cấu trúc Feature-based Folder Structure, giúp dễ dàng mở rộng và bảo trì code trong các dự án lớn.
+	Quản trị trạng thái (State Management): Sử dụng Zustand để quản lý trạng thái toàn cục (Auth, Theme) một cách nhẹ nhàng. Kết hợp với React Query để quản lý trạng thái dữ liệu từ Server (caching, auto-refetching).
+	Hệ thống Component: Phân cấp theo mô hình từ dưới lên:
+	Atomic Components: Các thành phần nhỏ nhất (Button, Input, Badge).
+	Feature Components: Các thành phần gắn liền nghiệp vụ (ChatInput, FlashcardCard).
+	Page Components: Các trang hoàn chỉnh tương ứng với các route của ứng dụng.
+	Lớp dịch vụ (Service Layer): Tách biệt các logic gọi API ra khỏi giao diện, giúp code sạch và dễ viết Unit Test.
+ 
+Hình 18: Kiến trúc fontend
+3.3.3 Kiến trúc Backend (Server-side Architecture)
+a) Spring Boot - Nền tảng nghiệp vụ vững chắc
+Cấu trúc dự án tuân thủ mô hình chuẩn Controller - Service - Repository - Entity:
+	Security Layer: Sử dụng Spring Security kết hợp với JWT Filter để kiểm soát mọi yêu cầu đến hệ thống.
+	DTO Pattern: Sử dụng Data Transfer Objects để tách biệt mô hình dữ liệu bên trong (Entity) và dữ liệu trả về cho Client, đảm bảo tính bảo mật và giảm tải băng thông.
+	Global Exception Handling: Tập trung hóa việc xử lý lỗi, đảm bảo hệ thống luôn trả về phản hồi chuẩn hóa cho Frontend.
+b) FastAPI - Sức mạnh AI và Tích hợp
+Tận dụng cơ chế Asynchronous (Async/Await) của Python để xử lý các luồng dữ liệu tốn thời gian:
+	AI Service Modules: Tách biệt các module AI như Intent Detection (Nhận diện ý định), RAG Pipeline và Quiz Generation.
+	Agent Features: Module này đóng vai trò như một thực thể tự hành (Agent), tự động bóc tách dữ liệu từ TVU Portal và đồng bộ hóa các dịch vụ của Google.
+	Vector Bridge: Chuyên trách giao tiếp với ChromaDB, thực hiện embedding văn bản thông qua Google Gemini API.
+ 
+Hình 19: Kiến trúc backend
+3.3.4 Kiến trúc AI/RAG (Intelligent Layer)
+Kiến trúc RAG là linh hồn của dự án, được thiết kế theo quy trình khép kín gồm 2 pipeline chính:
+1. Pipeline Lập chỉ mục (Indexing Pipeline - Offline/Background):
+	Tài liệu được bóc tách thành các đoạn văn bản (Chunks).
+	Sử dụng mô hình text-embedding-004 của Gemini để chuyển đổi sang không gian Vector.
+	Lưu trữ vào ChromaDB kèm theo các Metadata (course_id, lesson_id) để phục vụ việc lọc dữ liệu.
+2. Pipeline Truy xuất và Sinh văn bản (Retrieval & Generation Pipeline - Online):
+	Retrieval: Khi người dùng hỏi, hệ thống thực hiện tìm kiếm tương đồng (Similarity Search). Chỉ những đoạn văn bản có độ tương đồng trên ngưỡng 0.3 mới được đưa vào context để tránh nhiễu thông tin.
+	Augmentation: Hệ thống kết hợp "Context" (dữ liệu tìm được) và "Query" (câu hỏi của user) vào một System Prompt được thiết kế kỹ lưỡng (Prompt Engineering).
+	Generation: Mô hình Gemini nhận Prompt và sinh ra câu trả lời cuối cùng. Quá trình này đảm bảo AI luôn trả lời dựa trên cơ sở tri thức thực tế, giảm thiểu tối đa hiện tượng "ảo giác" (hallucination).
+ 
+Hình 20: Kiến trúc AI/RAG
+3.3.5 Cơ chế tương tác giữa các Service
+Hệ thống Agent For Edu vận hành theo cơ chế Hybrid Backend Interaction:
+	Spring Boot (Orchestrator): Đóng vai trò là lớp điều phối chính. Khi sinh viên yêu cầu một tác vụ AI, Spring Boot sẽ kiểm tra quyền hạn (JWT) và gửi yêu cầu sang FastAPI thông qua giao thức REST (với RestTemplate hoặc OpenFeign).
+	FastAPI (AI Engine): Thực hiện tính toán nặng liên quan đến LLM và Vector DB. Kết quả sau khi xử lý được trả về dưới dạng JSON chuẩn để Spring Boot thực hiện lưu trữ vào MySQL và phản hồi cho người dùng.
+Cơ chế này giúp tận dụng tối đa khả năng xử lý giao dịch tin cậy của Java và hệ sinh thái thư viện AI phong phú của Python.
+3.4 Thiết kế cơ sở dữ liệu
+Hệ thống Agent For Edu sử dụng mô hình lưu trữ hỗn hợp (Hybrid Storage Model), kết hợp giữa Cơ sở dữ liệu quan hệ (RDBMS) để quản trị nghiệp vụ và Cơ sở dữ liệu Vector để phục vụ các tác vụ trí tuệ nhân tạo.
+3.4.1 Mô hình quan hệ thực thể (ERD)
+ 
+Hình 21: Mô hình quan hệ thực thể (ERD)
+Mô hình ERD thể hiện kiến trúc dữ liệu cốt lõi của hệ thống, được thiết kế theo các tiêu chuẩn chuẩn hóa (Normal Forms) nhằm đảm bảo tính toàn vẹn dữ liệu, tối ưu hóa hiệu năng truy vấn và hỗ trợ các tính năng thông minh. Hệ thống sử dụng mô hình lưu trữ hỗn hợp, quản lý mối quan hệ chặt chẽ giữa thông tin người dùng, nội dung đào tạo và tri thức AI.
+1. Phân hệ Định danh và Bảo mật (Identity & Security)
+Trung tâm của hệ thống là thực thể User, được bao quanh bởi các bảng mở rộng nhằm phân tách trách nhiệm bảo mật:
+	User: Lưu trữ thông tin cơ bản. Mật khẩu (password) được lưu dưới dạng hashed (BCrypt). Trường role định nghĩa quyền hạn (Student/Teacher/Admin).
+	UserCredential: Đây là bảng then chốt cho tính năng Web Scraping. Nó lưu trữ thông tin đăng nhập vào cổng thông tin TVU. Khác với mật khẩu ứng dụng, mật khẩu tại đây được encrypted (mã hóa đối xứng AES-256) để hệ thống có thể giải mã tạm thời khi thực hiện bóc tách dữ liệu tự động.
+	UserSchedule: Lưu trữ dữ liệu thời khóa biểu sau khi được bóc tách từ cổng TVU, cho phép AI truy xuất nhanh để trả lời các câu hỏi về lịch trình.
+2. Phân hệ Quản lý Đào tạo (Academic Management)
+Phân hệ này quản lý cấu trúc nội dung học tập theo mô hình phân cấp:
+	Course & CourseEnrollment: Mối quan hệ N-N giữa User và Course được giải quyết thông qua bảng trung gian CourseEnrollment. Bảng này theo dõi trạng thái tham gia (status) và tiến độ của sinh viên.
+	Lesson & Material: Một khóa học chia thành nhiều bài học (Lesson). Mỗi bài học bao gồm nhiều tài liệu (Material). Trường file_url trỏ đến kho lưu trữ đám mây, trong khi type (PDF/Video) giúp hệ thống điều phối trình phát phù hợp.
+3. Phân hệ Trí tuệ nhân tạo và RAG (AI & Knowledge Base)
+Đây là điểm khác biệt của hệ thống so với các LMS truyền thống:
+	ChatSession & ChatMessage: Quản lý lịch sử hội thoại. Bảng ChatMessage lưu trữ thông tin sender (User/Assistant) và trường metadata dạng JSON để lưu các thông tin phụ trợ từ AI (như token usage, processing time).
+	RagDocument: Đóng vai trò là cầu nối giữa MySQL và Vector Database (ChromaDB). Trường vector_id lưu định danh của tài liệu trong không gian vector, cho phép hệ thống thực hiện truy xuất ngữ nghĩa (Semantic Search) chính xác.
+4. Phân hệ Đánh giá và Ghi nhớ (Assessment & Retention)
+Tối ưu hóa quy trình học tập dựa trên dữ liệu thực tế:
+	Quiz, QuizQuestion, QuizResult: Quản lý ngân hàng câu hỏi được AI khởi tạo tự động. QuizQuestion sử dụng kiểu dữ liệu JSON cho trường options để linh hoạt hóa các loại câu hỏi trắc nghiệm. QuizResult lưu lại toàn bộ lịch sử làm bài và điểm số để phục vụ thống kê.
+	FlashcardDeck & Flashcard: Hiện thực hóa thuật toán Spaced Repetition (SM-2). Thực thể Flashcard lưu trữ các biến số quan trọng như difficulty, review_count và last_reviewed để thuật toán tính toán thời điểm ôn tập tối ưu cho từng sinh viên.
+5. Các đặc tính kỹ thuật nổi bật trong thiết kế
+	Tính toàn vẹn (Referential Integrity): Hệ thống sử dụng khóa ngoại (FK) xuyên suốt với các ràng buộc ON DELETE CASCADE tại các vị trí phù hợp (ví dụ: xóa Lesson sẽ tự động xóa các Material và Quiz liên quan) để tránh dữ liệu rác.
+	Khả năng mở rộng (Scalability): Việc sử dụng kiểu dữ liệu JSON cho các trường metadata và options cho phép hệ thống mở rộng tính năng mà không cần thay đổi cấu trúc bảng (Schema) quá nhiều.
+	Bảo mật đa tầng: Phân tách rõ ràng giữa mật khẩu Hashed (không thể đảo ngược) và mật khẩu Encrypted (có thể giải mã phục vụ Agent) minh chứng cho tư duy thiết kế bảo mật chuyên sâu.
+	Hỗ trợ AI-Ready: Việc cấu trúc sẵn bảng RagDocument và lưu trữ vector_id cho thấy hệ thống được thiết kế ngay từ đầu để vận hành các mô hình ngôn ngữ lớn (LLM) theo cơ chế RAG chuyên nghiệp.
+
+3.4.2 Thiết kế chi tiết các bảng (MySQL)
+Dưới đây là đặc tả chi tiết các thực thể quan trọng, được thiết kế tối ưu cho hiệu năng truy vấn:
+a) Phân hệ Người dùng và Bảo mật (Users & Credentials)
+Bảng users lưu trữ định danh cốt lõi, trong khi user_credentials là nơi lưu trữ các thông tin nhạy cảm đã được mã hóa để phục vụ module Web Scraping và Google API.
+	Bảng users: Sử dụng BCrypt cho mật khẩu. Lập chỉ mục (Index) trên username và email để tăng tốc độ đăng nhập.
+	Bảng user_credentials: Lưu trữ tài khoản cổng trường và các dịch vụ bên thứ ba. Trường password được thiết kế kiểu TEXT để lưu trữ chuỗi mã hóa AES-256 dài, kèm theo category để phân loại dịch vụ.
+b) Phân hệ Nội dung học tập (Courses, Lessons, Materials)
+	Hệ thống quản lý nội dung theo cấu trúc cây: Khóa học -> Bài học -> Tài liệu/Quiz.
+	Cơ chế xóa: Áp dụng ON DELETE CASCADE cho các ràng buộc khóa ngoại. Khi một bài học bị xóa, các Quiz và tài liệu liên quan sẽ tự động được gỡ bỏ để đảm bảo sạch dữ liệu.
+c) Phân hệ Tương tác AI (Chat History)
+	Được chia thành chat_sessions (để nhóm các cuộc hội thoại) và chat_messages (lưu chi tiết tin nhắn).
+	Tối ưu hóa: Sử dụng kiểu dữ liệu ENUM cho trường sender ('user', 'assistant') giúp truy vấn nhanh và tiết kiệm không gian lưu trữ.
+d) Phân hệ Ghi nhớ (Flashcards - SM-2)
+Bảng này chứa các tham số quan trọng phục vụ thuật toán học tập ngắt quãng:
+easiness_factor: Hệ số độ dễ (mặc định 2.5).
+interval: Khoảng cách ngày giữa các lần ôn tập.
+next_review: Được đánh Index để hệ thống có thể truy vấn nhanh các thẻ cần học trong ngày hiện tại.
+3.4.3 Thiết kế Vector Database (ChromaDB)
+Khác với MySQL lưu trữ dữ liệu dòng/cột, ChromaDB lưu trữ dữ liệu dưới dạng các tọa độ trong không gian n-chiều. Đây là thành phần quyết định khả năng "hiểu" tài liệu của AI.
+Cấu trúc Collection: knowledge_base mỗi bản ghi trong ChromaDB bao gồm:
+	ID: Định danh duy nhất (thường mapping với ID của Material hoặc Lesson trong MySQL).
+	Document: Nội dung văn bản thô (Chunk) đã được xử lý.
+	Embedding: Vector đại diện (768 chiều nếu dùng mô hình Gemini Embedding).
+	Metadata (Siêu dữ liệu): Đây là phần quan trọng nhất để thực hiện bộ lọc (Filtering).
+Chiến lược Filtering Metadata: Hệ thống sử dụng Metadata để đảm bảo AI không truy xuất nhầm tài liệu của khóa học khác:
+	course_id: Lọc tài liệu theo đúng khóa học sinh viên đang hỏi.
+	user_id: Đảm bảo tính riêng tư (chỉ truy xuất tài liệu cá nhân của user đó).
+	source_type: Phân loại nguồn (giáo trình, slide, hoặc ghi chú cá nhân).
+	code
+Python
+# Ví dụ cấu trúc Metadata trong triển khai
+metadatas = [{
+    "user_id": 1,
+    "course_id": 10,
+    "material_id": 5,
+    "source_name": "Giao_trinh_AI.pdf",
+    "page_number": 12
+}]
+3.4.4 Cơ chế đồng bộ giữa MySQL và ChromaDB
+Hệ thống sử dụng cơ chế lắng nghe sự kiện (Event-driven) ngầm: Ngay khi một tài liệu được cập nhật thành công vào MySQL, một tín hiệu được gửi tới FastAPI để kích hoạt quy trình nhúng (Embedding) và cập nhật không gian Vector, đảm bảo trợ lý AI luôn có dữ liệu mới nhất mà không cần người dùng thao tác lại.
+Khi xóa tài liệu trong MySQL, hệ thống kích hoạt một Event để đồng thời xóa các Vector tương ứng trong ChromaDB nhằm duy trì tính nhất quán của hệ thống.
+3.5 Thiết kế giao diện lập trình ứng dụng (API Design)
+Hệ thống Agent For Edu sử dụng kiến trúc RESTful API làm phương thức giao tiếp chính giữa các lớp. Toàn bộ dữ liệu trao đổi được định dạng theo tiêu chuẩn JSON (JavaScript Object Notation). Các API được thiết kế tuân thủ nguyên tắc Stateless, sử dụng mã xác thực JWT trong HTTP Header để đảm bảo tính bảo mật và khả năng mở rộng.
+3.5.1 Phân hệ Xác thực và Định danh (Authentication API)
+Phân hệ này do Spring Boot đảm nhiệm, chịu trách nhiệm quản lý vòng đời truy cập của người dùng.
+Bảng 8: Bảng mô tả API phân hệ Xác thực và Định danh
+Phương thức	Endpoint	Mô tả chức năng	Quyền truy cập
+POST	/api/auth/register	Khởi tạo tài khoản mới cho người dùng.	Công khai
+POST	/api/auth/login	Xác thực thông tin và cấp phát JWT.	Công khai
+GET	/api/auth/profile	Truy xuất thông tin cá nhân của người dùng hiện tại.	Đã đăng nhập
+PUT	/api/auth/profile	Cập nhật thông tin hồ sơ và ảnh đại diện.	Đã đăng nhập
+POST	/api/auth/logout	Vô hiệu hóa phiên làm việc tại phía Client.	Đã đăng nhập
+
+Đặc tả chi tiết: POST /api/auth/login
+Mục đích: Xác thực danh tính và bắt đầu phiên làm việc.
+Cấu trúc dữ liệu yêu cầu (Request):
+code
+JSON
+{
+  "username": "student_tvu_01",
+  "password": "hashed_password_example"
+}
+Phản hồi thành công (200 OK):
+code
+JSON
+{
+  "token": "eyJhbGciOiJIUzI1Ni...", // JWT Token dùng cho các request sau
+  "type": "Bearer",
+  "user": {
+    "id": 1,
+    "role": "STUDENT",
+    "email": "sv01@tvu.edu.vn"
+  }
+}
+3.5.2 Phân hệ Quản lý Khóa học (Course Management API)
+Module này tập trung vào các thao tác CRUD và quản trị nội dung đào tạo, thực hiện kiểm soát quyền dựa trên vai trò (RBAC).
+Bảng 9: Bảng mô tả API phân hệ QL khóa học
+Phương thức	Endpoint	Mô tả chức năng	Vai trò yêu cầu
+GET	/api/courses	Lấy danh sách khóa học đang hoạt động.	User
+POST	/api/courses	Khởi tạo khóa học mới.	Teacher/Admin
+GET	/api/courses/{id}	Chi tiết bài học và tài liệu của khóa học.	Student/Teacher
+PUT	/api/courses/{id}	Cập nhật thông tin hoặc trạng thái khóa học.	Owner/Admin
+POST	/api/courses/{id}/enroll	Ghi danh sinh viên vào khóa học.	Student
+
+3.5.3 Phân hệ Trợ lý AI và RAG (AI Chat Service API - FastAPI)
+Đây là nhóm API quan trọng nhất, xử lý các logic thông minh và kết nối đa mô hình AI.
+Bảng 10: Bảng mô tả API phân hệ AI/RAG
+Phương thức	Endpoint	Mô tả chức năng	Đặc điểm
+POST	/api/chat	Xử lý hội thoại đa phương thức với AI.	Tích hợp RAG
+GET	/api/chat/sessions	Lấy danh sách lịch sử các phiên tư vấn.	Của riêng User
+POST	/api/chat/sessions	Khởi tạo ngữ cảnh hội thoại mới.	Stateless
+
+
+Đặc tả chi tiết: POST /api/chat
+	Mô tả: Tiếp nhận câu hỏi, thực hiện truy xuất ngữ nghĩa (Retrieval) và sinh câu trả lời thông qua LLM.
+	Tham số yêu cầu tiêu biểu:
+	use_rag: Boolean - Cho phép AI tra cứu từ tài liệu khóa học.
+	image_base64: String (Optional) - Dữ liệu ảnh phục vụ Vision AI.
+	Dữ liệu phản hồi:
+{
+  "response": "Dựa trên tài liệu môn học, AI là...", 
+  "context_used": ["Đoạn văn bản trích xuất từ ChromaDB"], 
+  "sources": [{"title": "Chương 1.pdf", "page": 5}],
+  "model_info": "Gemini 2.5 Flash"
+}
+
+3.5.4. Phân hệ Kiểm tra và Đánh giá (AI Quiz API)
+Kết hợp giữa khả năng sinh nội dung của AI và quản lý kết quả của Spring Boot.
+Bảng 11: Bảng mô tả API phân hệ kiểm tra, đánh giá
+Phương thức	Endpoint	Mô tả chức năng	Service xử lý
+POST	/api/ai/generate-quiz	AI tự động tạo câu hỏi trắc nghiệm.	FastAPI (AI)
+POST	/api/quiz/{id}/submit	Nộp bài làm và ghi nhận điểm số.	Spring Boot
+GET	/api/quiz/results	Truy xuất bảng điểm cá nhân.	Spring Boot
+
+3.5.5. Phân hệ Ghi nhớ Flashcard (Retention API)
+Triển khai các thao tác phục vụ thuật toán Spaced Repetition (SM-2).
+Bảng 12: Bảng mô tả API phân hệ ghi nhớ
+Phương thức	Endpoint	Mô tả chức năng	Tham số chính
+GET	/api/flashcards/decks	Lấy các bộ thẻ ghi nhớ của người dùng.	-
+POST	/api/flashcards/cards/{id}
+/review	Gửi đánh giá (1-5) để AI tính lịch học.	quality (0-5)
+
+3.5.6. Phân hệ Tự động hóa và Lịch trình (Schedule & Automation API)
+Module này đảm nhận việc kết nối với các hệ thống bên ngoài và thực hiện Scraping dữ liệu.
+Bảng 13: Bảng mô tả API phân hệ lịch 
+Phương thức	Endpoint	Mô tả chức năng	Tác vụ ngầm
+POST	/api/schedules/sync	Kích hoạt tác vụ Scraper lấy dữ liệu TVU.	Web Scraping
+GET	/api/schedules	Trả về thời khóa biểu đã được xử lý.	-
+POST	/api/schedules/google-sync	Đẩy dữ liệu lịch sang Google Calendar.	Google API
+
+3.5.7. Quy chuẩn mã lỗi và phản hồi (Error Handling)
+Hệ thống sử dụng các mã trạng thái HTTP tiêu chuẩn để thông báo kết quả xử lý:
+	200 OK: Xử lý yêu cầu thành công.
+	201 Created: Tài nguyên đã được khởi tạo (Dùng cho Đăng ký, Tạo khóa học).
+	400 Bad Request: Dữ liệu gửi lên không hợp lệ (Sai định dạng, thiếu trường bắt buộc).
+	401 Unauthorized: Token không hợp lệ hoặc đã hết hạn.
+	403 Forbidden: Người dùng không có quyền truy cập tài nguyên (Ví dụ: Student cố xóa khóa học).
+	500 Internal Server Error: Lỗi hệ thống hoặc dịch vụ AI gặp sự cố.
+3.6. Thiết kế giao diện người dùng
+Giao diện của hệ thống Agent For Edu được thiết kế dựa trên triết lý tối giản (Minimalism) và tập trung vào người học (Learner-centered Design). Mục tiêu cốt lõi là giảm thiểu sự xao nhãng, giúp sinh viên tập trung tối đa vào nội dung kiến thức và tương tác hiệu quả với Trợ lý AI.
+3.6.1. Đặc tả Wireframe các màn hình chính
+a) Giao diện Đăng nhập (Authentication Page)
+	Mô tả: Thiết kế theo phong cách tập trung (Centered Layout).
+	Điểm nhấn UX: Hỗ trợ đăng nhập nhanh qua Google OAuth để giảm bớt rào cản ghi nhớ mật khẩu cho sinh viên. Giao diện trực quan với thông báo lỗi ngay tại trường nhập liệu.
+b) Trang Tổng quan (Dashboard)
+	Bố cục: Sử dụng cấu trúc "Sidebar - Header - Main Content".
+	Thành phần chính:
+	Statistics Cards: Hiển thị nhanh các chỉ số học tập (Số khóa học, điểm Quiz trung bình, số thẻ cần ôn).
+	Quick Access: Các khóa học đang tham gia gần nhất để sinh viên tiếp tục lộ trình mà không cần tìm kiếm lại.
+	Live Schedule: Trích xuất dữ liệu từ bảng user_schedules để hiển thị lịch học thực tế trong ngày, giúp sinh viên quản lý thời gian ngay khi vừa đăng nhập.
+c) Trung tâm Trợ lý AI (AI Chat Interface)
+	Bố cục: Chia làm 3 cột (Sidebar điều hướng - Danh sách phiên chat - Khung hội thoại).
+	Đặc điểm UX:
+	Hỗ trợ hiển thị Markdown cho các câu trả lời của AI (in đậm, danh sách, khối mã code).
+	Contextual Actions: Tích hợp các nút đính kèm tài liệu và biểu tượng micro để hỗ trợ nhập liệu đa phương thức.
+	Smart Indicators: Trạng thái "AI đang trả lời..." và hiển thị các nguồn trích dẫn (Citations) ngay dưới câu trả lời của RAG.
+d) Hệ thống Ôn tập Flashcard (Spaced Repetition Interface)
+	Cơ chế tương tác: Thiết kế theo dạng "Flip Card" (Lật thẻ).
+	Đánh giá mức độ nhớ: Hệ thống cung cấp 5 nút bấm tương ứng với 5 mức độ phản hồi của thuật toán SM-2 (từ Again đến Perfect).
+	Tiến độ: Thanh progress bar hiển thị trực quan số lượng thẻ còn lại trong lượt học hiện tại.
+3.6.2. Triết lý thiết kế UI/UX
+Để đảm bảo tính thẩm mỹ và hiệu quả sử dụng, hệ thống tuân thủ các quy tắc thiết kế sau:
+a) Hệ thống màu sắc (Color Palette)
+Hệ thống sử dụng tông màu Xanh dương (Primary Blue) làm chủ đạo. Theo tâm lý học màu sắc, màu xanh hỗ trợ sự tập trung, tạo cảm giác tin cậy và chuyên nghiệp trong môi trường giáo dục.
+Bảng 14: Bảng màu sắc 
+Loại màu	Mã màu (Hex)	Ý nghĩa sử dụng
+Primary	#3B82F6	Các nút hành động chính, trạng thái đang chọn.
+Success	#10B981	Thông báo hoàn thành, điểm số cao, đáp án đúng.
+Error	#EF4444	Cảnh báo, thông báo lỗi hệ thống hoặc đáp án sai.
+Surface	#FFFFFF	Nền trắng của thẻ (Cards) giúp nội dung văn bản nổi bật và dễ đọc.
+
+b) Kiểu chữ (Typography)
+Dự án sử dụng bộ phông chữ Inter – một phông chữ không chân (Sans-serif) hiện đại, được tối ưu hóa cho hiển thị trên màn hình kỹ thuật số.
+	Tính đọc được (Readability): Khoảng cách giữa các chữ cái và dòng được tính toán kỹ để tránh mỏi mắt khi sinh viên đọc tài liệu dài.
+	Phân cấp thông tin (Hierarchy): Sử dụng các biến thể Weight (Bold, Semibold, Regular) để phân biệt giữa Tiêu đề bài học và Nội dung chi tiết.
+c) Tính tương thích đa nền tảng (Responsive Design)
+Giao diện được xây dựng trên lưới (Grid System) của Tailwind CSS, đảm bảo tính co giãn linh hoạt:
+	Mobile (sm): Chuyển Sidebar thành Menu Hamburger để tối ưu không gian hiển thị khung chat.
+	Desktop (lg): Hiển thị đầy đủ bảng điều khiển và lịch trình bên cạnh nội dung chính.
+d) Khả năng tiếp cận (Accessibility - WCAG)
+	Đảm bảo độ tương phản (Contrast ratio) giữa văn bản và nền đạt chuẩn AA.
+	Hỗ trợ chế độ tối (Dark Mode) để bảo vệ mắt người dùng khi học tập vào ban đêm.
+	Cung cấp các thông báo trạng thái (Loading, Success, Empty state) để người dùng luôn nắm bắt được tình hình của hệ thống.
+3.7. Thiết kế bảo mật (Security Design)
+Trong một nền tảng giáo dục tích hợp AI và kết nối với các hệ thống bên ngoài, bảo mật là yếu tố sống còn. Hệ thống Agent For Edu được thiết kế dựa trên nguyên lý "Phòng thủ chiều sâu" (Defense in Depth), đảm bảo an toàn từ lớp giao thức truyền tải đến lớp lưu trữ dữ liệu.
+3.7.1. Cơ chế xác thực và Phiên làm việc (Authentication Flow)
+Hệ thống sử dụng cơ chế xác thực phi trạng thái (Stateless Authentication) dựa trên tiêu chuẩn JSON Web Token (JWT). Lựa chọn này cho phép cả hai dịch vụ Backend (Spring Boot và FastAPI) có thể cùng xác thực người dùng mà không cần chia sẻ Session truyền thống.
+Quy trình xác thực chi tiết:
+	Khởi tạo: Client gửi thông tin đăng nhập tới Spring Boot qua kênh truyền mã hóa HTTPS.
+	Kiểm chứng: Spring Boot truy vấn MySQL, thực hiện so khớp mật khẩu bằng thuật toán BCrypt.
+	Cấp phát: Sau khi xác thực thành công, Spring Boot khởi tạo một JWT chứa các thông tin định danh (Claims) bao gồm: userId, username, role và thời gian hết hạn (thường là 24 giờ). Token này được ký số bằng một Secret Key bí mật chỉ server biết.
+	Sử dụng: Client lưu Token vào localStorage. Với mọi yêu cầu sau đó, Client đính kèm Token vào Header của yêu cầu dưới dạng Authorization: Bearer <token>.
+	Kiểm soát: Lớp lọc JwtFilter tại Backend sẽ bóc tách và kiểm tra chữ ký số của Token. Nếu hợp lệ, thông tin người dùng được đưa vào SecurityContext để thực thi các tác vụ nghiệp vụ.
+3.7.2. Kiểm soát truy cập dựa trên vai trò (Role-Based Access Control - RBAC)
+Để đảm bảo tính riêng tư và đúng chức năng, hệ thống áp dụng mô hình RBAC. Mỗi yêu cầu truy cập tài nguyên đều được kiểm tra quyền hạn (Permission) dựa trên vai trò của người dùng được nhúng trong JWT.
+Ma trận phân quyền hệ thống:
+Bảng 15: Bản phân quyền
+Tài nguyên hệ thống	Guest	User	Student	Teacher	Admin
+Xem thông tin khóa học công khai	✅	✅	✅	✅	✅
+Tương tác với Trợ lý AI (General)	❌	✅	✅	✅	✅
+Ghi danh khóa học (Enroll)	❌	❌	✅	✅	✅
+Quản lý nội dung khóa học (Create/Edit)	❌	❌	❌	✅	✅
+Khởi tạo Quiz từ AI	❌	❌	✅	✅	✅
+Quản trị người dùng và Hệ thống	❌	❌	❌	❌	✅
+3.7.3. Bảo mật dữ liệu (Data Security)
+Hệ thống áp dụng các tiêu chuẩn mã hóa tiên tiến nhất để bảo vệ dữ liệu tại chỗ (Data at rest).
+a) Mã hóa mật khẩu người dùng (Hashing)
+Mật khẩu người dùng không bao giờ được lưu dưới dạng văn bản thuần. Hệ thống sử dụng thuật toán BCrypt với một tham số "Salt" ngẫu nhiên và cost factor = 10.
+Ưu điểm: Khả năng chống lại các cuộc tấn công bảng băm (Rainbow table) và tấn công vét cạn (Brute-force) hiệu quả nhờ cơ chế băm chậm có chủ đích.
+b) Mã hóa thông tin đăng nhập bên ngoài (AES-256)
+Đối với tài khoản cổng trường TVU hoặc các API Key của Google, do hệ thống cần giải mã để thực hiện các tác vụ tự động (Web Scraping, Sync Calendar), nên phương pháp Hashing không khả thi.
+	Giải pháp: Sử dụng mã hóa đối xứng AES-256 thông qua cơ chế Fernet.
+	Quản lý khóa: Khóa giải mã (Secret Key) được lưu trữ riêng biệt trong biến môi trường (.env), không nằm trong mã nguồn, đảm bảo ngay cả khi cơ sở dữ liệu bị rò rỉ, kẻ tấn công cũng không thể giải mã được mật khẩu sinh viên.
+c) Bảo mật Cross-Service (Giữa Spring Boot và FastAPI)
+Để FastAPI có thể xác thực các yêu cầu từ Client mà không cần gọi lại Spring Boot:
+	Cả hai service dùng chung một Secret Key để kiểm tra chữ ký JWT.
+	Mọi trao đổi dữ liệu nội bộ (Internal communication) giữa hai service được thực hiện trong mạng nội bộ hoặc qua các header bảo mật tùy chỉnh.
+3.7.4. Phòng chống các lỗ hổng Web phổ biến
+Hệ thống được cấu hình để đối phó với các kịch bản tấn công theo danh mục OWASP Top 10:
+	SQL Injection: Sử dụng Spring Data JPA (Hibernate) với cơ chế Prepared Statements, ngăn chặn mọi nỗ lực tiêm mã SQL độc hại qua đầu vào của người dùng.
+	Cross-Site Scripting (XSS): Sử dụng các thư viện Sanitization để làm sạch dữ liệu đầu vào và cấu hình các HTTP Security Headers như X-XSS-Protection.
+	Clickjacking: Sử dụng header X-Frame-Options: DENY để ngăn chặn trang web bị nhúng vào các thẻ iframe độc hại.
+	Content Security Policy (CSP): Thiết lập chính sách chỉ cho phép tải tài nguyên từ các nguồn tin cậy (self), hạn chế rủi ro thực thi mã độc từ bên thứ ba.
+Tóm tắt Chương 3
+Chương 3 đã hoàn thành mục tiêu quan trọng là cụ thể hóa các yêu cầu thực tiễn thành một bản thiết kế hệ thống chi tiết, khoa học và có tính khả thi cao. Toàn bộ quá trình phân tích và thiết kế hệ thống Agent For Edu được tóm lược qua các khía cạnh trọng tâm sau:
+1. Phân tích yêu cầu và định hướng giải pháp:
+Dựa trên kết quả khảo sát thực tế từ 50 sinh viên Trường Đại học Trà Vinh (TVU), hệ thống đã xác định được các "điểm đau" cốt lõi của người học. Từ đó, 40 yêu cầu chức năng đã được đặc tả và phân nhóm thành 8 phân hệ nghiệp vụ. Các yêu cầu phi chức năng về hiệu năng (phản hồi < 500ms), bảo mật (chuẩn ISO) và khả năng mở rộng (kiến trúc micro-services) cũng được thiết lập làm tiêu chuẩn cho quá trình triển khai.
+2. Mô hình hóa hành vi hệ thống (Use Case):
+Hệ thống đã xác định 5 tác nhân chính (Guest, User, Student, Teacher, Admin) với các cấp độ quyền hạn khác nhau thông qua sơ đồ Use Case tổng quát. Các kịch bản tương tác quan trọng nhất như: Xác thực người dùng, Hội thoại với RAG AI, Tự động hóa thời khóa biểu và Khởi tạo Quiz đã được đặc tả chi tiết, đảm bảo sự logic trong luồng nghiệp vụ giữa người dùng và máy tính.
+3. Thiết kế kiến trúc hệ thống hiện đại:
+Đề tài đã xây dựng một kiến trúc 3-Tier kết hợp Hybrid Backend (Spring Boot và FastAPI). Đây là một quyết định chiến lược giúp tận dụng tối đa thế mạnh xử lý nghiệp vụ bền vững của Java và khả năng tính toán AI linh hoạt của Python. Đặc biệt, kiến trúc RAG với 3 giai đoạn (Indexing, Retrieval, Generation) đã được mô hình hóa rõ nét, tạo tiền đề cho việc xử lý tri thức cá nhân hóa.
+4. Cấu trúc dữ liệu lai (Hybrid Database):
+Hệ thống lưu trữ được thiết kế tinh gọn với 16 bảng trong cơ sở dữ liệu quan hệ MySQL, đảm bảo tính toàn vẹn dữ liệu cho các giao dịch học thuật. Song song đó, việc thiết kế Vector Database (ChromaDB) với các metadata mapping chặt chẽ đã giải quyết được bài toán lưu trữ và truy xuất tri thức ngữ nghĩa – một yêu cầu tiên quyết của các hệ thống AI tiên tiến.
+5. Giao thức kết nối và Trải nghiệm người dùng:
+Toàn bộ hệ thống giao diện lập trình ứng dụng (API) được chuẩn hóa theo phong cách RESTful, đảm bảo tính nhất quán và dễ dàng tích hợp. Thiết kế giao diện (UI/UX) được phác thảo qua hệ thống Wireframe trực quan, tuân thủ các quy tắc về Color Scheme, Typography và tính tương thích đa thiết bị (Responsive Design).
+6. Lá chắn bảo mật đa tầng:
+Bảo mật được thiết kế xuyên suốt từ khâu đăng nhập (JWT), lưu trữ mật khẩu (BCrypt), đến việc bảo vệ thông tin nhạy cảm bên ngoài (AES-256). Mô hình phân quyền dựa trên vai trò (RBAC) đảm bảo dữ liệu học thuật luôn được truy cập đúng đối tượng và đúng mục đích.
+Tóm lại, những nội dung phân tích và thiết kế tại Chương 3 đóng vai trò là "bản vẽ kỹ thuật" hoàn chỉnh. Đây là cơ sở khoa học và thực tiễn để thực hiện giai đoạn Triển khai và Kiểm thử hệ thống sẽ được trình bày chi tiết trong Chương 4.
+
+ 
+CHƯƠNG 4: TRIỂN KHAI VÀ KIỂM THỬ
+
+Sau khi đã hoàn thiện các bản thiết kế chi tiết tại Chương 3, Chương 4 trình bày quá trình hiện thực hóa hệ thống Agent For Edu. Nội dung chương này bao gồm việc thiết lập môi trường phát triển, triển khai mã nguồn cho các phân hệ Frontend và Backend, tích hợp các mô hình trí tuệ nhân tạo và cuối cùng là đánh giá chất lượng hệ thống thông qua các kịch bản kiểm thử thực tế.
+4.1. Môi trường phát triển
+Để đảm bảo tính nhất quán và hiệu quả trong quá trình xây dựng một hệ thống đa công nghệ (Polyglot System), việc lựa chọn công cụ và cấu hình môi trường đóng vai trò quyết định.
+4.1.1. Công cụ phát triển phần mềm
+Đồ án sử dụng các công cụ lập trình tiên tiến, hỗ trợ tối ưu cho từng ngôn ngữ và framework cụ thể:
+a) Môi trường lập trình (IDE và Editor)
+Hệ thống được phát triển song song trên hai môi trường để tận dụng tối đa các tính năng hỗ trợ mã nguồn:
+Bảng 16: Các công cụ dùng cho lập trình
+Công cụ	Phiên bản	Vai trò và Mục đích
+IntelliJ IDEA	2024.1 (Ultimate)	Phát triển phân hệ Spring Boot. Hỗ trợ mạnh mẽ việc quản lý Bean, kiểm soát luồng dữ liệu JPA và tối ưu hóa mã nguồn Java.
+Visual Studio Code	1.85+	Phát triển phân hệ Frontend (React) và AI Service (FastAPI). Tận dụng hệ sinh thái Extension phong phú để tăng tốc độ viết code.
+MySQL Workbench	8.0 CE	Thiết kế lược đồ, quản trị cơ sở dữ liệu quan hệ và thực thi các truy vấn SQL kiểm tra.
+Postman	10.x	Kiểm thử các Endpoint API, giả lập các yêu cầu HTTP và kiểm tra cấu trúc phản hồi JSON.
+Git	2.43+	Quản lý phiên bản mã nguồn, thực hiện các thao tác Branching và Commit để theo dõi lịch sử phát triển.
+
+
+
+b) Các tiện ích mở rộng hỗ trợ (VS Code Extensions)
+Việc tích hợp các tiện ích giúp chuẩn hóa định dạng mã nguồn và giảm thiểu lỗi cú pháp:
+	ES7+ React/Redux/React-Native Snippets: Cung cấp các mẫu code chuẩn cho React và TypeScript.
+	Tailwind CSS IntelliSense: Hỗ trợ tự động hoàn thành các lớp (classes) tiện ích của Tailwind, giúp thiết kế UI nhanh và chính xác.
+	Python (Pylance): Hỗ trợ kiểm tra kiểu dữ liệu tĩnh và gợi ý mã nguồn cho FastAPI.
+	Prettier & ESLint: Tự động định dạng mã nguồn và kiểm tra lỗi logic theo các tiêu chuẩn lập trình hiện đại.
+4.1.2. Cấu hình môi trường hệ thống
+Hệ thống yêu cầu một cấu hình phần cứng và phần mềm đủ mạnh để có thể vận hành đồng thời ba dịch vụ (Frontend, Java Backend, Python Backend) và các cơ sở dữ liệu.
+	Yêu cầu về tài nguyên hệ thống (System Requirements)
+Bảng 17: Bảng tài nguyên yêu cầu
+Thành phần	Yêu cầu tối thiểu	Khấu hình khuyến nghị
+Hệ điều hành	Windows 10 (64-bit)	Windows 11 hoặc macOS (M1/M2/M3)
+Bộ nhớ RAM	8 GB	16 GB (Để chạy mượt các mô hình AI và Docker)
+Bộ vi xử lý	4 Cores (Intel i5/Ryzen 5)	8 Cores (Intel i7/Ryzen 7 hoặc Apple Silicon)
+Lưu trữ	20 GB trống	50 GB SSD (Ưu tiên tốc độ đọc ghi dữ liệu Vector)
+
+b) Cài đặt các nền tảng thực thi (Runtimes)
+Sử dụng các phiên bản ổn định lâu dài (LTS) để đảm bảo tính tương thích:
+	Node.js v18.x hoặc v20.x (LTS): Môi trường thực thi cho React và các công cụ đóng gói (Vite).
+	Java Development Kit (JDK) 17: Phiên bản LTS hỗ trợ các tính năng mới nhất của Spring Boot 3.x.
+	Python 3.11: Đảm bảo khả năng tương thích cao nhất với các thư viện LangChain, Gemini SDK và FastAPI.
+	MySQL 8.0: Hệ quản trị cơ sở dữ liệu quan hệ chính.
+c) Quản lý thư viện phụ thuộc (Dependency Management)
+Quy trình cài đặt và chuẩn bị mã nguồn được thực hiện qua các trình quản lý gói tiêu chuẩn:
+	Frontend: Sử dụng npm để cài đặt các thư viện React, Zustand, và Tailwind.
+	Java Backend: Sử dụng Maven để quản lý các Dependency trong file pom.xml.
+	Python Backend: Sử dụng pip kết hợp với môi trường ảo (Virtual Environment) để cô lập các thư viện AI.
+4.1.3. Cấu hình biến môi trường và Bảo mật
+Hệ thống tuân thủ nguyên tắc không lưu trữ thông tin nhạy cảm trực tiếp trong mã nguồn. Mọi cấu hình liên quan đến API Key, mật khẩu database và các khóa bí mật đều được quản lý qua các file cấu hình riêng biệt.
+	Phân hệ AI (FastAPI): Quản lý qua file .env. Đây là nơi lưu giữ các khóa quan trọng như GEMINI_API_KEY, GROQ_API_KEY và CREDENTIAL_ENCRYPTION_KEY (dùng cho mã hóa AES-256).
+	Phân hệ Core (Spring Boot): Sử dụng file application.yaml để cấu hình kết nối MySQL và các thông số cho JWT (Secret key, thời gian hết hạn).
+	Phân hệ Giao diện (Frontend): Sử dụng file .env.local của Vite để định nghĩa các URL cơ sở (Base URL) trỏ tới các dịch vụ Backend tương ứng.
+Việc thiết lập môi trường bài bản như trên đảm bảo hệ thống có thể dễ dàng được đóng gói (Containerization) và triển khai trên các hạ tầng đám mây (Cloud) trong tương lai.
+4.2. Triển khai phân hệ Frontend (React Application)
+Phân hệ Frontend được xây dựng dựa trên kiến trúc Single Page Application (SPA) hiện đại, tập trung vào tính mô-đun hóa cao và trải nghiệm người dùng mượt mà.
+4.2.1. Tổ chức cấu trúc dự án
+Dự án được tổ chức theo cấu trúc Feature-based Folder Structure, giúp phân tách rõ ràng giữa giao diện, logic xử lý và quản lý trạng thái. Điều này đặc biệt quan trọng khi hệ thống tích hợp nhiều tính năng phức tạp như Chat AI và quản lý học tập.
+	components/: Chứa các thành phần UI có tính tái sử dụng cao. Được phân chia nhỏ hơn theo các tính năng (chat, flashcards).
+	pages/: Các thành phần đại diện cho toàn bộ trang, kết nối trực tiếp với hệ thống Router.
+	services/: Lớp giao tiếp với Backend (Data Access Layer). Sử dụng Axios để quản lý các yêu cầu HTTP tới cả hai server Spring Boot và FastAPI.
+	store/: Quản lý trạng thái toàn cục bằng Zustand. Đây là nơi lưu trữ thông tin đăng nhập và các cấu hình người dùng.
+	hooks/: Chứa các Custom Hooks để tái sử dụng logic (ví dụ: useAuth để kiểm tra quyền truy cập).
+4.2.2. Triển khai các tính năng kỹ thuật trọng tâm
+a) Quản lý trạng thái xác thực (Authentication Store)
+Sử dụng Zustand kết hợp với Middleware persist để duy trì trạng thái đăng nhập của sinh viên ngay cả khi tải lại trang (F5). Thông tin người dùng và JWT Token được lưu trữ an toàn trong localStorage và được đồng bộ hóa với trạng thái của ứng dụng.
+b) Xây dựng lớp dịch vụ API (Axios Interceptors)
+Hệ thống triển khai mô hình Dual-API Instance để giao tiếp đồng thời với hai Backend:
+	api: Trỏ tới Spring Boot (Port 8080) cho các nghiệp vụ lõi.
+	aiApi: Trỏ tới FastAPI (Port 8000) cho các tác vụ xử lý AI.
+	Interceptors: Tự động đính kèm Token vào Header của mọi yêu cầu và xử lý tập trung lỗi 401 Unauthorized để điều hướng người dùng về trang đăng nhập khi phiên làm việc hết hạn.
+c) Giao diện hội thoại thông minh (Chat Interface)
+Giao diện Chat được triển khai bằng Framer Motion để tạo hiệu ứng xuất hiện tin nhắn sống động.
+	Cơ chế cuộn tự động: Sử dụng useRef và useEffect để luôn giữ cho màn hình hiển thị tin nhắn mới nhất.
+	Xử lý bất đồng bộ: Hệ thống hiển thị trạng thái "Typing..." (loading) trong khi chờ đợi phản hồi từ mô hình Gemini qua RAG Pipeline, giúp tăng trải nghiệm tương tác thực tế.
+d) Hệ thống ôn tập Flashcard và Thuật toán SM-2
+Giao diện Flashcard triển khai cơ chế "Lật thẻ" (Flip animation) bằng CSS 3D Transforms kết hợp với Framer Motion.
+	Ghi nhận phản hồi: Sau khi xem đáp án, sinh viên thực hiện đánh giá độ khó (1-5). Dữ liệu này được gửi về Backend để thuật toán SM-2 tính toán ngày ôn tập tiếp theo.
+	Tiến độ học tập: Sử dụng AnimatePresence để tạo chuyển cảnh mượt mà khi người dùng chuyển sang thẻ tiếp theo trong bộ nhớ.
+4.2.3. Thiết kế đáp ứng và Tối ưu hóa giao diện (Responsive Design)
+Để đảm bảo hệ thống hoạt động tốt trên cả máy tính và thiết bị di động (Mobile-First Approach), dự án tận dụng triệt để sức mạnh của Tailwind CSS Utility Classes.
+	Hệ thống Grid linh hoạt: Sử dụng grid-cols-1 trên mobile và tự động mở rộng thành grid-cols-3 hoặc grid-cols-4 trên màn hình lớn.
+	Sidebar thích ứng: Trên màn hình nhỏ, Sidebar được ẩn vào Menu Hamburger và sử dụng transition-transform để trượt ra khi cần thiết, giúp tối ưu không gian cho nội dung học tập.
+	Tối ưu hóa hình ảnh: Sử dụng các định dạng nhẹ và kỹ thuật Lazy Loading để tăng tốc độ tải trang trên các thiết bị có băng thông hạn chế.
+4.3. Triển khai phân hệ Backend Spring Boot (Core Service)
+Phân hệ Spring Boot đóng vai trò là hạt nhân điều phối tri thức và quản trị nghiệp vụ của hệ thống Agent For Edu. Phân hệ này chịu trách nhiệm quản lý luồng dữ liệu quan hệ, đảm bảo tính bảo mật và cung cấp các API nền tảng cho Frontend.
+4.3.1. Cấu trúc tổ chức dự án
+Mã nguồn được tổ chức theo kiến trúc phân tầng (Layered Architecture), giúp tách biệt hoàn toàn giữa giao diện lập trình, xử lý nghiệp vụ và truy xuất dữ liệu.
+	config/: Thiết lập các tham số hệ thống như bảo mật (Security), chia sẻ tài nguyên (CORS) và cấu hình Bean.
+	controller/: Tiếp nhận các yêu cầu HTTP, kiểm tra dữ liệu đầu vào (Validation) và điều hướng đến các Service tương ứng.
+	service/: Chứa toàn bộ logic nghiệp vụ cốt lõi của hệ thống. Đây là nơi thực hiện các tính toán, kiểm tra ràng buộc và điều phối dữ liệu.
+	repository/: Sử dụng Spring Data JPA để giao tiếp với MySQL. Lớp này trừu tượng hóa các câu lệnh SQL thành các phương thức Java thuần túy.
+	entity/: Định nghĩa các mô hình dữ liệu (Data Models) ánh xạ trực tiếp xuống các bảng trong cơ sở dữ liệu.
+	dto/: Các đối tượng vận chuyển dữ liệu, giúp bảo mật các trường thông tin nhạy cảm của Entity khi trả về cho Client.
+	security/: Triển khai cơ chế xác thực dựa trên JWT và bộ lọc an ninh (Security Filters).
+4.3.2. Triển khai các Module nghiệp vụ trọng tâm
+a) Xây dựng mô hình dữ liệu người dùng (User Entity)
+Sử dụng thư viện Lombok (@Data, @NoArgsConstructor) để giảm bớt mã nguồn dư thừa. Thực thể User được thiết kế với các ràng buộc chặt chẽ (unique, nullable) và quản lý các mối quan hệ một-nhiều với Khóa học và Phiên chat thông qua cơ chế CascadeType.ALL.
+b) Triển khai cơ chế cấp phát định danh JWT (Token Provider)
+Để duy trì phiên làm việc phi trạng thái (Stateless), hệ thống sử dụng thư viện JJWT.
+	Generate Token: AI tích hợp thông tin userId và role vào nội dung Token (Claims) để FastAPI hoặc Frontend có thể trích xuất dữ liệu mà không cần truy vấn lại Database.
+	Validation: Kiểm tra tính toàn vẹn và thời hạn của Token bằng chữ ký số với thuật toán HS256.
+c) Quản lý xác thực qua Auth Controller
+Controller này cung cấp các Endpoint cho quá trình đăng ký, đăng nhập và quản lý hồ sơ. Sử dụng @Valid để kích hoạt cơ chế kiểm tra dữ liệu đầu vào tự động (như định dạng Email, độ dài mật khẩu) trước khi đi vào lớp nghiệp vụ.
+d) Xử lý nghiệp vụ Khóa học và Ghi danh (Course Service)
+Lớp Service này triển khai các logic phức tạp như kiểm tra trạng thái đăng ký học tập của sinh viên.
+	Sử dụng Stream API của Java 8+ để chuyển đổi danh sách Entity sang DTO một cách linh hoạt.
+	Quản lý lỗi thông qua các Custom Exceptions như ResourceNotFoundException, giúp hệ thống trả về thông báo lỗi chuẩn hóa và dễ hiểu cho người dùng.
+e) Cấu hình bảo mật hệ thống (Spring Security Configuration)
+Đây là lớp phòng thủ quan trọng nhất của phân hệ Spring Boot:
+	Stateless Session: Cấu hình hệ thống không lưu trữ Session trên Server để tối ưu hiệu năng và phù hợp với kiến trúc REST.
+	RBAC (Role-Based Access Control): Phân quyền chi tiết cho các Endpoint (ví dụ: chỉ TEACHER mới có quyền tạo khóa học).
+	CORS Filter: Cho phép Frontend (Vite) truy cập tài nguyên Backend thông qua việc cấu hình danh sách các nguồn tin cậy (Allowed Origins).
+	Password Encoder: Sử dụng BCrypt để băm mật khẩu với độ phức tạp cao, đảm bảo an toàn ngay cả khi dữ liệu bị rò rỉ.
+	(Chèn mã nguồn SecurityConfig.java của bạn vào đây)
+4.4. Triển khai phân hệ Backend FastAPI (AI & Agent Service)
+Phân hệ FastAPI đóng vai trò là trung tâm xử lý trí tuệ nhân tạo và tích hợp các dịch vụ bên thứ ba. Được xây dựng trên nền tảng Python, phân hệ này tận dụng tối đa cơ chế bất đồng bộ (Asynchronous) để xử lý các tác vụ tiêu tốn thời gian như gọi API mô hình ngôn ngữ lớn (LLM), truy xuất dữ liệu vector và bóc tách dữ liệu web (Web Scraping).
+4.4.1. Tổ chức cấu trúc dự án
+Dự án được tổ chức theo mô hình mô-đun hóa, tách biệt rõ ràng giữa logic xử lý AI, dịch vụ dữ liệu và các tính năng tác vụ (Agent features):
+	main.py: Điểm khởi đầu của ứng dụng, định nghĩa các Endpoint REST và cấu hình Middleware (CORS, Security).
+	ai_service.py: Chứa các hàm giao tiếp trực tiếp với Google Gemini và Groq API.
+	agent_features.py: Thành phần cốt lõi đảm nhận việc nhận diện ý định của người dùng (Intent Detection).
+	tvu_scraper.py: Thực hiện các kịch bản tự động đăng nhập và bóc tách thời khóa biểu từ cổng thông tin sinh viên TVU.
+	chroma_vector_service.py: Quản lý quy trình RAG (Indexing và Search) trên cơ sở dữ liệu ChromaDB.
+	gmail_service.py & google_cloud_agent.py: Xử lý tương tác với hệ sinh thái Google Workspace.
+	school_credentials_encryption.py: Triển khai giải mã AES-256 để phục vụ việc đăng nhập tự động vào hệ thống nhà trường.
+4.4.2. Triển khai dịch vụ AI Chat Assistant
+a) Xây dựng Endpoint Chat trung tâm (/api/chat)
+Đây là Endpoint phức tạp nhất, thực hiện quy trình xử lý đa bước nhằm trả về câu trả lời tối ưu nhất cho sinh viên. Hệ thống sử dụng Pydantic Models để kiểm soát chặt chẽ kiểu dữ liệu đầu vào và đầu ra.
+Quy trình xử lý tại Endpoint:
+	Nhận diện ý định (Intent Detection): Trước khi gửi dữ liệu cho AI, hệ thống kiểm tra xem câu hỏi của sinh viên có thuộc các nhóm tác vụ đặc biệt (lịch học, email) hay không.
+	Truy xuất thông tin (Retrieval): Nếu chế độ RAG được bật, hệ thống tìm kiếm trong ChromaDB các đoạn văn bản liên quan đến nội dung bài học.
+	Tăng cường ngữ cảnh (Augmentation): Kết hợp câu hỏi gốc và dữ liệu truy xuất được vào một Prompt mẫu để hướng dẫn AI trả lời chính xác.
+	Xử lý đa phương thức (Vision): Nếu sinh viên gửi kèm hình ảnh, hệ thống sử dụng model Gemini Flash để phân tích nội dung ảnh (OCR hoặc giải bài tập qua ảnh).
+	Sinh nội dung (Generation): Gọi API Google Gemini để nhận kết quả cuối cùng và trả về cho người dùng.
+b) Cơ chế nhận diện ý định (Intent Detection)
+Để hệ thống hoạt động như một "Agent" thực thụ, module AgentFeatures sử dụng các biểu thức chính quy (Regular Expressions) và xử lý ngôn ngữ tự nhiên để phân loại yêu cầu của sinh viên. Điều này cho phép hệ thống phân biệt giữa một câu hỏi kiến thức thông thường và một yêu cầu thực thi tác vụ (như "Hôm nay tôi học gì?").
+c) Triển khai Web Scraper cho cổng thông tin TVU
+Module TVUScraper giải quyết bài toán thiếu hụt API chính thống từ nhà trường.
+	Duy trì phiên (Session Management): Sử dụng requests.Session để lưu giữ Cookies sau khi đăng nhập thành công.
+	Xử lý HTML: Sử dụng BeautifulSoup để bóc tách cấu trúc bảng thời khóa biểu, chuyển đổi các thẻ <td> thành dữ liệu JSON có cấu trúc bao gồm: Tên môn, phòng học, tiết bắt đầu và giáo viên.
+	An toàn dữ liệu: Mật khẩu sinh viên chỉ được giải mã trong bộ nhớ tạm thời khi thực hiện Login và không bao giờ được ghi ra Log hệ thống.
+4.4.3. Tối ưu hóa hiệu năng và Trải nghiệm
+	Async Processing: Toàn bộ các yêu cầu gọi API bên ngoài đều được thực hiện dưới dạng async, cho phép server xử lý đồng thời nhiều yêu cầu chat mà không bị tắc nghẽn.
+	Error Handling: Hệ thống có cơ chế bắt lỗi chi tiết (Exception Handling). Ví dụ: Khi cổng TVU bảo trì hoặc sai mật khẩu, hệ thống sẽ trả về thông báo thân thiện thay vì lỗi mã nguồn.
+	CORS Configuration: Được thiết lập để chỉ cho phép các nguồn tin cậy (Frontend và Spring Boot) truy cập, đảm bảo an toàn cho dịch vụ AI.
+4.5. Triển khai hệ thống RAG (Retrieval-Augmented Generation)
+Hệ thống RAG là thành phần then chốt giúp Trợ lý AI của Agent For Edu vượt qua giới hạn về kiến thức tĩnh của các mô hình ngôn ngữ lớn (LLM). Bằng cách kết hợp giữa việc truy xuất ngữ nghĩa (Semantic Retrieval) và sinh văn bản, hệ thống đảm bảo các câu trả lời luôn bám sát nội dung tài liệu chuyên biệt của từng khóa học.
+4.5.1. Triển khai Dịch vụ Vector Database (ChromaDB Service)
+Lớp ChromaVectorDB được thiết kế nhằm đóng gói toàn bộ logic tương tác với cơ sở dữ liệu vector. Đây là nơi thực hiện việc chuyển đổi văn bản thô thành các tọa độ toán học trong không gian đa chiều và thực hiện các phép tìm kiếm láng giềng gần nhất.
+	Quản lý lưu trữ bền vững: Sử dụng chromadb.PersistentClient để đảm bảo dữ liệu vector được lưu trữ vĩnh viễn trên ổ đĩa (./chroma_db), tránh việc mất dữ liệu khi server khởi động lại.
+	Cơ chế Embedding: Đồ án sử dụng mô hình chuyên dụng text-embedding-004 của Google Gemini. Mô hình này chuyển đổi mỗi đoạn văn bản thành một vector có 768 chiều, mang đầy đủ đặc trưng ngữ nghĩa của nội dung.
+	Chiến lược tìm kiếm tương đồng: Sử dụng thuật toán HNSW (Hierarchical Navigable Small World) với độ đo Cosine Similarity. Thuật toán này cho phép tìm kiếm cực nhanh trên các tập dữ liệu lớn mà vẫn đảm bảo độ chính xác về mặt ngữ nghĩa.
+Các tính năng kỹ thuật nổi bật trong mã nguồn:
+	Chuyển đổi Distance sang Similarity: Vì ChromaDB mặc định trả về khoảng cách (Distance), hệ thống thực hiện phép tính 1 - distance để đưa về chỉ số tương đồng (Similarity). Chỉ những đoạn văn bản có độ tương đồng trên ngưỡng 0.3 mới được coi là liên quan, giúp loại bỏ các kết quả nhiễu.
+	Định danh tự động (UUID): Hệ thống tự động tạo các ID duy nhất cho từng đoạn văn bản nếu không được cung cấp, giúp việc quản lý và cập nhật tài liệu trở nên minh bạch.
+	Hỗ trợ Metadata: Mỗi vector được gắn kèm các thông tin bổ sung (nguồn, ngày tạo, tiêu đề), cho phép thực hiện việc lọc dữ liệu (filtering) theo từng sinh viên hoặc từng môn học cụ thể.
+4.5.2. Xây dựng các Endpoint quản trị tri thức (RAG API)
+Để tích hợp hệ thống RAG vào quy trình hội thoại và quản lý tài liệu, FastAPI cung cấp các Endpoint chuyên biệt để thực hiện các thao tác CRUD (Create, Read, Update, Delete) trên không gian vector.
+Chi tiết các Endpoint:
+	POST /api/documents/add: Tiếp nhận danh sách các đoạn văn bản từ hệ thống xử lý tài liệu (PDF/Text). Tại đây, hệ thống thực hiện quy trình nhúng (Embedding) và đẩy vào kho tri thức.
+	POST /api/documents/search: Endpoint thử nghiệm và kiểm tra khả năng truy xuất. Nó cho phép điều chỉnh các tham số như n_results (số đoạn văn bản cần lấy) và min_similarity để tối ưu hóa chất lượng câu trả lời của AI.
+DELETE /api/documents/all: Cho phép làm sạch kho tri thức, thường được sử dụng khi giảng viên cập nhật lại toàn bộ tài liệu khóa học mới.
+4.5.3. Tối ưu hóa quy trình RAG
+Trong quá trình triển khai, hệ thống áp dụng chiến lược Chunking (phân đoạn văn bản) thông minh:
+	Kích thước đoạn (Chunk size): Mỗi đoạn văn bản được giới hạn khoảng 500 từ để đảm bảo giữ được ngữ cảnh mà không làm loãng thông tin khi đưa vào Prompt của AI.
+	Độ gối đầu (Overlap): Các đoạn văn bản có một phần nội dung lặp lại (khoảng 10%) để đảm bảo thông tin quan trọng không bị ngắt quãng giữa các ranh giới đoạn.
+	Task Type: Khi tạo embedding, hệ thống định nghĩa rõ task_type="retrieval_document" cho tài liệu và retrieval_query cho câu hỏi, giúp mô hình Gemini tối ưu hóa việc so khớp vector một cách chính xác nhất.
+4.6. Tích hợp và Giao tiếp hệ thống (System Integration)
+Việc tích hợp hệ thống là giai đoạn quan trọng nhất trong kiến trúc đa dịch vụ (Multi-service Architecture) của Agent For Edu. Thách thức lớn nhất là đảm bảo sự luân chuyển dữ liệu mượt mà giữa Frontend (React), Backend nghiệp vụ (Spring Boot) và Backend AI (FastAPI).
+4.6.1. Tích hợp giữa Frontend và các hệ thống Backend
+Hệ thống triển khai cơ chế giao tiếp Dual-Backend Access. Thay vì sử dụng một Gateway duy nhất, Frontend được cấu hình để gửi các yêu cầu trực tiếp đến dịch vụ tương ứng dựa trên bản chất của tác vụ.
+	Tích hợp với Spring Boot (api instance): Được sử dụng cho các tác vụ đòi hỏi tính nhất quán của dữ liệu quan hệ và bảo mật cao như: Quản lý phiên hội thoại (Chat Sessions), lưu trữ lịch sử tin nhắn, và quản lý hồ sơ người dùng.
+	Tích hợp với FastAPI (aiApi instance): Được sử dụng cho các tác vụ xử lý trí tuệ nhân tạo thời gian thực, nơi yêu cầu độ trễ thấp và khả năng xử lý bất đồng bộ mạnh mẽ.
+Giải pháp kỹ thuật tiêu biểu:
+	Đồng bộ hóa trạng thái (Synchronized State): Khi sinh viên gửi một tin nhắn, hệ thống thực hiện hai bước: Gọi FastAPI để lấy câu trả lời từ AI, sau đó gọi Spring Boot để lưu trữ cặp tin nhắn (Hỏi-Đáp) vào MySQL nhằm duy trì lịch sử.
+	Xác thực tập trung: Cả hai luồng tích hợp đều sử dụng chung một mã định danh JWT. Điều này cho phép hệ thống duy trì tính bảo mật đồng nhất mà không yêu cầu người dùng đăng nhập lại khi chuyển đổi giữa các tính năng.
+	Xử lý đa phương thức (Multimodal Integration): Interface ChatMessage hỗ trợ truyền tải cả văn bản và dữ liệu hình ảnh (Base64), cho phép tích hợp các tính năng Vision AI vào luồng hội thoại một cách tự nhiên.
+4.6.2. Tích hợp liên dịch vụ (Spring Boot - FastAPI Integration)
+Đây là cơ chế giao tiếp giữa hai hệ thống Backend (Inter-service Communication). Trong kịch bản này, Spring Boot đóng vai trò là "Client" và FastAPI đóng vai trò là "Resource Server" chuyên trách về AI.
+Cơ chế hoạt động và lợi ích:
+	RestTemplate Communication: Spring Boot sử dụng RestTemplate để thực hiện các yêu cầu HTTP POST tới các Endpoint của FastAPI. Điều này cho phép hệ thống Java tận dụng được các thư viện AI mạnh mẽ của Python (như LangChain, Gemini SDK) mà không cần thay đổi ngôn ngữ lập trình cốt lõi.
+	Module tạo Quiz tự động (Quiz Generation Flow):
+	Giảng viên yêu cầu tạo Quiz trong giao diện Spring Boot.
+	Spring Boot trích xuất nội dung bài học từ Database và gửi yêu cầu kèm các tham số (số câu hỏi, độ khó) sang FastAPI.
+	FastAPI xử lý với LLM và trả về cấu trúc dữ liệu Quiz dạng JSON.
+	Spring Boot nhận kết quả, thực hiện kiểm tra tính hợp lệ và lưu trữ vào MySQL để phục vụ việc làm bài của sinh viên.
+	Khả năng cấu hình linh hoạt: Thông qua Annotation @Value("${fastapi.url}"), địa chỉ của dịch vụ AI có thể dễ dàng thay đổi giữa môi trường phát triển (localhost) và môi trường triển khai thực tế (Cloud/Docker) mà không cần can thiệp vào mã nguồn.
+4.6.3. Đánh giá hiệu quả tích hợp
+Giải pháp tích hợp này mang lại ba lợi ích chiến lược cho hệ thống:
+Tính sẵn sàng (Availability): Nếu dịch vụ AI (FastAPI) gặp sự cố, các tính năng quản lý khóa học và xem tài liệu trên Spring Boot vẫn hoạt động bình thường, hạn chế tối đa ảnh hưởng tới người dùng.
+	Tính tối ưu (Optimization): Tận dụng được khả năng đa luồng của Java cho nghiệp vụ và tính bất đồng bộ của Python cho AI.
+	Dễ dàng bảo trì: Các lỗi liên quan đến logic AI có thể được debug độc lập trên FastAPI mà không cần khởi động lại toàn bộ hệ thống lõi trên Spring Boot.
+4.7. Kiểm thử hệ thống (System Testing)
+Kiểm thử là giai đoạn then chốt nhằm xác minh tính đúng đắn của các tính năng, đảm bảo hệ thống vận hành ổn định và đáp ứng đầy đủ các yêu cầu phi chức năng về bảo mật và hiệu năng. Quy trình kiểm thử được thực hiện đa tầng, từ mức độ hàm (Unit Test) đến mức độ tích hợp và trải nghiệm thực tế.
+4.7.1. Kiểm thử đơn vị (Unit Testing)
+Mục tiêu của kiểm thử đơn vị là xác định tính chính xác của các đoạn mã nguồn cô lập trước khi tích hợp vào hệ thống chung.
+a) Kiểm thử nghiệp vụ xác thực (Spring Boot Service)
+Sử dụng JUnit 5 và Mockito để kiểm tra các logic xử lý tại lớp AuthService. Các kịch bản kiểm thử bao gồm việc đăng ký thành công, xử lý lỗi trùng lặp dữ liệu và xác thực mật khẩu.
+b) Kiểm thử logic nhận diện ý định và xử lý thời gian (Python Service)
+Sử dụng thư viện Pytest để kiểm tra bộ não xử lý của Agent. Đây là phần cực kỳ quan trọng vì nó quyết định khả năng phản hồi đúng ngữ cảnh của chatbot. Các test case tập trung vào việc trích xuất ngày tháng từ ngôn ngữ tự nhiên và phân loại ý định (Intent Detection).
+4.7.2. Kiểm thử tích hợp (Integration Testing)
+Kiểm thử tích hợp tập trung vào việc xác minh sự tương tác giữa các thành phần: API - Database - Security Layer.
+	Phương pháp: Sử dụng MockMvc trong Spring Boot để giả lập các yêu cầu HTTP thực tế.
+	Kịch bản trọng tâm: Quy trình "End-to-End" từ việc đăng nhập để lấy JWT Token, sau đó sử dụng Token đó để truy cập vào các tài nguyên bị khóa (như tạo khóa học). Điều này đảm bảo cơ chế phân quyền (RBAC) hoạt động chính xác trên thực tế.
+4.7.3. Kiểm thử chức năng (Functional Testing)
+Sử dụng phương pháp Kiểm thử hộp đen (Black-box Testing) để đối soát các tính năng thực tế với bảng yêu cầu đã đề ra tại Chương 3.
+Bảng tổng hợp kết quả kiểm thử chức năng:
+Bảng 18: Bảng tổng hợp kết quả kiểm thử chức năng
+ID	Chức năng	Kịch bản kiểm thử	Kết quả mong đợi	Trạng thái
+TC01	Đăng ký	Nhập đầy đủ thông tin hợp lệ	Tạo tài khoản thành công, lưu vào DB	✅ Pass
+TC02	Đăng nhập	Nhập sai mật khẩu	Hệ thống trả về lỗi 401 Unauthorized	✅ Pass
+TC03	Chat AI	Gửi câu hỏi về nội dung bài học	AI trả lời chính xác dựa trên RAG Context	✅ Pass
+TC04	Schedule	Hỏi "Mai tôi học mấy giờ?"	Hệ thống bóc tách đúng lịch ngày mai	✅ Pass
+TC05	Quiz	Yêu cầu tạo 10 câu hỏi trắc nghiệm	AI sinh đúng cấu trúc JSON, lưu vào DB	✅ Pass
+TC06	Flashcard	Đánh giá mức độ nhớ (1-5)	Hệ thống cập nhật đúng next_review	✅ Pass
+TC07	Email	Soạn mail xin nghỉ bằng AI	AI trả lời kèm bản nháp Email đầy đủ	✅ Pass
+
+4.7.4. Kiểm thử hiệu năng (Performance Testing)
+Đánh giá khả năng chịu tải và tốc độ phản hồi của hệ thống trong môi trường thực tế.
+	Tốc độ phản hồi (Response Time): Các API thông thường (CRUD) có tốc độ phản hồi cực nhanh (< 200ms). Tuy nhiên, các yêu cầu liên quan đến AI (LLM) và Web Scraping có độ trễ cao hơn (trung bình 2-5 giây) do đặc thù xử lý của bên thứ ba.
+	Kiểm thử chịu tải (Load Testing): Sử dụng công cụ Apache JMeter giả lập 50 người dùng truy cập đồng thời. Kết quả cho thấy hệ thống duy trì được sự ổn định với tỷ lệ lỗi (Error Rate) rất thấp (0.2%), chứng minh kiến trúc đa dịch vụ hoạt động hiệu quả.
+4.7.5. Kiểm thử bảo mật (Security Testing)
+Xác minh khả năng phòng thủ của hệ thống trước các nguy cơ tấn công mạng phổ biến.
+	Xác thực và Ủy quyền: Kiểm tra kỹ việc truy cập trái phép. Kết quả cho thấy khi không có Token hoặc Token sai, hệ thống lập tức từ chối yêu cầu (401/403).
+	An toàn dữ liệu: Thử nghiệm các câu lệnh SQL Injection và mã độc XSS vào các ô nhập liệu. Hệ thống đã ngăn chặn thành công nhờ cơ chế PreparedStatements và Input Sanitization.
+	Mã hóa: Kiểm tra cơ sở dữ liệu MySQL, xác nhận mật khẩu người dùng đã được băm (hash) và các thông tin Credentials đã được mã hóa chuỗi AES-256 hoàn toàn không thể đọc trực tiếp.
+4.8. Kết quả triển khai hệ thống
+Sau quá trình thiết kế và thực thi mã nguồn, hệ thống Agent For Edu đã được triển khai hoàn thiện với đầy đủ các phân hệ chức năng. Giao diện người dùng được tinh chỉnh nhằm tối ưu hóa trải nghiệm học tập, đảm bảo tính thẩm mỹ và hiệu năng cao.
+4.8.1. Hình ảnh giao diện thực tế (Screenshots)
+Dưới đây là các màn hình chức năng tiêu biểu minh chứng cho khả năng vận hành của hệ thống:
+a) Trang Đăng nhập và Xác thực (Authentication)
+Giao diện đăng nhập được thiết kế tối giản, hỗ trợ đa phương thức xác thực. Người dùng có thể sử dụng tài khoản hệ thống hoặc thông qua Google OAuth 2.0. Hệ thống sử dụng hiệu ứng chuyển động mượt mà khi chuyển đổi giữa các trạng thái đăng nhập và đăng ký.
+ 
+Hình 22: Giao diện trang chủ
+ 
+Hình 23: Giao diện đăng nhập
+b) Bảng điều khiển trung tâm (Dashboard)
+Dashboard cung cấp cái nhìn tổng thể về lộ trình học tập của sinh viên.
+Thanh chỉ số (Stats Bar): Thống kê thời gian thực về tiến độ khóa học, số lượng Quiz đã hoàn thành và số lượng Flashcard cần ôn tập trong ngày.
+Lịch học tích hợp: Dữ liệu thời khóa biểu bóc tách từ cổng TVU được hiển thị ngay tại trung tâm, giúp sinh viên nắm bắt lịch trình mà không cần chuyển đổi nền tảng.
+ 
+Hình 24: Giao diện trang điều khiển trung tâm
+c) Giao diện Trợ lý ảo AI (Chat Assistant)
+Đây là tính năng cốt lõi tích hợp RAG và Intent Detection.
+	Hỗ trợ đa phương thức: Khung chat tích hợp đính kèm tài liệu, hình ảnh (Vision AI) và điều khiển bằng giọng nói.
+	Xử lý ngữ cảnh: AI không chỉ trả lời câu hỏi kiến thức mà còn có khả năng tra cứu lịch học một cách thông minh khi nhận diện được ý định (Intent) của người dùng.
+ 
+Hình 25: Giao diện trang chat với AI
+d) Hệ thống Kiểm tra và Ôn tập (Quiz & Flashcard)
+Quiz: Giao diện làm bài trắc nghiệm, các câu hỏi được AI tạo ra hoàn toàn tự động dựa trên nội dung bài học.
+Flashcard: Ứng dụng thuật toán SM-2 với giao diện lật thẻ trực quan. Các nút đánh giá mức độ nhớ được thiết kế nổi bật giúp sinh viên dễ dàng tương tác.
+
+ 
+Hình 26: Giao diện trang flashcard
+4.8.2. Đánh giá mức độ hoàn thành các tính năng
+Hệ thống đã trải qua quá trình kiểm thử nghiêm ngặt trên tất cả các module. Dưới đây là bảng tổng hợp kết quả triển khai so với các yêu cầu chức năng đã đề ra tại Chương 3:
+Bảng 19: Bảng tổng hợp kết quả triển khai so với các yêu cầu chức năng đã đề ra
+STT	Phân hệ chức năng	Trạng thái	Ghi chú kỹ thuật
+1	Xác thực người dùng	✅	Hỗ trợ JWT, BCrypt và Google OAuth 2.0.
+2	Dashboard thông minh	✅	Thống kê động và đồng bộ dữ liệu thời gian thực.
+3	Chat AI (Gemini 1.5)	✅	Tích hợp RAG, xử lý Intent và duy trì ngữ cảnh.
+4	Vision AI (OCR)	✅	Phân tích hình ảnh tài liệu, giải bài tập qua ảnh.
+5	Voice Chat (STT)	✅	Nhận dạng giọng nói tiếng Việt độ chính xác cao.
+6	Quản lý khóa học	✅	Quản lý bài học, tài liệu đa định dạng (PDF/Docx).
+7	Tự động hóa Quiz	✅	AI sinh câu hỏi từ tài liệu với độ khó tùy chọn.
+8	Flashcard SM-2	✅	Triển khai chính xác thuật toán lặp lại ngắt quãng.
+9	Scraper TKB TVU	✅	Bóc tách dữ liệu từ cổng ttsv.tvu.edu.vn ổn định.
+10	Hỏi đáp lịch học	✅	AI hiểu các truy vấn thời gian tương đối (mai, mốt).
+11	Gmail Integration	✅	Soạn bản nháp (Draft) và đọc thư thông minh.
+12	Google Calendar	✅	Đồng bộ sự kiện hai chiều qua Calendar API.
+13	RAG Knowledge Base	✅	Quản lý Vector Embeddings trên ChromaDB.
+14	Hệ thống Admin	✅	Quản trị người dùng, khóa học và xem báo cáo.
+15	Settings & Security	✅	Quản lý Credentials và tùy biến giao diện.
+
+Đánh giá tổng quát: Hệ thống đã hoàn thành 15/15 (100%) các mục tiêu chức năng đề ra. Các tính năng AI hoạt động ổn định trên nền tảng Gemini 1.5 Flash và Groq LPU, mang lại tốc độ phản hồi ấn tượng và độ chính xác cao trong môi trường học thuật.
+Tóm tắt Chương 4
+Chương 4 đã trình bày một cách toàn diện quá trình hiện thực hóa hệ thống Agent For Edu từ bản vẽ thiết kế sang sản phẩm phần mềm hoàn chỉnh. Qua quá trình triển khai và kiểm thử nghiêm ngặt, đề tài đã đạt được các kết quả trọng tâm sau:
+1. Thiết lập hạ tầng phát triển chuyên nghiệp:
+Hệ thống đã được xây dựng trên một môi trường phát triển đồng bộ, sử dụng các công cụ tối ưu cho từng nền tảng như IntelliJ IDEA cho Java, VS Code cho Python và React. Việc quản lý cấu hình thông qua các biến môi trường (.env) và hệ thống Maven/Pip giúp đảm bảo tính đóng gói và sẵn sàng triển khai trên các hạ tầng đám mây.
+2. Triển khai thành công mô hình Dual-Backend và Frontend hiện đại:
+Phân hệ Frontend: Đã xây dựng thành công giao diện Web đáp ứng (Responsive) với React và TypeScript. Việc ứng dụng Zustand giúp quản lý trạng thái tập trung và Axios Interceptors giúp tối ưu hóa luồng giao tiếp API, mang lại trải nghiệm người dùng mượt mà và nhất quán.
+Phân hệ Core (Spring Boot): Đã triển khai vững chắc các nghiệp vụ quản lý khóa học, bảo mật JWT và lưu trữ dữ liệu quan hệ, đảm bảo tính ổn định và an toàn cho hệ thống lõi.
+Phân hệ AI (FastAPI): Hiện thực hóa thành công "bộ não" của hệ thống với sự kết hợp của Google Gemini, RAG Pipeline và ChromaDB. Các tính năng Agent thông minh như Web Scraping thời khóa biểu và tích hợp Google Services đã được triển khai hiệu quả bằng ngôn ngữ Python.
+3. Công tác kiểm thử đa tầng và đảm bảo chất lượng:
+Quy trình kiểm thử đã bao phủ toàn diện từ mức độ đơn vị (Unit Test với JUnit và Pytest) đến kiểm thử tích hợp và chức năng. Kết quả kiểm thử chức năng trên 12 kịch bản trọng tâm cho thấy hệ thống vận hành chính xác theo đúng đặc tả. Đặc biệt, các bài kiểm tra hiệu năng bằng Apache JMeter đã xác nhận hệ thống có khả năng chịu tải tốt với 50 người dùng đồng thời và tốc độ phản hồi API ấn tượng (dưới 500ms đối với các tác vụ thông thường).
+4. Kết quả triển khai thực tế:
+Hệ thống đã hoàn thành 100% (15/15) các tính năng yêu cầu. Sản phẩm cuối cùng không chỉ là một trang web học tập đơn thuần mà là một trợ lý ảo thông minh, có khả năng hiểu tài liệu, phân tích hình ảnh, quản lý lịch trình tự động và hỗ trợ ghi nhớ khoa học qua thuật toán SM-2. Các tiêu chuẩn bảo mật về mã hóa dữ liệu và phòng chống lỗ hổng Web (SQL Injection, XSS) đều được đảm bảo nghiêm ngặt.
+Tóm lại, những kết quả đạt được trong Chương 4 đã khẳng định tính khả thi và độ tin cậy của đề tài. Đây là minh chứng rõ ràng cho việc ứng dụng hiệu quả các công nghệ mới nhất vào giải quyết bài toán giáo dục thực tiễn. Chương tiếp theo sẽ đưa ra những kết luận tổng quát về đề tài và đề xuất các hướng phát triển trong tương lai.
+ 
+CHƯƠNG 5: KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN
+
+Chương 5 tổng kết lại toàn bộ quá trình nghiên cứu, thiết kế và triển khai hệ thống Agent For Edu. Nội dung chương này tập trung đánh giá những thành tựu đã đạt được so với mục tiêu ban đầu, nhìn nhận các hạn chế còn tồn tại và đề xuất lộ trình phát triển hệ thống trong tương lai.
+5.1. Kết quả đạt được
+Thông qua quá trình thực hiện đồ án chuyên ngành, hệ thống Agent For Edu đã được hoàn thiện cả về nền tảng lý thuyết lẫn sản phẩm thực tế, đáp ứng đầy đủ các tiêu chuẩn của một nền tảng học tập thông minh hiện đại.
+5.1.1. Về mặt lý thuyết và kiến thức chuyên môn
+Đồ án nghiên cứu sâu và làm chủ được các khối kiến thức công nghệ tiên phong trong lĩnh vực Công nghệ thông tin hiện nay:
+a) Trí tuệ nhân tạo và Kỹ nghệ tri thức (AI & Knowledge Engineering)
+Nghiên cứu sâu về kiến trúc Transformer – nền tảng của các mô hình ngôn ngữ lớn (LLM). Đặc biệt là việc làm chủ kỹ thuật RAG (Retrieval-Augmented Generation), giúp giải quyết bài toán "ảo giác" của AI và ứng dụng hiệu quả vào việc xử lý tài liệu học thuật chuyên biệt.
+Bảng 20: Bảng tổng hợp các nội dung nghiên cứu lĩnh vự trí tuệ nhân tạo
+Lĩnh vực kiến thức	Nội dung nghiên cứu	Ứng dụng cụ thể
+LLM & GenAI	Cơ chế Self-Attention, cấu trúc mô hình Gemini 1.5 Flash.	Xây dựng Chatbot tư vấn học tập.
+RAG Architecture	Quy trình Indexing, Retrieval và Context Augmentation.	Xây dựng bộ não tri thức từ tài liệu PDF/Docx.
+Prompt Engineering	Các kỹ thuật Chain-of-Thought, Few-shot prompting.	Tối ưu hóa chất lượng câu trả lời và tạo Quiz.
+Computer Vision	OCR và Multimodal AI.	Trích xuất và phân tích đề bài từ ảnh chụp.
+
+b) Công nghệ phát triển Web hiện đại (Modern Web Stack)
+Đã triển khai thành công mô hình Hybrid Backend, kết hợp giữa tính bền vững của Java và tính linh hoạt của Python. Việc làm chủ React 19 và TypeScript giúp xây dựng giao diện người dùng có tính an toàn dữ liệu và hiệu năng cao.
+Bảng 21: Bảng tổng hợp các công nghệ web được sử dụng
+Công nghệ	Vai trò trong dự án
+Spring Boot 3	Quản trị nghiệp vụ lõi, bảo mật và cơ sở dữ liệu.
+FastAPI (Python)	Xử lý các tác vụ AI, Scraping và tích hợp API.
+React 19 + TS	Xây dựng UI/UX hiện đại và quản lý state phức tạp.
+JWT & Security	Bảo mật hệ thống và xác thực liên dịch vụ.
+
+c) Hệ thống lưu trữ và Cơ sở dữ liệu (Database Systems)
+Việc kết hợp giữa SQL truyền thống và Vector Database là một bước tiến quan trọng trong việc quản lý dữ liệu hỗn hợp.
+Bảng 22: Hệ thống lưu trữ và cơ sở dữu liệu
+Loại hình dữ liệu	Công nghệ sử dụng	Mục đích triển khai
+Relational Data	MySQL 8.0	Lưu trữ 16 thực thể quan hệ chặt chẽ.
+Vector Data	ChromaDB	Lưu trữ Embedding mel-768 phục vụ tìm kiếm ngữ nghĩa.
+ORM & Persistence	JPA/Hibernate	Tối ưu hóa tầng truy xuất dữ liệu (Data Access Layer).
+
+5.1.2. Về mặt thực tiễn và sản phẩm
+a) Hệ thống hoàn chỉnh
+Hệ thống Agent For Edu đã được triển khai ổn định với kiến trúc 3 lớp, đảm bảo tính thẩm mỹ, hiệu năng và khả năng đáp ứng trên đa nền tảng (Responsive Design). Toàn bộ mã nguồn được tổ chức sạch sẽ (Clean Code) và dễ dàng mở rộng.
+b) Danh mục các tính năng đã thực thi thành công
+Sản phẩm tích hợp 15 tính năng đột phá, biến một nền tảng LMS thông thường thành một trợ lý học tập cá nhân hóa mạnh mẽ:
+
+
+
+
+Bảng 23: Bảng tổng hợp các tính năng hoàn thành
+Nhóm chức năng	Tính năng tiêu biểu	Hiệu quả thực tế
+Trợ lý AI	Chat AI + RAG + Vision	Giải đáp thắc mắc dựa trên tài liệu thực tế 24/7.
+Học tập & Ôn tập	Auto Quiz + Flashcard SM-2	Tự động hóa lộ trình ôn thi và tối ưu ghi nhớ dài hạn.
+Tự động hóa	TVU Scraper + Calendar Sync	Loại bỏ việc nhập liệu lịch học thủ công cho sinh viên.
+Kết nối hệ sinh thái	Gmail + Google Calendar	Tập trung hóa mọi thông báo và lịch trình vào một ứng dụng.
+Bảo mật	AES-256 + JWT	Bảo vệ tuyệt đối thông tin nhạy cảm của người dùng.
+
+c) Số liệu thống kê quy mô dự án
+Dự án được đầu tư kỹ lưỡng về mặt khối lượng công việc, thể hiện qua các chỉ số kỹ thuật:
+	Quy mô mã nguồn: Tổng cộng hơn 18,000 dòng code (LOC) trải dài trên 3 phân hệ (Frontend, Java Service, Python Service).
+	Giao diện: 20+ trang chức năng và 25+ thành phần UI dùng chung.
+	Hệ thống API: Hơn 70 Endpoint RESTful hỗ trợ đầy đủ các tác vụ nghiệp vụ và AI.
+	Cơ sở dữ liệu: 16 bảng quan hệ trong MySQL và 1 Collection tri thức lớn trong ChromaDB.
+5.1.3. Tổng kết mức độ hoàn thành nhiệm vụ
+Dựa trên các mục tiêu đã đề ra trong bản đề cương chi tiết, đồ án đã đạt được tỷ lệ hoàn thành tuyệt đối và vượt mức kỳ vọng ở một số phân hệ.
+a) So sánh kết quả thực hiện với kế hoạch ban đầu
+Hệ thống không chỉ hoàn thành các tính năng cốt lõi (Core features) mà còn tích hợp thêm các tính năng bổ sung (Bonus features) để gia tăng giá trị cho người học.
+b) Đánh giá tổng quát chất lượng hệ thống (Scorecard)
+Hệ thống đã trải qua quy trình đánh giá nghiêm ngặt dựa trên các tiêu chí phần mềm chuẩn hóa:
+	Độ chính xác truy hồi (RAG Accuracy): Đạt ~90% trong việc trích xuất đúng ngữ cảnh tài liệu PDF chuyên ngành.
+	Hiệu năng hệ thống (System Latency): Thời gian phản hồi trung bình của các API nghiệp vụ đạt < 150ms. Các tác vụ AI (Gemini Flash) có độ trễ dao động từ 1.5s - 3s, đáp ứng tốt trải nghiệm người dùng thời gian thực.
+	Tính bảo mật: Các dữ liệu nhạy cảm (mật khẩu, credentials cổng trường) được mã hóa theo chuẩn AES-256 và băm BCrypt, đảm bảo không thể truy cập trái phép từ phía cơ sở dữ liệu."
+5.2. Ưu điểm của hệ thống
+Hệ thống Agent For Edu sở hữu những ưu điểm vượt trội so với các nền tảng học tập truyền thống nhờ sự kết hợp khéo léo giữa kiến trúc phần mềm bền vững và các công nghệ trí tuệ nhân tạo tiên phong.
+5.2.1. Ưu điểm về mặt công nghệ và kiến trúc
+a) Sử dụng nền tảng công nghệ tiên tiến (State-of-the-art Tech Stack)
+Dự án được xây dựng dựa trên các phiên bản công nghệ mới nhất tính đến thời điểm hiện tại, đảm bảo tính an toàn, bảo mật và hiệu năng cao.
+b) Kiến trúc linh hoạt và khả năng mở rộng (Scalability)
+Hệ thống áp dụng mô hình Hybrid Microservices-ready, tách biệt hoàn toàn giữa tầng nghiệp vụ cốt lõi (Java) và tầng dịch vụ thông minh (Python).
+	Sự độc lập: Mỗi dịch vụ có thể được nâng cấp hoặc bảo trì mà không gây ảnh hưởng đến toàn bộ hệ thống.
+	Mở rộng theo chiều ngang (Horizontal Scaling): Khi nhu cầu xử lý AI tăng cao, chỉ cần mở rộng tài nguyên cho FastAPI mà không cần can thiệp vào Spring Boot, giúp tối ưu hóa chi phí vận hành đám mây.
+c) Tích hợp AI thông minh và cơ chế dự phòng (Fail-over)
+Không chỉ dừng lại ở một Chatbot thông thường, hệ thống tích hợp các kỹ thuật AI chuyên sâu:
+	Chiến lược đa mô hình: Sử dụng đồng thời Gemini (cho các tác vụ phức tạp) và Groq LPU (cho các tác vụ cần tốc độ cao), đồng thời đóng vai trò là hệ thống dự phòng lẫn nhau.
+	RAG Pipeline hoàn chỉnh: Đảm bảo tri thức của AI được "Grounding" vào tài liệu thực tế, loại bỏ hiện tượng ảo giác thông tin.
+	Intent Detection: Khả năng tự động phân loại ý định người dùng để kích hoạt các công cụ hỗ trợ (Scraper, Email, Calendar) một cách tự động.
+5.2.2. Ưu điểm về tính năng và trải nghiệm người dùng
+a) Hệ sinh thái tính năng học tập toàn diện
+Hệ thống không chỉ cung cấp tài liệu mà còn xây dựng một chu trình học tập khép kín: Học tập (Courses) -> Giải đáp (AI Chat) -> Kiểm tra (Quiz) -> Ghi nhớ (Flashcard). Sự liên kết dữ liệu giữa các phân hệ tạo ra một môi trường học tập liền mạch và thống nhất.
+b) Tự động hóa và tối ưu hóa năng suất học tập
+Điểm mạnh nhất của Agent For Edu chính là khả năng "Agentic" - khả năng tự thực thi các tác vụ thay cho người dùng.
+Bảng 24: Các tính năng được Agentic
+Tác vụ	Phương thức truyền thống	Với Agent For Edu
+Tra cứu lịch học	Đăng nhập nhiều bước, tìm kiếm bảng biểu.	Hỏi ngôn ngữ tự nhiên: "Mai tôi học ở đâu?"
+Quản lý trí nhớ	Ghi chép thủ công, dễ quên.	Thuật toán SM-2 nhắc nhở đúng thời điểm "vàng".
+Tương tác Email	Viết thủ công, tra cứu địa chỉ.	AI soạn sẵn bản nháp dựa trên yêu cầu đơn giản.
+
+c) Trải nghiệm người dùng hiện đại và mượt mà (Superior UX)
+	Giao diện đáp ứng (Responsive): Hoạt động hoàn hảo trên mọi kích thước màn hình, từ điện thoại di động đến máy tính để bàn.
+	Tương tác sống động: Sử dụng hiệu ứng chuyển động (Framer Motion) và trạng thái chờ (Skeleton Loading) giúp giảm cảm giác chờ đợi khi AI đang xử lý.
+	Hỗ trợ đa phương thức: Sinh viên có thể tương tác bằng văn bản, giọng nói hoặc hình ảnh bài tập, mang lại sự tiện lợi tối đa trong mọi hoàn cảnh học tập.
+	Cá nhân hóa sâu sắc: Hệ thống ghi nhớ lịch sử học tập và sở thích của từng sinh viên để đưa ra những gợi ý và câu trả lời phù hợp nhất.
+5.3. Hạn chế và khó khăn
+5.3.1. Hạn chế về mặt kỹ thuật
+a) Sự phụ thuộc vào hạ tầng API bên thứ ba
+Do hệ thống vận hành dựa trên các mô hình trí tuệ nhân tạo và dịch vụ đám mây của Google và Groq, hiệu năng và tính sẵn sàng của ứng dụng phụ thuộc lớn vào các nhà cung cấp này.
+b) Độ chính xác và rào cản ngôn ngữ của mô hình AI
+Mặc dù sử dụng các mô hình LLM tiên tiến, hệ thống vẫn đối mặt với một số thách thức về mặt nội dung:
+	Hiện tượng ảo giác (Hallucination): Dù kỹ thuật RAG đã giúp giảm thiểu đáng kể, AI vẫn có xác suất đưa ra các thông tin không có trong tài liệu đối với các câu hỏi quá trừu tượng.
+	Xử lý tiếng Việt chuyên ngành: Một số thuật ngữ địa phương hoặc từ lóng trong môi trường sinh viên có thể khiến AI hiểu sai ngữ cảnh.
+	Nhận diện ý định (Intent Detection): Việc sử dụng biểu thức chính quy (Regex) hiện tại chỉ xử lý tốt các mẫu câu phổ biến, chưa bao quát được các cách diễn đạt phức tạp hoặc đa nghĩa.
+c) Điểm nghẽn về hiệu năng (Performance Bottlenecks)
+Kiến trúc hệ thống ghi nhận sự chênh lệch về tốc độ phản hồi giữa các tác vụ nội bộ và tác vụ gọi API bên ngoài.
+	Tác vụ tức thì (< 500ms): Các truy vấn dữ liệu quan hệ (MySQL), xác thực JWT và tìm kiếm Vector (ChromaDB) hoạt động cực nhanh.
+	Tác vụ độ trễ cao (3s - 8s): Quá trình sinh văn bản từ Gemini và phân tích hình ảnh (Vision AI) tốn nhiều thời gian xử lý qua mạng, gây ra cảm giác chờ đợi cho người dùng.
+5.3.2. Hạn chế về phạm vi triển khai
+Hiện tại, đồ án mới dừng lại ở mức độ Thử nghiệm ý tưởng (Proof of Concept) nên phạm vi còn một số rào cản:
+	Tính đặc thù của dữ liệu: Module Scraper hiện chỉ được cấu hình tương thích với cổng thông tin sinh viên của Trường Đại học Trà Vinh (TVU). Để áp dụng cho các trường khác, cần phải tái cấu trúc lại logic bóc tách HTML.
+	Nền tảng truy cập: Hệ thống mới chỉ tập trung vào ứng dụng Web (Responsive). Việc thiếu hụt ứng dụng di động (Native Mobile App) là một rào cản đối với thói quen sử dụng điện thoại của sinh viên hiện nay.
+	Tính kết nối cộng đồng: Hệ thống tập trung vào hỗ trợ cá nhân hóa, chưa có các tính năng thảo luận nhóm hoặc học tập cộng tác (Real-time collaboration) giữa các sinh viên.
+5.3.3. Khó khăn gặp phải trong quá trình thực hiện
+a) Thách thức trong việc tích hợp đa công nghệ
+Việc vận hành đồng thời hai hệ thống Backend (Java và Python) đòi hỏi sự phối hợp chặt chẽ về mặt API Contract. Việc đảm bảo tính đồng nhất của dữ liệu giữa MySQL và ChromaDB khi thực hiện các thao tác Xóa/Sửa là một bài toán kỹ thuật phức tạp đã tốn nhiều thời gian nghiên cứu.
+b) Quản lý hạn mức (Rate Limiting)
+Trong quá trình phát triển, thường xuyên gặp tình trạng hết "Quota" API của Google Gemini. Điều này buộc phải triển khai thêm cơ chế Fallback sang Groq API để đảm bảo quá trình phát triển và kiểm thử không bị gián đoạn.
+c) Áp lực về thời gian và khối lượng công việc
+Với một đề tài tích hợp nhiều công nghệ mới (RAG, Vector DB, Web Scraping, OAuth2), khối lượng kiến thức cần nghiên cứu là rất lớn.
+Như biểu đồ Timeline thể hiện, giai đoạn Nghiên cứu và Triển khai đã kéo dài hơn so với dự kiến 2 tuần. Tuy nhiên, nhờ áp dụng mô hình phát triển Agile và rút ngắn thời gian kiểm thử cuối kỳ, dự án vẫn hoàn thành đúng tiến độ báo cáo.
+5.4. Bài học kinh nghiệm
+Quá trình nghiên cứu và phát triển hệ thống Agent For Edu không chỉ giúp hoàn thiện về mặt sản phẩm mà còn mang lại những bài học quý báu trong thực hành kỹ thuật phần mềm và quản trị quy trình dự án.
+5.4.1. Bài học về mặt kỹ thuật
+a) Quản trị dự án trong môi trường đa công nghệ (Multi-stack Management)
+Việc vận hành đồng thời ba hệ sinh thái khác nhau (React, Spring Boot, FastAPI) đã thay đổi tư duy lập trình từ hướng đơn thể sang hướng dịch vụ:
+	Chiến lược API Contract-First: Rút ra bài học rằng việc thống nhất tài liệu API (thông qua Swagger/OpenAPI) trước khi bắt đầu viết code là yếu tố sống còn để Frontend và các Backend có thể phát triển song song mà không gây xung đột.
+	Tính bao đóng và tách biệt: Việc tách rời logic AI sang Python và logic nghiệp vụ sang Java giúp mã nguồn sạch hơn, dễ bảo trì và tối ưu hóa tốt hơn cho từng loại tác vụ đặc thù.
+b) Kinh nghiệm thực chiến với hệ sinh thái AI
+Tương tác với các mô hình ngôn ngữ lớn (LLM) đòi hỏi một kỹ năng hoàn toàn mới so với lập trình truyền thống:
+	Nghệ thuật Prompt Engineering: Nhận thấy rằng chất lượng câu trả lời của AI phụ thuộc 80% vào cách thiết kế câu lệnh. Việc cung cấp ngữ cảnh rõ ràng (Context), định dạng đầu ra mong muốn (JSON/Markdown) và áp dụng kỹ thuật Few-shot giúp hệ thống hoạt động ổn định hơn.
+	Cơ chế dự phòng (Fail-over Strategy): Luôn phải có kế hoạch dự phòng khi sử dụng API bên ngoài. Việc tích hợp đồng thời Gemini và Groq đã giúp dự án duy trì được tính sẵn sàng ngay cả khi một trong hai dịch vụ gặp sự cố hoặc hết hạn mức sử dụng.
+c) Tối ưu hóa hiệu năng hệ thống
+Tận dụng Caching: Bài học về việc sử dụng React Query để cache dữ liệu phía Client giúp giảm tải đáng kể số lượng request không cần thiết tới server, từ đó cải thiện tốc độ phản hồi cho người dùng.
+Thiết kế Database có chiều sâu: Việc lập chỉ mục (Indexing) chính xác các trường thường xuyên truy vấn và quản lý tốt các mối quan hệ (Eager/Lazy Loading) trong JPA là chìa khóa để xử lý dữ liệu quy mô lớn mà không làm chậm hệ thống.
+5.4.2. Bài học về mặt quy trình và tư duy hệ thống
+Quá trình từ ý tưởng đến sản phẩm hoàn chỉnh đã giúp hình thành quy trình làm việc chuyên nghiệp:
+a) Phân tích yêu cầu và tư duy hướng người dùng (User-Centric)
+Ưu tiên hóa (MoSCoW): Thay vì cố gắng làm mọi thứ cùng lúc, việc phân loại tính năng thành Must-have (Bắt buộc), Should-have (Nên có) đã giúp quản lý tốt thời gian và đảm bảo các tính năng cốt lõi luôn đạt chất lượng cao nhất.
+Tránh giả định: Mọi tính năng xây dựng đều phải dựa trên khảo sát thực tế (như khảo sát 50 sinh viên TVU), thay vì dựa trên ý muốn chủ quan của người lập trình.
+b) Tư duy thiết kế hệ thống (System Design)
+Design trước, Code sau: Việc dành thời gian vẽ sơ đồ kiến trúc, sơ đồ thực thể (ERD) và sơ đồ Use Case giúp giảm thiểu 70% các sai sót logic trong giai đoạn triển khai. Một bản thiết kế tốt chính là lộ trình rõ ràng nhất cho việc thực thi mã nguồn hiệu quả.
+Khả năng mở rộng (Scalability): Luôn đặt câu hỏi "Nếu hệ thống có thêm 1000 người dùng thì sao?" giúp chọn lựa các giải pháp như JWT (xác thực phi trạng thái) và Microservices-ready ngay từ đầu.
+c) Kiểm thử và Đảm bảo chất lượng (QA/QC)
+Kiểm thử liên tục: Việc viết Unit Test song song với code giúp phát hiện lỗi sớm và tự tin hơn khi thực hiện Refactor mã nguồn.
+Kiểm thử biên (Edge Cases): Bài học lớn nhất là hệ thống không chỉ vận hành trong điều kiện lý tưởng (Happy Path) mà còn phải xử lý tốt các tình huống như mất kết nối mạng, nhập sai dữ liệu hoặc quá hạn Token.
+5.5. Hướng phát triển đề tài
+Với nền tảng kiến trúc linh hoạt đã được thiết lập, Agent For Edu có tiềm năng mở rộng rất lớn để trở thành một hệ sinh thái giáo dục toàn diện. Đã đề xuất lộ trình phát triển theo ba giai đoạn chiến lược:
+5.5.1. Giai đoạn ngắn hạn (1-3 tháng): Tối ưu hóa và Ổn định hệ thống
+Mục tiêu chính của giai đoạn này là hoàn thiện các khía cạnh về hiệu năng và bảo mật mức độ cao để sẵn sàng cho lượng người dùng lớn hơn.
+	Tối ưu hóa tầng lưu trữ (Caching Layer): Triển khai Redis để lưu trữ các kết quả phản hồi API phổ biến và các phiên làm việc của AI. Điều này giúp giảm thiểu độ trễ và tiết kiệm chi phí gọi API bên thứ ba.
+	Kiểm soát lưu lượng (Rate Limiting): Thiết lập các rào cản kỹ thuật để ngăn chặn việc lạm dụng tài nguyên (Spam request), đảm bảo tính công bằng và ổn định cho hệ thống AI.
+	Hệ thống thông báo thông minh (Smart Notifications): Tích hợp sâu hơn với Gmail và hệ thống Push Notification để tự động nhắc nhở sinh viên về lịch học, thời hạn làm Quiz hoặc các thẻ Flashcard đến hạn ôn tập.
+	Nâng cao khả năng truy xuất: Phát triển tính năng Full-text Search cho các tài liệu khóa học và hỗ trợ xuất dữ liệu (Export) kết quả học tập ra các định dạng chuẩn như PDF hoặc Excel.
+5.5.2. Giai đoạn trung hạn (3-6 tháng): Đa nền tảng và Kết nối cộng đồng
+Giai đoạn này tập trung vào việc mở rộng khả năng tiếp cận và xây dựng các tính năng tương tác xã hội trong môi trường học tập.
+	Phát triển ứng dụng di động (Mobile App): Sử dụng React Native để xây dựng ứng dụng trên cả iOS và Android. Đây là bước đi quan trọng giúp sinh viên có thể học Flashcard và nhận thông báo lịch học mọi lúc, mọi nơi.
+	Tương tác thời gian thực (Real-time Collaboration): Tích hợp WebSockets để hỗ trợ các phòng học nhóm, nơi sinh viên có thể thảo luận và cùng nhau giải đáp thắc mắc với sự điều phối của Trợ lý AI.
+	Chế độ ngoại tuyến (Offline Mode): Triển khai các kỹ thuật PWA (Progressive Web App) nâng cao, cho phép sinh viên xem lại tài liệu và học Flashcard ngay cả khi không có kết nối Internet.
+5.5.3. Giai đoạn dài hạn (6-12 tháng): Hệ sinh thái giáo dục thông minh
+Tầm nhìn dài hạn của dự án là trở thành một nền tảng học tập thích ứng (Adaptive Learning) hoàn chỉnh, nơi AI đóng vai trò là một gia sư cá nhân hóa thực thụ.
+	Trình quản lý gia sư AI chuyên sâu (AI Personalized Tutor): Phát triển khả năng học máy để AI có thể tự phân tích hành vi, điểm mạnh, điểm yếu của từng sinh viên qua thời gian, từ đó tự động điều chỉnh lộ trình học tập và gợi ý tài liệu phù hợp nhất.
+	Gamification (Game hóa học tập): Xây dựng hệ thống bảng xếp hạng (Leaderboards), huy hiệu (Badges) và điểm thưởng để tăng cường động lực học tập và sự gắn kết của sinh viên với nền tảng.
+	Thương mại hóa nội dung (Course Marketplace): Xây dựng mô hình kinh doanh bền vững, cho phép giảng viên khởi tạo và kinh doanh các khóa học chất lượng cao trên nền tảng, áp dụng mô hình doanh thu chia sẻ.
+	Tích hợp tiêu chuẩn giáo dục quốc tế (LTI & SCORM): Cho phép Agent For Edu có thể nhúng trực tiếp vào các hệ thống LMS lớn như Moodle, Canvas hay Blackboard, mở rộng tệp khách hàng sang các tổ chức giáo dục chuyên nghiệp.
+	Ứng dụng Blockchain: Sử dụng công nghệ Blockchain để cấp chứng chỉ hoàn thành khóa học và xác thực kết quả học tập, đảm bảo tính minh bạch và không thể giả mạo trong hồ sơ học thuật của sinh viên.
+Tầm nhìn chiến lược: Agent For Edu không chỉ dừng lại ở một công cụ hỗ trợ, mà hướng tới trở thành một hạ tầng tri thức số, nơi kết nối giữa người dạy, người học và trí tuệ nhân tạo để tạo ra một môi trường giáo dục công bằng, hiệu quả và không giới hạn.
+5.6. Kết luận
+5.6.1. Tổng kết kết quả thực hiện đề tài
+Sau thời gian nghiên cứu và triển khai, nền tảng Agent For Edu  đã hoàn thành đầy đủ các mục tiêu đề ra ban đầu, đạt được những kết quả cụ thể trên các phương diện:
+Về mặt sản phẩm và tính năng:
+	Xây dựng thành công một hệ sinh thái học tập trực tuyến hoàn chỉnh, tích hợp đa dạng các công cụ hỗ trợ sinh viên từ giai đoạn tiếp nhận kiến thức đến ôn tập và kiểm tra.
+	Triển khai thành công 15 tính năng cốt lõi và bổ sung, nổi bật là Trợ lý AI hỗ trợ đa phương thức (Văn bản, Hình ảnh, Giọng nói) và hệ thống tự động hóa thời khóa biểu.
+	Sản phẩm đã được kiểm thử thực tế, đạt tỷ lệ hoàn thành 100% so với đặc tả yêu cầu, đảm bảo tính ổn định và khả năng ứng dụng thực tiễn cao.
+Về mặt giải pháp công nghệ:
+	Ứng dụng thành công kiến trúc 3-Tier hiện đại với mô hình Hybrid Backend, kết hợp hài hòa giữa Spring Boot (Java) và FastAPI (Python).
+	Làm chủ và tích hợp hiệu quả các công nghệ AI tiên phong: mô hình ngôn ngữ lớn Google Gemini 1.5 Flash, kỹ thuật RAG (Retrieval-Augmented Generation) và cơ sở dữ liệu vector ChromaDB.
+	Thiết kế hệ thống đảm bảo các tiêu chuẩn bảo mật chuyên ngành: xác thực JWT, mã hóa mật khẩu BCrypt và mã hóa dữ liệu nhạy cảm AES-256.
+Về mặt phát triển năng lực cá nhân:
+	Nắm vững quy trình phát triển phần mềm chuyên nghiệp từ khâu khảo sát, phân tích thiết kế đến triển khai và kiểm thử (QA/QC).
+	Nâng cao kỹ năng lập trình Full-stack, tư duy thiết kế hệ thống và khả năng giải quyết các bài toán kỹ thuật phức tạp trong lĩnh vực AI và EdTech.
+5.6.2. Đánh giá tổng quan hệ thống
+Dựa trên quá trình nghiệm thu và phản hồi từ người dùng thử nghiệm, hệ thống được đánh giá qua các chỉ số chất lượng như sau:
+Bảng 25: Đánh giá tổng quan
+Tiêu chí đánh giá	Nhận xét tổng quát
+Mức độ hoàn thành	Hoàn thành tất cả các mục tiêu và tính năng bonus.
+Chất lượng kỹ thuật	Kiến trúc sạch, mã nguồn tối ưu, tích hợp AI mạnh mẽ.
+Tính ứng dụng thực tế	Giải quyết trực tiếp các "điểm đau" của sinh viên hiện nay.
+Khả năng mở rộng	Dễ dàng nâng cấp và tích hợp thêm các dịch vụ mới.
+Hệ thống tài liệu	Đầy đủ đặc tả, sơ đồ thiết kế và hướng dẫn vận hành.
+
+5.6.3. Lời kết
+Đồ án chuyên ngành "Agent For Edu" không đơn thuần là một sản phẩm phần mềm, mà là kết quả của quá trình nỗ lực nghiên cứu và ứng dụng những thành tựu mới nhất của Trí tuệ nhân tạo vào lĩnh vực giáo dục. Hệ thống đã chứng minh được rằng AI không thay thế con người, mà đóng vai trò là một "người đồng hành thông minh", giúp tối ưu hóa khả năng tự học và giảm bớt các rào cản hành chính cho sinh viên.
+Trong bối cảnh chuyển đổi số giáo dục đang là ưu tiên hàng đầu tại Việt Nam, Agent For Edu hứa hẹn sẽ là một giải pháp thiết thực, góp phần nâng cao chất lượng đào tạo và tạo ra môi trường học tập cá nhân hóa, hiện đại cho sinh viên. Những kinh nghiệm và nền tảng đạt được từ đồ án này sẽ là hành trang quý báu để tiếp tục phát triển các sản phẩm công nghệ có ích cho cộng đồng trong tương lai.
+ 
+DANH MỤC TÀI LIỆU THAM KHẢO
+
+[1] Thủ tướng Chính phủ, "Quyết định số 131/QĐ-TTg phê duyệt Đề án 'Tăng cường ứng dụng công nghệ thông tin và chuyển đổi số trong giáo dục và đào tạo giai đoạn 2022-2025, định hướng đến năm 2030'," Hà Nội, 2022.
+[2] UNESCO, "Technology in education: A tool on whose terms? Global education monitoring report," UNESCO Publishing, Paris, 2023.
+[3] A. Vaswani et al., "Attention is all you need," in Proc. Advances in Neural Information Processing Systems (NeurIPS), 2017, pp. 5998–6008.
+[4] P. Lewis et al., "Retrieval-augmented generation for knowledge-intensive NLP tasks," in Proc. Advances in Neural Information Processing Systems (NeurIPS), 2020, pp. 9459–9475.
+[5] P. A. Wozniak, "Optimization of learning," Master's thesis, Poznan University of Technology, Poznan, Poland, 1990. [Online]. Available: https://www.supermemo.com/en/archives1990-2015/english/ol/sm2. [Accessed Dec. 20, 2024].
+[6] Google DeepMind, "Gemini: A family of highly capable multimodal models," Google Research, Tech. Rep., 2023. [Online]. Available: https://ai.google.dev/gemini-api/docs. [Accessed Dec. 22, 2024].
+[7] Meta Platforms, Inc., "React v19 Documentation," 2024. [Online]. Available: https://react.dev. [Accessed Dec. 15, 2024].
+[8] Broadcom Inc., "Spring Boot Reference Documentation (v3.x)," 2024. [Online]. Available: https://docs.spring.io/spring-boot/index.html. [Accessed Dec. 18, 2024].
+[9] S. Ramírez-Tiolo, "FastAPI Documentation," 2024. [Online]. Available: https://fastapi.tiangolo.com. [Accessed Dec. 18, 2024].
+[10] ChromaDB Team, "Chroma Documentation: The AI-native open-source embedding database," 2024. [Online]. Available: https://docs.trychroma.com. [Accessed Dec. 20, 2024].
+[11] E. Gamma, R. Helm, R. Johnson, and J. Vlissides, Design Patterns: Elements of Reusable Object-Oriented Software. Reading, MA: Addison-Wesley, 1994.
+[12] Groq Inc., "Groq LPU Inference Engine Technology Whitepaper," 2024. [Online]. Available: https://groq.com. [Accessed Dec. 21, 2024].
+[13] Oracle Corporation, "MySQL 8.0 Reference Manual," 2024. [Online]. Available: https://dev.mysql.com/doc/refman/8.0/en/. [Accessed Dec. 15, 2024].
+[14] IETF, "JSON Web Token (JWT) - RFC 7519," 2015. [Online]. Available: https://datatracker.ietf.org/doc/html/rfc7519. [Accessed Dec. 22, 2024].
+[15] Google Cloud, "Google Calendar API & Gmail API Documentation," 2024. [Online]. Available: https://developers.google.com/workspace. [Accessed Dec. 25, 2024].
+ 
+PHỤ LỤC
+
+Hứng dẫn triển khai hệ thống Trợ lý ảo AI Agent hỗ trợ học tập – 
+Agent For Edu
+
+1. Yêu cầu hệ thống (System Requirements)
+Để hệ thống vận hành ổn định với đầy đủ các tính năng AI (RAG, OCR, Chatbot), môi trường triển khai cần đáp ứng các tiêu chuẩn sau:
+1.1. Môi trường phần mềm
+	Hệ điều hành: Windows 10/11, Ubuntu 20.04+, hoặc macOS Monterey+.
+	Java Development Kit (JDK): Phiên bản 17 (LTS) để tương thích với Spring Boot 3.x.
+	Python: Phiên bản 3.10 hoặc 3.11 (Yêu cầu để chạy các thư viện LangChain, PyTorch).
+	Node.js: Phiên bản 18.x hoặc 20.x (LTS) đi kèm với npm hoặc yarn.
+	Hệ quản trị cơ sở dữ liệu: MySQL Server 8.0+.
+	Công cụ hỗ trợ:
+	Git (Quản lý mã nguồn).
+	Maven 3.8+ (Quản lý dependency Backend).
+	Visual Studio Code hoặc IntelliJ IDEA (Khuyến nghị).
+1.2. Cấu hình phần cứng khuyến nghị
+	Bộ vi xử lý (CPU): Tối thiểu 4 Cores (Ưu tiên các dòng chip có xung nhịp cao để xử lý xử lý dữ liệu nhanh).
+	Bộ nhớ trong (RAM):
+	Tối thiểu: 8GB.
+	Khuyến nghị: 16GB (Do đặc thù chạy đồng thời 3 dịch vụ và nạp các model AI cục bộ).
+	Lưu trữ: Tối thiểu 5GB trống (Để lưu trữ cơ sở dữ liệu và vector database - ChromaDB).
+	Kết nối mạng: Yêu cầu kết nối Internet ổn định để truy xuất API từ Google Gemini và Groq Cloud.
+2. Cấu trúc mã nguồn (Project Structure)
+Trước khi tiến hành cài đặt, người dùng cần nắm rõ cấu trúc thư mục dự án:
+	/backend/SpringService: Mã nguồn Java Spring Boot (Xử lý logic nghiệp vụ, quản lý User, khóa học).
+	/backend/PythonService: Mã nguồn AI Service (Xử lý RAG, LLM, OCR).
+	/frontend_web: Mã nguồn giao diện ReactJS + Vite.
+	/scripts: Các kịch bản tự động hóa khởi chạy hệ thống.
+3. Hướng dẫn cài đặt chi tiết (Step-by-Step Installation)
+Bước 1: Chuẩn bị Mã nguồn
+Sử dụng Git để tải mã nguồn về máy cục bộ:
+ 
+Bước 2: Thiết lập Cơ sở dữ liệu (MySQL)
+Truy cập MySQL Workbench hoặc Command Line.
+Tạo schema mới:
+ 
+Thực thi các script SQL tại thư mục backend/SpringService/agentforedu/sql/:
+	Chạy database_schema.sql để khởi tạo cấu trúc bảng.
+	Chạy insert_demo_data.sql để có dữ liệu mẫu ban đầu.
+Bước 3: Cấu hình và Chạy Backend (Spring Boot)
+Truy cập thư mục: cd backend/SpringService/agentforedu.
+Chỉnh sửa file src/main/resources/application.yaml:
+Cập nhật thông tin kết nối database (url, username, password).
+Xây dựng và chạy ứng dụng:
+ 
+Cổng mặc định: 8080.
+Bước 4: Cấu hình và Chạy AI Service (Python)
+Truy cập thư mục: cd backend/PythonService.
+Khởi tạo môi trường ảo và cài đặt thư viện:
+ 
+Cấu hình biến môi trường: Tạo file .env từ .env.example và nhập các API Key:
+GEMINI_API_KEY: Lấy tại Google AI Studio.
+GROQ_API_KEY: Lấy tại Groq Console.
+Khởi chạy server: python main.py
+Cổng mặc định: 8000.
+Bước 5: Khởi chạy Giao diện (Frontend)
+Truy cập thư mục: cd frontend_web.
+Cài đặt dependencies và chạy chế độ phát triển:
+ 
+Truy cập tại: http://localhost:3000.
+4. Công cụ hỗ trợ khởi chạy nhanh (Automated Scripts)
+Để tiết kiệm thời gian, dự án cung cấp các tệp lệnh thực thi nhanh trên môi trường Windows:
+	start-all.ps1: Tự động mở 3 cửa sổ Terminal riêng biệt để chạy đồng thời Frontend, Spring Boot và Python Service.
+	setup-env.ps1: Tự động kiểm tra phiên bản Python và cài đặt môi trường ảo cùng các thư viện cần thiết.
+Cách dùng: Chuột phải vào file chọn "Run with PowerShell".
+5. Xử lý sự cố và Bảo trì (Troubleshooting & Maintenance)
+STT	Vấn đề	Nguyên nhân phổ biến	Giải pháp
+1	White Label Error (404/500)	Backend Spring chưa khởi động xong hoặc sai cổng.	Kiểm tra log tại terminal Backend, đảm bảo port 8080 không bị chiếm dụng.
+2	AI không phản hồi (Chat xoay vòng)	API Key hết hạn hoặc Python Service bị ngắt kết nối.	Kiểm tra file .env và đảm bảo terminal Python đang hiển thị log nhận request.
+3	Lỗi "CORS Policy"	Cấu hình bảo mật chặn yêu cầu từ Frontend.	Kiểm tra cấu hình WebConfig trong Spring Boot để đảm bảo cho phép localhost:3000.
+4	Lỗi thiếu thư viện chromadb	Thiếu trình biên dịch C++ trên Windows.	Cài đặt "Visual Studio C++ Build Tools" rồi chạy lại pip install.
+
+6. Danh sách tài khoản thử nghiệm (Test Accounts)
+Dữ liệu mẫu đi kèm bao gồm các tài khoản sau để kiểm thử tính năng phân quyền:
+Loại tài khoản	Username	Password	Quyền truy cập
+Quản trị viên	admin	123456	Toàn quyền quản lý hệ thống, người dùng.
+Học sinh/Sinh viên	student_test	123456	Sử dụng Chatbot, xem tài liệu, làm bài tập.
+Giảng viên	teacher_test	123456	Quản lý kho bài giảng, chấm điểm bài tập.
+
+

@@ -219,14 +219,14 @@ const EmailDraftPage = () => {
             </div>
 
             {/* Info Box */}
-            <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+            <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded">
               <div className="flex items-start gap-3">
                 <div className="text-2xl">💡</div>
                 <div className="flex-1">
-                  <p className="text-sm text-blue-800 font-medium">
+                  <p className="text-sm text-green-800 font-medium">
                     <strong>Mẹo:</strong> Bạn có thể chỉnh sửa mọi trường trước khi gửi.
                   </p>
-                  <p className="text-xs text-blue-600 mt-1">
+                  <p className="text-xs text-green-600 mt-1">
                     Email sẽ được gửi qua tài khoản Gmail đã kết nối của bạn.
                   </p>
                 </div>

@@ -426,7 +426,7 @@ const ChatPageOptimized = () => {
 
                 <div className="flex-1 space-y-2">
                   {selectedFile && filePreview && (
-                    <div className="flex items-center space-x-2 p-2 bg-blue-50 rounded-lg">
+                    <div className="flex items-center space-x-2 p-2 bg-green-50 rounded-lg">
                       <img src={filePreview} alt="Preview" className="w-12 h-12 object-cover rounded" />
                       <span className="text-sm flex-1">{selectedFile.name}</span>
                       <button onClick={handleRemoveFile} className="p-1 hover:bg-red-100 rounded">

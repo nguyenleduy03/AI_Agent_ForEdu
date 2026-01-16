@@ -64,7 +64,7 @@ const StudentDetailPage = () => {
         {/* Student Info Card */}
         <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
           <div className="flex flex-col md:flex-row md:items-center gap-6">
-            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-3xl font-bold">
+            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center text-white text-3xl font-bold">
               {(student.fullName || student.username).charAt(0).toUpperCase()}
             </div>
             <div className="flex-1">
@@ -73,9 +73,9 @@ const StudentDetailPage = () => {
               <p className="text-gray-500 flex items-center gap-2 mt-1"><Calendar className="w-4 h-4" />Đăng ký: {formatDate(student.enrolledAt)}</p>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="text-center p-3 bg-blue-50 rounded-xl">
-                <TrendingUp className="w-6 h-6 text-blue-600 mx-auto mb-1" />
-                <p className="text-xl font-bold text-blue-600">{student.progressPercentage.toFixed(1)}%</p>
+              <div className="text-center p-3 bg-green-50 rounded-xl">
+                <TrendingUp className="w-6 h-6 text-green-600 mx-auto mb-1" />
+                <p className="text-xl font-bold text-green-600">{student.progressPercentage.toFixed(1)}%</p>
                 <p className="text-xs text-gray-500">Tiến độ</p>
               </div>
               <div className="text-center p-3 bg-green-50 rounded-xl">
@@ -99,7 +99,7 @@ const StudentDetailPage = () => {
 
         {/* Quiz Stats */}
         <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
-          <h2 className="text-lg font-bold mb-4 flex items-center gap-2"><FileText className="w-5 h-5 text-blue-600" />Thống kê bài kiểm tra</h2>
+          <h2 className="text-lg font-bold mb-4 flex items-center gap-2"><FileText className="w-5 h-5 text-green-600" />Thống kê bài kiểm tra</h2>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             <div className="text-center p-4 bg-gray-50 rounded-xl">
               <p className="text-2xl font-bold text-gray-900">{student.totalQuizzesTaken}</p>
@@ -109,8 +109,8 @@ const StudentDetailPage = () => {
               <p className="text-2xl font-bold text-green-600">{student.totalQuizzesPassed}</p>
               <p className="text-sm text-gray-500">Đạt (≥50%)</p>
             </div>
-            <div className="text-center p-4 bg-blue-50 rounded-xl">
-              <p className="text-2xl font-bold text-blue-600">{student.averageQuizScore.toFixed(1)}%</p>
+            <div className="text-center p-4 bg-green-50 rounded-xl">
+              <p className="text-2xl font-bold text-green-600">{student.averageQuizScore.toFixed(1)}%</p>
               <p className="text-sm text-gray-500">Điểm TB</p>
             </div>
             <div className="text-center p-4 bg-emerald-50 rounded-xl">
@@ -126,10 +126,10 @@ const StudentDetailPage = () => {
 
         {/* Tabs */}
         <div className="flex gap-2 mb-4">
-          <button onClick={() => setActiveTab('progress')} className={`px-4 py-2 rounded-xl font-medium ${activeTab === 'progress' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700'}`}>
+          <button onClick={() => setActiveTab('progress')} className={`px-4 py-2 rounded-xl font-medium ${activeTab === 'progress' ? 'bg-green-600 text-white' : 'bg-white text-gray-700'}`}>
             Tiến độ bài học
           </button>
-          <button onClick={() => setActiveTab('quizzes')} className={`px-4 py-2 rounded-xl font-medium ${activeTab === 'quizzes' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700'}`}>
+          <button onClick={() => setActiveTab('quizzes')} className={`px-4 py-2 rounded-xl font-medium ${activeTab === 'quizzes' ? 'bg-green-600 text-white' : 'bg-white text-gray-700'}`}>
             Lịch sử làm bài ({student.quizHistory.length})
           </button>
         </div>
@@ -159,7 +159,7 @@ const StudentDetailPage = () => {
                       {lesson.isCompleted ? (
                         <span className="flex items-center gap-1 text-green-600"><CheckCircle className="w-4 h-4" />Hoàn thành</span>
                       ) : lesson.progressPercentage > 0 ? (
-                        <span className="flex items-center gap-1 text-blue-600"><TrendingUp className="w-4 h-4" />Đang học</span>
+                        <span className="flex items-center gap-1 text-green-600"><TrendingUp className="w-4 h-4" />Đang học</span>
                       ) : (
                         <span className="flex items-center gap-1 text-gray-400"><XCircle className="w-4 h-4" />Chưa bắt đầu</span>
                       )}
@@ -167,7 +167,7 @@ const StudentDetailPage = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-2">
                         <div className="w-20 h-2 bg-gray-200 rounded-full overflow-hidden">
-                          <div className={`h-full rounded-full ${lesson.isCompleted ? 'bg-green-500' : 'bg-blue-500'}`} style={{ width: `${lesson.progressPercentage}%` }} />
+                          <div className={`h-full rounded-full ${lesson.isCompleted ? 'bg-green-500' : 'bg-green-500'}`} style={{ width: `${lesson.progressPercentage}%` }} />
                         </div>
                         <span className="text-sm">{lesson.progressPercentage.toFixed(0)}%</span>
                       </div>

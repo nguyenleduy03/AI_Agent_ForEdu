@@ -239,7 +239,7 @@ Cần ít nhất 50 ký tự."
               className="bg-white rounded-xl shadow-lg p-6"
             >
               <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <Book className="w-6 h-6 text-blue-600" />
+                <Book className="w-6 h-6 text-green-600" />
                 Kết quả ({flashcards.length} flashcards)
               </h2>
 
@@ -253,9 +253,9 @@ Cần ít nhất 50 ký tự."
                 <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
                   {/* Summary */}
                   {summary && (
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-                      <h3 className="font-semibold text-blue-800 mb-2">📝 Tóm tắt</h3>
-                      <p className="text-sm text-blue-700">{summary}</p>
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+                      <h3 className="font-semibold text-green-800 mb-2">📝 Tóm tắt</h3>
+                      <p className="text-sm text-green-700">{summary}</p>
                     </div>
                   )}
 
@@ -298,7 +298,7 @@ Cần ít nhất 50 ký tự."
                           <span className="font-medium">✅ Trả lời:</span> {card.answer}
                         </p>
                         {card.hint && (
-                          <p className="text-blue-600 text-sm">
+                          <p className="text-green-600 text-sm">
                             <span className="font-medium">💡 Gợi ý:</span> {card.hint}
                           </p>
                         )}
@@ -338,7 +338,7 @@ Cần ít nhất 50 ký tự."
               </p>
             </div>
             <div className="bg-white rounded-lg p-4 shadow-sm">
-              <h3 className="font-semibold text-blue-600 mb-2">🎯 Chính xác</h3>
+              <h3 className="font-semibold text-green-600 mb-2">🎯 Chính xác</h3>
               <p className="text-sm text-gray-600">
                 Trích xuất key concepts, tạo câu hỏi chất lượng cao từ Gemini AI
               </p>

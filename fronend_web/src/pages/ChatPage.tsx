@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Send,
-  Bot,
   User,
   Plus,
   CheckCheck,
@@ -31,6 +30,7 @@ import VoiceChatButton from '../components/VoiceChatButton';
 import QuotaWarningBanner from '../components/QuotaWarningBanner';
 import ErrorBoundary from '../components/ErrorBoundary';
 import { EmailDraftOverlay } from '../components/EmailDraftOverlay';
+import WormAvatar from '../components/WormAvatar';
 import { chatService } from '../services/chatService';
 import { springApi } from '../services/api';
 import { useVoiceChat } from '../hooks/useVoiceChat';
@@ -60,6 +60,17 @@ interface EmailDraft {
   user_id?: number;
 }
 
+interface CourseCard {
+  id: number;
+  title: string;
+  description: string;
+  creator_name: string;
+  enrollment_count: number;
+  lesson_count: number;
+  thumbnail_url?: string;
+  url: string;
+}
+
 interface Message {
   id: string;
   sender: 'user' | 'ai';
@@ -70,6 +81,7 @@ interface Message {
   actions?: ActionLink[];
   toolAction?: ToolAction;
   emailDraft?: EmailDraft;
+  courseCards?: CourseCard[];
   attachment?: {
     type: 'image' | 'file';
     url: string;
@@ -300,6 +312,7 @@ const ChatPage = () => {
 
       let responseText = typeof aiResponse.response === 'string' ? aiResponse.response : JSON.stringify(aiResponse.response, null, 2);
       let emailDraft = aiResponse.email_draft || aiResponse.emailDraft;
+      let courseCards = aiResponse.course_cards || aiResponse.courseCards;
 
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -309,6 +322,7 @@ const ChatPage = () => {
         actions: aiResponse.suggested_actions || [],
         toolAction: aiResponse.tool_action,
         emailDraft,
+        courseCards,
       };
 
       setMessages((prev) => [...prev, aiMessage]);
@@ -432,10 +446,10 @@ const ChatPage = () => {
   };
 
   const modeConfig = {
-    normal: { icon: Sparkles, label: 'Chat', color: 'from-violet-500 to-purple-500', desc: 'Trò chuyện tự nhiên với AI' },
-    'google-cloud': { icon: Zap, label: 'Cloud', color: 'from-blue-500 to-cyan-500', desc: 'Dịch, phân tích cảm xúc, OCR' },
-    rag: { icon: BookOpen, label: 'RAG', color: 'from-emerald-500 to-green-500', desc: 'Tìm kiếm trong tài liệu' },
-    agent: { icon: GraduationCap, label: 'Agent', color: 'from-orange-500 to-amber-500', desc: 'Xem TKB, điểm, gửi email' },
+    normal: { icon: Sparkles, label: 'Chat', color: 'from-green-500 to-emerald-500', desc: 'Trò chuyện tự nhiên với AI' },
+    'google-cloud': { icon: Zap, label: 'Cloud', color: 'from-teal-500 to-cyan-500', desc: 'Dịch, phân tích cảm xúc, OCR' },
+    rag: { icon: BookOpen, label: 'RAG', color: 'from-green-600 to-green-700', desc: 'Tìm kiếm trong tài liệu' },
+    agent: { icon: GraduationCap, label: 'Agent', color: 'from-lime-500 to-yellow-500', desc: 'Xem TKB, điểm, gửi email' },
   };
 
 
@@ -465,13 +479,11 @@ const ChatPage = () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="relative">
-                    <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${modeConfig[chatMode].color} flex items-center justify-center text-white shadow-lg shadow-purple-500/20`}>
-                      <Bot className="w-6 h-6" />
-                    </div>
+                    <WormAvatar size="md" mood="happy" />
                     <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white" />
                   </div>
                   <div>
-                    <h1 className="text-lg font-bold text-slate-800">AI Learning Assistant</h1>
+                    <h1 className="text-lg font-bold text-slate-800">🐛 Sâu Sách</h1>
                     <p className="text-sm text-slate-500">{sessions.find((s) => s.id === currentSessionId)?.title || 'Chọn hoặc tạo cuộc hội thoại'}</p>
                   </div>
                 </div>
@@ -506,7 +518,7 @@ const ChatPage = () => {
                     <button
                       onClick={() => setAiProvider('gemini')}
                       className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                        aiProvider === 'gemini' ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md' : 'text-slate-600 hover:bg-white/60'
+                        aiProvider === 'gemini' ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-md' : 'text-slate-600 hover:bg-white/60'
                       }`}
                     >
                       ✨ Gemini
@@ -514,7 +526,7 @@ const ChatPage = () => {
                     <button
                       onClick={() => setAiProvider('groq')}
                       className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                        aiProvider === 'groq' ? 'bg-gradient-to-r from-slate-700 to-slate-900 text-white shadow-md' : 'text-slate-600 hover:bg-white/60'
+                        aiProvider === 'groq' ? 'bg-gradient-to-r from-green-700 to-emerald-800 text-white shadow-md' : 'text-slate-600 hover:bg-white/60'
                       }`}
                     >
                       ⚡ Groq
@@ -546,7 +558,7 @@ const ChatPage = () => {
                         <select
                           value={selectedGeminiModel}
                           onChange={(e) => setSelectedGeminiModel(e.target.value)}
-                          className="px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                          className="px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent"
                         >
                           {geminiModels.map((m) => (
                             <option key={m.name} value={m.name}>{m.display_name}</option>
@@ -557,7 +569,7 @@ const ChatPage = () => {
                         <select
                           value={selectedGroqModel}
                           onChange={(e) => setSelectedGroqModel(e.target.value)}
-                          className="px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                          className="px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent"
                         >
                           {groqModels.map((m) => (
                             <option key={m.id} value={m.id}>{m.name}</option>
@@ -567,11 +579,11 @@ const ChatPage = () => {
 
                       {/* Toggles */}
                       <label className="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" checked={useRag} onChange={(e) => setUseRag(e.target.checked)} className="w-4 h-4 rounded text-purple-600" />
+                        <input type="checkbox" checked={useRag} onChange={(e) => setUseRag(e.target.checked)} className="w-4 h-4 rounded text-green-600" />
                         <span className="text-sm text-slate-600">📚 Dùng tài liệu</span>
                       </label>
                       <label className="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" checked={autoSpeak} onChange={(e) => setAutoSpeak(e.target.checked)} className="w-4 h-4 rounded text-purple-600" />
+                        <input type="checkbox" checked={autoSpeak} onChange={(e) => setAutoSpeak(e.target.checked)} className="w-4 h-4 rounded text-green-600" />
                         <span className="text-sm text-slate-600">{autoSpeak ? <Volume2 className="w-4 h-4 inline" /> : <VolumeX className="w-4 h-4 inline" />} Tự động đọc</span>
                       </label>
                     </div>
@@ -591,16 +603,14 @@ const ChatPage = () => {
                     animate={{ opacity: 1, y: 0 }}
                     className="flex flex-col items-center justify-center h-full py-20"
                   >
-                    <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center mb-6 shadow-2xl shadow-purple-500/30">
-                      <Bot className="w-12 h-12 text-white" />
-                    </div>
-                    <h2 className="text-2xl font-bold text-slate-800 mb-2">Chào mừng bạn!</h2>
+                    <WormAvatar size="xl" mood="excited" className="mb-6 shadow-2xl shadow-green-500/30" />
+                    <h2 className="text-2xl font-bold text-slate-800 mb-2">Chào mừng bạn! 🎉</h2>
                     <p className="text-slate-500 mb-8 text-center max-w-md">
-                      Tạo cuộc hội thoại mới để bắt đầu trò chuyện với AI Learning Assistant
+                      Mình là Sâu Sách - trợ lý học tập của bạn. Tạo cuộc hội thoại mới để bắt đầu nhé!
                     </p>
                     <button
                       onClick={handleNewSession}
-                      className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-medium shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/40 transition-all hover:-translate-y-0.5"
+                      className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-medium shadow-lg shadow-green-500/30 hover:shadow-xl hover:shadow-green-500/40 transition-all hover:-translate-y-0.5"
                     >
                       <Plus className="w-5 h-5" />
                       Tạo cuộc hội thoại mới
@@ -661,19 +671,21 @@ const ChatPage = () => {
                       className={`flex gap-4 ${message.sender === 'user' ? 'flex-row-reverse' : ''}`}
                     >
                       {/* Avatar */}
-                      <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${
-                        message.sender === 'user'
-                          ? 'bg-gradient-to-br from-slate-700 to-slate-900 text-white'
-                          : `bg-gradient-to-br ${modeConfig[chatMode].color} text-white shadow-lg`
-                      }`}>
-                        {message.sender === 'user' ? <User className="w-5 h-5" /> : <Bot className="w-5 h-5" />}
+                      <div className="flex-shrink-0">
+                        {message.sender === 'user' ? (
+                          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-600 to-emerald-700 flex items-center justify-center text-white">
+                            <User className="w-5 h-5" />
+                          </div>
+                        ) : (
+                          <WormAvatar size="sm" mood="happy" animate={false} />
+                        )}
                       </div>
 
                       {/* Message Content */}
                       <div className={`flex-1 max-w-[80%] ${message.sender === 'user' ? 'flex flex-col items-end' : ''}`}>
                         <div className={`relative group rounded-2xl px-4 py-3 ${
                           message.sender === 'user'
-                            ? 'bg-gradient-to-br from-slate-700 to-slate-900 text-white'
+                            ? 'bg-gradient-to-br from-green-600 to-emerald-700 text-white'
                             : 'bg-white border border-slate-200 text-slate-800 shadow-sm'
                         }`}>
                           {/* Message text */}
@@ -684,15 +696,61 @@ const ChatPage = () => {
                             <img src={message.attachment.url} alt="" className="mt-3 rounded-lg max-w-xs cursor-pointer hover:opacity-90" onClick={() => window.open(message.attachment!.url)} />
                           )}
 
-                          {/* Actions */}
-                          {message.sender === 'ai' && message.actions && message.actions.length > 0 && (
-                            <div className="mt-3 pt-3 border-t border-slate-100 space-y-2">
-                              <p className="text-xs text-slate-400 font-medium">📚 Tài liệu tham khảo:</p>
-                              {message.actions.map((action, idx) => (
-                                <a key={idx} href={action.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-3 py-2 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors text-sm text-slate-600">
-                                  <span>{action.icon}</span>
-                                  <span className="flex-1">{action.title}</span>
-                                  <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
+                          {/* Tool Action - chỉ hiện khi có video/search cụ thể */}
+                          {message.sender === 'ai' && message.toolAction && message.toolAction.url && (
+                            <div className="mt-3 pt-3 border-t border-slate-100">
+                              <a href={message.toolAction.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-3 py-2 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors text-sm text-slate-600">
+                                <span>{message.toolAction.tool === 'play_youtube' ? '🎬' : '🔍'}</span>
+                                <span className="flex-1">{message.toolAction.query}</span>
+                                <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
+                              </a>
+                            </div>
+                          )}
+
+                          {/* Course Cards */}
+                          {message.sender === 'ai' && message.courseCards && message.courseCards.length > 0 && (
+                            <div className="mt-4 space-y-3">
+                              <div className="text-xs font-medium text-slate-500 mb-2">📚 Khóa học tìm thấy:</div>
+                              {message.courseCards.map((course) => (
+                                <a
+                                  key={course.id}
+                                  href={course.url}
+                                  className="block p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl border border-green-100 hover:border-green-300 hover:shadow-md transition-all group"
+                                >
+                                  <div className="flex gap-3">
+                                    {/* Thumbnail */}
+                                    {course.thumbnail_url ? (
+                                      <img src={course.thumbnail_url} alt={course.title} className="w-20 h-20 rounded-lg object-cover flex-shrink-0" />
+                                    ) : (
+                                      <div className="w-20 h-20 rounded-lg bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center flex-shrink-0">
+                                        <span className="text-2xl">📚</span>
+                                      </div>
+                                    )}
+                                    
+                                    {/* Content */}
+                                    <div className="flex-1 min-w-0">
+                                      <h4 className="font-semibold text-slate-800 group-hover:text-green-600 transition-colors line-clamp-1">
+                                        {course.title}
+                                      </h4>
+                                      <p className="text-sm text-slate-600 mt-1 line-clamp-2">{course.description}</p>
+                                      <div className="flex items-center gap-4 mt-2 text-xs text-slate-500">
+                                        <span className="flex items-center gap-1">
+                                          👨‍🏫 {course.creator_name}
+                                        </span>
+                                        <span className="flex items-center gap-1">
+                                          👥 {course.enrollment_count}
+                                        </span>
+                                        <span className="flex items-center gap-1">
+                                          📖 {course.lesson_count} bài
+                                        </span>
+                                      </div>
+                                    </div>
+                                    
+                                    {/* Arrow */}
+                                    <div className="flex-shrink-0 self-center">
+                                      <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-green-600 transition-colors" />
+                                    </div>
+                                  </div>
                                 </a>
                               ))}
                             </div>
@@ -730,9 +788,7 @@ const ChatPage = () => {
                 {/* Loading */}
                 {loading && (
                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-4">
-                    <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${modeConfig[chatMode].color} flex items-center justify-center text-white shadow-lg`}>
-                      <Bot className="w-5 h-5" />
-                    </div>
+                    <WormAvatar size="sm" mood="thinking" />
                     <div className="bg-white border border-slate-200 rounded-2xl px-4 py-3 shadow-sm">
                       <div className="flex gap-1.5">
                         <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" />
@@ -812,7 +868,7 @@ const ChatPage = () => {
                       placeholder={!currentSessionId ? 'Vui lòng tạo cuộc hội thoại mới...' : 'Nhập tin nhắn... (Shift+Enter để xuống dòng)'}
                       disabled={!currentSessionId || loading || voiceChat.isListening}
                       rows={1}
-                      className="w-full px-4 py-3 bg-slate-100 border-0 rounded-xl text-slate-800 placeholder-slate-400 focus:ring-2 focus:ring-purple-500 focus:bg-white transition-all resize-none disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full px-4 py-3 bg-slate-100 border-0 rounded-xl text-slate-800 placeholder-slate-400 focus:ring-2 focus:ring-green-500 focus:bg-white transition-all resize-none disabled:opacity-50 disabled:cursor-not-allowed"
                       style={{ minHeight: '48px', maxHeight: '200px' }}
                     />
                   </div>

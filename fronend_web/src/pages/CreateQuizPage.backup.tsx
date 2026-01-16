@@ -148,7 +148,7 @@ const CreateQuizPage: React.FC = () => {
         >
           <Link
             to={`/lessons/${lessonIdNum}`}
-            className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium hover:gap-3 transition-all"
+            className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-medium hover:gap-3 transition-all"
           >
             <ArrowLeft className="w-5 h-5" />
             Quay lại bài học
@@ -158,7 +158,7 @@ const CreateQuizPage: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-3xl p-8 mb-8 text-white"
+          className="bg-gradient-to-br from-green-600 to-emerald-600 rounded-3xl p-8 mb-8 text-white"
         >
           <div className="flex items-center gap-4 mb-4">
             <div className="w-16 h-16 bg-white/20 backdrop-blur rounded-2xl flex items-center justify-center text-4xl">
@@ -166,7 +166,7 @@ const CreateQuizPage: React.FC = () => {
             </div>
             <div>
               <h1 className="text-3xl font-bold">Tạo Bài Kiểm Tra Mới</h1>
-              <p className="text-blue-100 mt-1">Cho bài học: {lesson?.title}</p>
+              <p className="text-green-100 mt-1">Cho bài học: {lesson?.title}</p>
             </div>
           </div>
         </motion.div>
@@ -183,7 +183,7 @@ const CreateQuizPage: React.FC = () => {
             onClick={() => setMode('manual')}
             className={`flex-1 py-3 px-4 rounded-xl font-semibold transition-all ${
               mode === 'manual'
-                ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
+                ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg'
                 : 'text-gray-600 hover:bg-gray-100'
             }`}
           >
@@ -194,7 +194,7 @@ const CreateQuizPage: React.FC = () => {
             onClick={() => setMode('ai')}
             className={`flex-1 py-3 px-4 rounded-xl font-semibold transition-all ${
               mode === 'ai'
-                ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
+                ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg'
                 : 'text-gray-600 hover:bg-gray-100'
             }`}
           >
@@ -223,7 +223,7 @@ const CreateQuizPage: React.FC = () => {
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   placeholder="VD: Kiểm tra kiến thức chương 1"
                 />
               </div>
@@ -233,7 +233,7 @@ const CreateQuizPage: React.FC = () => {
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   rows={3}
                   placeholder="Mô tả ngắn về bài kiểm tra này..."
                 />
@@ -244,7 +244,7 @@ const CreateQuizPage: React.FC = () => {
                 <select
                   value={difficulty}
                   onChange={(e) => setDifficulty(e.target.value as any)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 >
                   <option value="EASY">Dễ</option>
                   <option value="MEDIUM">Trung bình</option>
@@ -284,7 +284,7 @@ const CreateQuizPage: React.FC = () => {
                     <textarea
                       value={q.question}
                       onChange={(e) => updateQuestion(index, 'question', e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                       rows={3}
                       placeholder="Nhập câu hỏi..."
                     />
@@ -302,7 +302,7 @@ const CreateQuizPage: React.FC = () => {
                           onChange={(e) =>
                             updateQuestion(index, `option${option}` as keyof QuestionForm, e.target.value)
                           }
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                           placeholder={`Nhập đáp án ${option}...`}
                         />
                       </div>
@@ -317,7 +317,7 @@ const CreateQuizPage: React.FC = () => {
                       <select
                         value={q.correctAnswer}
                         onChange={(e) => updateQuestion(index, 'correctAnswer', e.target.value)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                       >
                         <option value="A">A</option>
                         <option value="B">B</option>
@@ -332,7 +332,7 @@ const CreateQuizPage: React.FC = () => {
                         type="text"
                         value={q.explanation || ''}
                         onChange={(e) => updateQuestion(index, 'explanation', e.target.value)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                         placeholder="Giải thích đáp án đúng..."
                       />
                     </div>
@@ -346,7 +346,7 @@ const CreateQuizPage: React.FC = () => {
           <button
             type="button"
             onClick={addQuestion}
-            className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-600 hover:border-blue-500 hover:text-blue-600 font-semibold transition-colors flex items-center justify-center gap-2"
+            className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-600 hover:border-green-500 hover:text-green-600 font-semibold transition-colors flex items-center justify-center gap-2"
           >
             <Plus className="w-5 h-5" />
             Thêm câu hỏi
@@ -433,7 +433,7 @@ const CreateQuizPage: React.FC = () => {
             <button
               type="submit"
               disabled={createQuizMutation.isPending || aiGenerateQuizMutation.isPending}
-              className="flex-1 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+              className="flex-1 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {createQuizMutation.isPending || aiGenerateQuizMutation.isPending ? (
                 <>

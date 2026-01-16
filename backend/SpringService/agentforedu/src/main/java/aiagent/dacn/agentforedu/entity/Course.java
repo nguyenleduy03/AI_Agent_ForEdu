@@ -26,6 +26,12 @@ public class Course {
     @Column(columnDefinition = "TEXT")
     private String description;
     
+    @Column(name = "thumbnail_url")
+    private String thumbnailUrl; // Ảnh đại diện khóa học (lưu trên Drive)
+    
+    @Column(name = "thumbnail_drive_id")
+    private String thumbnailDriveId; // ID file trên Drive để xóa khi cần
+    
     @Column(name = "created_by", nullable = false)
     private Long createdBy;
     

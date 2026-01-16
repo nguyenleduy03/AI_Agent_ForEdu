@@ -44,7 +44,32 @@ public class Quiz {
     @Column(name = "is_public", nullable = false)
     private Boolean isPublic = false; // true = công khai cho sinh viên, false = riêng tư
     
+    @Column(name = "deadline")
+    private LocalDateTime deadline; // Hạn làm bài - null = không giới hạn
+    
+    @Column(name = "time_limit_minutes")
+    private Integer timeLimitMinutes; // Thời gian làm bài (phút) - null = không giới hạn
+    
+    @Column(name = "max_attempts")
+    private Integer maxAttempts; // Số lần làm bài tối đa - null = không giới hạn
+    
+    @Column(name = "shuffle_questions")
+    private Boolean shuffleQuestions = false; // Xáo trộn thứ tự câu hỏi
+    
+    @Column(name = "shuffle_options")
+    private Boolean shuffleOptions = false; // Xáo trộn thứ tự đáp án
+    
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
+    
+    /**
+     * Kiểm tra quiz đã hết hạn chưa
+     */
+    public boolean isExpired() {
+        if (deadline == null) {
+            return false; // Không có deadline = không hết hạn
+        }
+        return LocalDateTime.now().isAfter(deadline);
+    }
 }

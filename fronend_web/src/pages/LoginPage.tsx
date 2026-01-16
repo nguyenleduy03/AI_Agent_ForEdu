@@ -63,7 +63,7 @@ const LoginPage = () => {
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-0 w-full h-full">
           <div className="absolute top-20 left-20 w-72 h-72 bg-gradient-to-br from-blue-400/20 to-cyan-400/20 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-20 right-20 w-96 h-96 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute bottom-20 right-20 w-96 h-96 bg-gradient-to-br from-green-400/20 to-emerald-400/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-br from-indigo-400/15 to-blue-400/15 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
         </div>
       </div>
@@ -230,7 +230,7 @@ const LoginPage = () => {
                           type="text"
                           required
                           autoComplete="name"
-                          className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none text-gray-900 placeholder-gray-400"
+                          className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/10 transition-all outline-none text-gray-900 placeholder-gray-400"
                           placeholder="John Doe"
                           value={formData.fullName}
                           onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
@@ -249,7 +249,7 @@ const LoginPage = () => {
                         type="text"
                         required
                         autoComplete="username"
-                        className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none text-gray-900 placeholder-gray-400"
+                        className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/10 transition-all outline-none text-gray-900 placeholder-gray-400"
                         placeholder={isLogin ? 'Enter your username' : 'Choose a username'}
                         value={formData.username}
                         onChange={(e) => setFormData({ ...formData, username: e.target.value })}
@@ -268,7 +268,7 @@ const LoginPage = () => {
                           type="email"
                           required
                           autoComplete="email"
-                          className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none text-gray-900 placeholder-gray-400"
+                          className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/10 transition-all outline-none text-gray-900 placeholder-gray-400"
                           placeholder="john@example.com"
                           value={formData.email}
                           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -288,7 +288,7 @@ const LoginPage = () => {
                         required
                         autoComplete={isLogin ? 'current-password' : 'new-password'}
                         minLength={!isLogin ? 6 : undefined}
-                        className="w-full pl-12 pr-12 py-3.5 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none text-gray-900 placeholder-gray-400"
+                        className="w-full pl-12 pr-12 py-3.5 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/10 transition-all outline-none text-gray-900 placeholder-gray-400"
                         placeholder={isLogin ? 'Enter your password' : 'Create a strong password'}
                         value={formData.password}
                         onChange={(e) => setFormData({ ...formData, password: e.target.value })}
@@ -314,7 +314,7 @@ const LoginPage = () => {
                           onClick={() => setFormData({ ...formData, role: 'STUDENT' })}
                           className={`py-3 px-4 rounded-xl border-2 font-medium transition-all ${
                             formData.role === 'STUDENT'
-                              ? 'border-blue-500 bg-blue-50 text-blue-700'
+                              ? 'border-green-500 bg-green-50 text-green-700'
                               : 'border-gray-200 text-gray-600 hover:border-gray-300'
                           }`}
                         >
@@ -325,7 +325,7 @@ const LoginPage = () => {
                           onClick={() => setFormData({ ...formData, role: 'TEACHER' })}
                           className={`py-3 px-4 rounded-xl border-2 font-medium transition-all ${
                             formData.role === 'TEACHER'
-                              ? 'border-blue-500 bg-blue-50 text-blue-700'
+                              ? 'border-green-500 bg-green-50 text-green-700'
                               : 'border-gray-200 text-gray-600 hover:border-gray-300'
                           }`}
                         >
@@ -340,7 +340,7 @@ const LoginPage = () => {
                     disabled={loading}
                     whileHover={{ scale: loading ? 1 : 1.02 }}
                     whileTap={{ scale: loading ? 1 : 0.98 }}
-                    className="w-full mt-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-xl font-semibold shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                    className="w-full mt-6 bg-gradient-to-r from-green-600 to-emerald-600 text-white py-4 rounded-xl font-semibold shadow-lg shadow-green-500/30 hover:shadow-xl hover:shadow-green-500/40 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
                   >
                     {loading ? (
                       <div className="w-6 h-6 border-3 border-white border-t-transparent rounded-full animate-spin" />
@@ -359,7 +359,7 @@ const LoginPage = () => {
                 {isLogin ? "Don't have an account?" : 'Already have an account?'}{' '}
                 <button
                   onClick={() => setIsLogin(!isLogin)}
-                  className="font-semibold text-blue-600 hover:text-blue-700 transition-colors"
+                  className="font-semibold text-green-600 hover:text-green-700 transition-colors"
                 >
                   {isLogin ? 'Sign up' : 'Sign in'}
                 </button>

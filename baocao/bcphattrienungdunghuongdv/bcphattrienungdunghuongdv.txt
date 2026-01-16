@@ -1,0 +1,151 @@
+================================================================================
+HƯỚNG DẪN CHỈNH SỬA BÁO CÁO MÔN PHÁT TRIỂN ỨNG DỤNG HƯỚNG DỊCH VỤ
+================================================================================
+Dự án: Agent For Edu - Trợ lý ảo AI Agent hỗ trợ học tập
+================================================================================
+
+CHƯƠNG 1: TỔNG QUAN - HƯỚNG DẪN CHỈNH SỬA
+================================================================================
+
+Tiêu chí phiếu chấm (Mục 2 - Bố cục/Mở đầu - 1.0 điểm):
+1. Đặt vấn đề (lý do chọn đề tài): rõ ràng, dẫn nhập liên quan trực tiếp đến đề tài
+2. Mục tiêu nghiên cứu: cụ thể, có khả năng thực hiện được
+3. Phương pháp nghiên cứu: cụ thể, rõ ràng, công cụ phù hợp
+4. Đối tượng và phạm vi nghiên cứu: Đúng đối tượng và phạm vi
+
+================================================================================
+1.1 ĐẶT VẤN ĐỀ - CẦN CHỈNH SỬA
+================================================================================
+
+[GIỮ NGUYÊN] Phần "Bối cảnh thực tiễn" - viết tốt rồi
+
+[CẦN THÊM] Sau phần "Thực trạng và thách thức", THÊM MỘT MỤC MỚI:
+
+────────────────────────────────────────────────────────────────────────────────
+THÊM MỤC: "c) Nhu cầu về kiến trúc hướng dịch vụ trong phát triển ứng dụng"
+────────────────────────────────────────────────────────────────────────────────
+Nội dung gợi ý viết thêm:
+
+"c) Nhu cầu về kiến trúc hướng dịch vụ trong phát triển ứng dụng
+
+Trong bối cảnh phát triển phần mềm hiện đại, kiến trúc Monolithic truyền thống 
+đang bộc lộ nhiều hạn chế khi ứng dụng cần mở rộng quy mô:
+
+- Khó khăn trong việc scale: Toàn bộ ứng dụng phải được scale cùng lúc, 
+  gây lãng phí tài nguyên khi chỉ một module cần xử lý nhiều request.
+
+- Phụ thuộc công nghệ: Việc thay đổi một công nghệ đòi hỏi phải viết lại 
+  toàn bộ ứng dụng.
+
+- Khó bảo trì: Khi codebase lớn, việc sửa đổi một tính năng có thể ảnh hưởng 
+  đến các phần khác của hệ thống.
+
+Kiến trúc hướng dịch vụ (Service-Oriented Architecture - SOA) và Microservices 
+ra đời để giải quyết các vấn đề trên. Với việc chia nhỏ ứng dụng thành các 
+service độc lập, giao tiếp qua API chuẩn hóa (RESTful), hệ thống có thể:
+
+- Scale từng service riêng biệt theo nhu cầu
+- Sử dụng công nghệ phù hợp nhất cho từng service (Polyglot)
+- Deploy và cập nhật độc lập mà không ảnh hưởng toàn hệ thống
+- Dễ dàng containerize với Docker để đảm bảo tính nhất quán môi trường
+
+Đây chính là lý do đề tài lựa chọn kiến trúc Dual-Backend (Spring Boot + FastAPI) 
+kết hợp với Docker containerization để xây dựng hệ thống."
+────────────────────────────────────────────────────────────────────────────────
+
+[CHỈNH SỬA] Phần "Lý do lựa chọn đề tài" - THÊM 1 đoạn cuối:
+────────────────────────────────────────────────────────────────────────────────
+THÊM VÀO CUỐI MỤC "Lý do lựa chọn đề tài":
+
+"Ngoài ra, đề tài còn hướng đến việc áp dụng kiến trúc hướng dịch vụ 
+(Service-Oriented Architecture) với việc chia hệ thống thành các service 
+độc lập, giao tiếp qua RESTful API chuẩn hóa. Việc triển khai với Docker 
+containerization giúp đảm bảo tính nhất quán giữa môi trường phát triển 
+và production, đồng thời tạo điều kiện thuận lợi cho việc mở rộng hệ thống 
+trong tương lai."
+────────────────────────────────────────────────────────────────────────────────
+
+================================================================================
+1.2 MỤC TIÊU ĐỀ TÀI - CẦN BỔ SUNG
+================================================================================
+
+[GIỮ NGUYÊN] Mục tiêu tổng quát - OK
+
+[CẦN THÊM] Vào phần "Mục tiêu cụ thể", THÊM 2 mục tiêu mới:
+────────────────────────────────────────────────────────────────────────────────
+THÊM VÀO DANH SÁCH MỤC TIÊU CỤ THỂ:
+
+"• Xây dựng hệ thống theo kiến trúc hướng dịch vụ: Thiết kế và triển khai 
+  hệ thống với kiến trúc Microservices/Hybrid Backend, trong đó các service 
+  giao tiếp với nhau thông qua RESTful API chuẩn hóa, đảm bảo tính độc lập 
+  và khả năng mở rộng.
+
+• Containerize ứng dụng với Docker: Đóng gói toàn bộ hệ thống (Frontend, 
+  Backend Services, Database) vào các Docker containers, sử dụng Docker 
+  Compose để orchestrate và quản lý multi-container application."
+────────────────────────────────────────────────────────────────────────────────
+
+================================================================================
+1.3 ĐỐI TƯỢNG VÀ PHẠM VI NGHIÊN CỨU - CẦN BỔ SUNG
+================================================================================
+
+[GIỮ NGUYÊN] Phần "Đối tượng nghiên cứu" - OK
+
+[CẦN THÊM] Vào "Đối tượng công nghệ", THÊM:
+────────────────────────────────────────────────────────────────────────────────
+THÊM VÀO DANH SÁCH "Đối tượng công nghệ":
+
+"• Kiến trúc hướng dịch vụ (SOA) và RESTful Web Services
+• Công nghệ containerization với Docker và Docker Compose"
+────────────────────────────────────────────────────────────────────────────────
+
+[CẦN THÊM] Vào "Phạm vi công nghệ", THÊM:
+────────────────────────────────────────────────────────────────────────────────
+THÊM VÀO DANH SÁCH "Phạm vi công nghệ":
+
+"• Containerization: Docker, Docker Compose
+• API Documentation: Swagger/OpenAPI"
+────────────────────────────────────────────────────────────────────────────────
+
+================================================================================
+1.4 PHƯƠNG PHÁP NGHIÊN CỨU - CẦN BỔ SUNG
+================================================================================
+
+[GIỮ NGUYÊN] Phần "Phương pháp nghiên cứu lý thuyết" - OK
+
+[CẦN THÊM] Vào "Phương pháp nghiên cứu thực nghiệm", THÊM:
+────────────────────────────────────────────────────────────────────────────────
+THÊM VÀO CUỐI MỤC "Phương pháp nghiên cứu thực nghiệm":
+
+"• Triển khai và Containerization:
+  - Đóng gói ứng dụng với Docker containers
+  - Sử dụng Docker Compose để quản lý multi-container
+  - Kiểm thử API endpoints với Swagger UI và Postman"
+────────────────────────────────────────────────────────────────────────────────
+
+================================================================================
+TÓM TẮT CHỈNH SỬA CHƯƠNG 1
+================================================================================
+
+┌────┬─────────────────────────────────────────────────────┬──────────────────┐
+│ #  │ Nội dung                                            │ Hành động        │
+├────┼─────────────────────────────────────────────────────┼──────────────────┤
+│ 1  │ Mục 1.1 - Thêm phần "Nhu cầu về kiến trúc hướng    │ THÊM MỚI         │
+│    │ dịch vụ trong phát triển ứng dụng"                  │                  │
+├────┼─────────────────────────────────────────────────────┼──────────────────┤
+│ 2  │ Mục 1.1 - Thêm đoạn về SOA/Docker vào cuối         │ THÊM ĐOẠN        │
+│    │ "Lý do lựa chọn đề tài"                             │                  │
+├────┼─────────────────────────────────────────────────────┼──────────────────┤
+│ 3  │ Mục 1.2 - Thêm 2 mục tiêu cụ thể về SOA và Docker  │ THÊM 2 MỤC       │
+├────┼─────────────────────────────────────────────────────┼──────────────────┤
+│ 4  │ Mục 1.3 - Thêm đối tượng công nghệ SOA, Docker     │ THÊM 2 DÒNG      │
+├────┼─────────────────────────────────────────────────────┼──────────────────┤
+│ 5  │ Mục 1.3 - Thêm phạm vi công nghệ Docker, Swagger   │ THÊM 2 DÒNG      │
+├────┼─────────────────────────────────────────────────────┼──────────────────┤
+│ 6  │ Mục 1.4 - Thêm phương pháp Containerization        │ THÊM 1 MỤC       │
+└────┴─────────────────────────────────────────────────────┴──────────────────┘
+
+LƯU Ý: Các phần khác của Chương 1 GIỮ NGUYÊN, chỉ bổ sung các nội dung trên
+để phù hợp với môn "Phát triển ứng dụng hướng dịch vụ".
+
+================================================================================

@@ -42,6 +42,8 @@ public class SecurityConfig {
                     "/api/auth/login",
                     "/api/auth/register",
                     "/api/chat/internal/**",
+                    "/api/courses/internal/**",
+                    "/api/courses/public/**",
                     "/api/users/*/google-tokens",
                     "/api/users/*/google-status",
                     "/api/credentials/user/**",

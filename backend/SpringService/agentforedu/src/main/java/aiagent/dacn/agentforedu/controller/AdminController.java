@@ -41,4 +41,16 @@ public class AdminController {
         userService.deleteUser(id);
         return ResponseEntity.ok(Map.of("message", "Xóa người dùng thành công"));
     }
+    
+    @PutMapping("/users/{id}/role")
+    @Operation(summary = "Cập nhật role người dùng")
+    public ResponseEntity<aiagent.dacn.agentforedu.dto.UserResponse> updateUserRole(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> request) {
+        String role = request.get("role");
+        if (role == null || role.isEmpty()) {
+            throw new RuntimeException("Role không được để trống");
+        }
+        return ResponseEntity.ok(userService.updateUserRole(id, role));
+    }
 }

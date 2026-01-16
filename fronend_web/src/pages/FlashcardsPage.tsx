@@ -93,7 +93,7 @@ const FlashcardsPage: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-3xl p-8 md:p-12 mb-8 overflow-hidden"
+          className="relative bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 rounded-3xl p-8 md:p-12 mb-8 overflow-hidden"
         >
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" />
@@ -149,7 +149,7 @@ const FlashcardsPage: React.FC = () => {
             </p>
             <button
               onClick={() => setShowCreateModal(true)}
-              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all"
             >
               <Plus className="w-5 h-5" />
               Create First Deck
@@ -167,8 +167,8 @@ const FlashcardsPage: React.FC = () => {
             >
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                    <Plus className="w-6 h-6 text-blue-600" />
+                  <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                    <Plus className="w-6 h-6 text-green-600" />
                   </div>
                   <h2 className="text-2xl font-bold">Create New Deck</h2>
                 </div>
@@ -189,7 +189,7 @@ const FlashcardsPage: React.FC = () => {
                     type="text"
                     value={newDeckName}
                     onChange={(e) => setNewDeckName(e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all"
                     placeholder="e.g. Advanced Calculus"
                     required
                   />
@@ -202,7 +202,7 @@ const FlashcardsPage: React.FC = () => {
                   <textarea
                     value={newDeckDescription}
                     onChange={(e) => setNewDeckDescription(e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all resize-none"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all resize-none"
                     placeholder="What's this deck about?"
                     rows={3}
                   />
@@ -220,7 +220,7 @@ const FlashcardsPage: React.FC = () => {
                         onClick={() => setNewDeckIcon(icon)}
                         className={`text-2xl w-14 h-14 rounded-xl border-2 transition-all ${
                           newDeckIcon === icon
-                            ? 'border-blue-500 bg-blue-50 scale-110'
+                            ? 'border-green-500 bg-green-50 scale-110'
                             : 'border-gray-200 hover:border-gray-300'
                         }`}
                       >
@@ -264,7 +264,7 @@ const FlashcardsPage: React.FC = () => {
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all"
+                    className="flex-1 px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all"
                   >
                     Create Deck
                   </button>

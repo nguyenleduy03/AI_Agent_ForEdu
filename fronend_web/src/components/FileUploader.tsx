@@ -67,7 +67,7 @@ const FileUploader = ({
     if (mimeType.startsWith('image/')) return <Image className="w-5 h-5 text-green-500" />;
     if (mimeType.includes('pdf')) return <FileText className="w-5 h-5 text-red-500" />;
     if (mimeType.includes('word') || mimeType.includes('document'))
-      return <FileText className="w-5 h-5 text-blue-500" />;
+      return <FileText className="w-5 h-5 text-green-500" />;
     if (mimeType.includes('powerpoint') || mimeType.includes('presentation'))
       return <FileText className="w-5 h-5 text-orange-500" />;
     return <File className="w-5 h-5 text-gray-500" />;

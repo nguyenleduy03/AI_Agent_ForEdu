@@ -116,7 +116,7 @@ export const EmailDraftModal = ({ draft, userId, onClose }: EmailDraftModalProps
               <div className="text-3xl">📧</div>
               <div>
                 <h2 className="text-2xl font-bold">Email Draft</h2>
-                <p className="text-sm text-blue-100">Chỉnh sửa và gửi email</p>
+                <p className="text-sm text-green-100">Chỉnh sửa và gửi email</p>
               </div>
             </div>
             <button
@@ -141,7 +141,7 @@ export const EmailDraftModal = ({ draft, userId, onClose }: EmailDraftModalProps
                 onChange={(e) => setTo(e.target.value)}
                 onKeyDown={handleKeyDown}
                 className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg 
-                         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                         focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent
                          transition-all"
                 placeholder="email@example.com"
                 required
@@ -159,7 +159,7 @@ export const EmailDraftModal = ({ draft, userId, onClose }: EmailDraftModalProps
                 onChange={(e) => setSubject(e.target.value)}
                 onKeyDown={handleKeyDown}
                 className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg 
-                         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                         focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent
                          transition-all"
                 placeholder="Tiêu đề email"
                 required
@@ -176,7 +176,7 @@ export const EmailDraftModal = ({ draft, userId, onClose }: EmailDraftModalProps
                 onChange={(e) => setBody(e.target.value)}
                 rows={10}
                 className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg 
-                         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                         focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent
                          transition-all resize-none"
                 placeholder="Nội dung email..."
                 required
@@ -184,8 +184,8 @@ export const EmailDraftModal = ({ draft, userId, onClose }: EmailDraftModalProps
             </div>
 
             {/* Info */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <p className="text-sm text-blue-800">
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <p className="text-sm text-green-800">
                 💡 <strong>Mẹo:</strong> Bạn có thể chỉnh sửa mọi trường trước khi gửi. 
                 Nhấn <kbd className="px-2 py-1 bg-white rounded border">Esc</kbd> để đóng.
               </p>

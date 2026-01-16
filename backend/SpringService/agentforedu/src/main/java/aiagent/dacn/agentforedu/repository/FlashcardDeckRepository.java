@@ -24,4 +24,7 @@ public interface FlashcardDeckRepository extends JpaRepository<FlashcardDeck, Lo
     List<FlashcardDeck> searchByName(@Param("userId") Long userId, @Param("keyword") String keyword);
     
     Long countByUserId(Long userId);
+    
+    @Query("SELECT f.deck.id FROM Flashcard f WHERE f.id = :flashcardId")
+    Optional<Long> findDeckIdByFlashcardId(@Param("flashcardId") Long flashcardId);
 }

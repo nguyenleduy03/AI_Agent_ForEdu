@@ -201,16 +201,16 @@ const GoogleConnectButton: React.FC<GoogleConnectButtonProps> = ({
   }
 
   return (
-    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+    <div className="bg-green-50 border border-green-200 rounded-lg p-4">
       <div className="flex items-center justify-between">
         <div className="flex-1">
-          <h3 className="font-medium text-blue-900 mb-1">
+          <h3 className="font-medium text-green-900 mb-1">
             Connect Your Google Account
           </h3>
-          <p className="text-sm text-blue-700 mb-2">
+          <p className="text-sm text-green-700 mb-2">
             Use your own Google Cloud quota for free features:
           </p>
-          <ul className="text-xs text-blue-600 space-y-1 ml-4">
+          <ul className="text-xs text-green-600 space-y-1 ml-4">
             <li>• Vision API: 1,000 requests/month FREE</li>
             <li>• Translation: 500,000 characters/month FREE</li>
             <li>• Speech: 60 minutes/month FREE</li>

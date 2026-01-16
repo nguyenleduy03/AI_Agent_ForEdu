@@ -92,7 +92,7 @@ const MyCoursesPage: React.FC = () => {
           {isTeacher && (
             <button
               onClick={() => navigate('/courses/create')}
-              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:shadow-lg transition-all font-semibold"
+              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:shadow-lg transition-all font-semibold"
             >
               <Plus className="w-5 h-5" />
               Tạo khóa học mới
@@ -175,7 +175,7 @@ const MyCoursesPage: React.FC = () => {
               className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow"
             >
               {/* Course Header */}
-              <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-6">
+              <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white p-6">
                 <div className="flex items-start justify-between mb-3">
                   <BookOpen className="w-8 h-8" />
                   {isTeacher && (

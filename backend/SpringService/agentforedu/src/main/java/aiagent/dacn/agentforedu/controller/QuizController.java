@@ -63,4 +63,22 @@ public class QuizController {
             @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(quizService.submitQuiz(id, request, user));
     }
+    
+    @PutMapping("/{id}")
+    @Operation(summary = "Cập nhật quiz (Teacher only)")
+    public ResponseEntity<QuizResponse> updateQuiz(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateQuizRequest request,
+            @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(quizService.updateQuiz(id, request, user));
+    }
+    
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Xóa quiz (Teacher only)")
+    public ResponseEntity<Void> deleteQuiz(
+            @PathVariable Long id,
+            @AuthenticationPrincipal User user) {
+        quizService.deleteQuiz(id, user);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -37,7 +37,7 @@ const MyProgressPage: React.FC = () => {
 
   const getProgressColor = (percentage: number): string => {
     if (percentage >= 80) return 'bg-green-500';
-    if (percentage >= 50) return 'bg-blue-500';
+    if (percentage >= 50) return 'bg-green-500';
     if (percentage >= 20) return 'bg-yellow-500';
     return 'bg-gray-400';
   };
@@ -103,7 +103,7 @@ const MyProgressPage: React.FC = () => {
 
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center gap-3">
-              <PlayCircle className="w-8 h-8 text-blue-600" />
+              <PlayCircle className="w-8 h-8 text-green-600" />
               <div>
                 <p className="text-sm text-gray-600">Đang học</p>
                 <p className="text-2xl font-bold text-gray-900">
@@ -149,7 +149,7 @@ const MyProgressPage: React.FC = () => {
               onClick={() => navigate(`/courses/${progress.courseId}`)}
             >
               {/* Progress Header */}
-              <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-6">
+              <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white p-6">
                 <h3 className="text-xl font-semibold mb-2">{progress.courseTitle}</h3>
                 <div className="flex items-center gap-2">
                   <TrendingUp className="w-5 h-5" />

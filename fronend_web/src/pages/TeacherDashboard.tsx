@@ -63,8 +63,8 @@ const TeacherDashboard = () => {
         {/* Stats Overview */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-white rounded-xl p-4 shadow-lg">
-            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mb-3">
-              <BookOpen className="w-5 h-5 text-blue-600" />
+            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mb-3">
+              <BookOpen className="w-5 h-5 text-green-600" />
             </div>
             <p className="text-2xl font-bold text-gray-900">{courses.length}</p>
             <p className="text-sm text-gray-500">Khóa học</p>
@@ -95,7 +95,7 @@ const TeacherDashboard = () => {
         {/* Courses List */}
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold">Khóa học của tôi</h2>
-          <Link to="/courses/create" className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">
+          <Link to="/courses/create" className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700">
             <Plus className="w-5 h-5" /> Tạo khóa học
           </Link>
         </div>
@@ -105,7 +105,7 @@ const TeacherDashboard = () => {
             <BookOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-xl font-bold text-gray-900 mb-2">Chưa có khóa học nào</h3>
             <p className="text-gray-500 mb-6">Bắt đầu tạo khóa học đầu tiên của bạn</p>
-            <Link to="/courses/create" className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700">
+            <Link to="/courses/create" className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700">
               <Plus className="w-5 h-5" /> Tạo khóa học
             </Link>
           </div>
@@ -123,11 +123,11 @@ const TeacherDashboard = () => {
                   className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all group"
                 >
                   <div className="flex flex-col md:flex-row md:items-center gap-4">
-                    <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
+                    <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
                       {course.courseTitle.charAt(0)}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors mb-1">
+                      <h3 className="text-xl font-bold text-gray-900 group-hover:text-green-600 transition-colors mb-1">
                         {course.courseTitle}
                       </h3>
                       <p className="text-gray-500 text-sm line-clamp-1 mb-3">{course.courseDescription}</p>
@@ -144,8 +144,8 @@ const TeacherDashboard = () => {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-blue-600 font-medium">Xem chi tiết</span>
-                      <ChevronRight className="w-5 h-5 text-blue-600 group-hover:translate-x-1 transition-transform" />
+                      <span className="text-green-600 font-medium">Xem chi tiết</span>
+                      <ChevronRight className="w-5 h-5 text-green-600 group-hover:translate-x-1 transition-transform" />
                     </div>
                   </div>
                 </Link>

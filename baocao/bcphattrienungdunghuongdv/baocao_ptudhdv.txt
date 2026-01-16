@@ -1,0 +1,1499 @@
+
+
+
+
+
+LỜI CẢM ƠN
+
+Để hoàn thành đồ án này, em xin bày tỏ lòng biết ơn chân thành đến Ban Giám hiệu cùng quý Thầy, Cô giáo khoa Công nghệ thông tin đã trang bị cho em nền tảng kiến thức vững chắc và tạo môi trường nghiên cứu chuyên nghiệp.
+
+Em xin gửi lời cảm ơn đặc biệt đến Thầy [Tên giảng viên], người đã trực tiếp hướng dẫn, tận tình chỉ bảo và truyền cảm hứng cho em trong suốt quá trình nghiên cứu về kiến trúc hướng dịch vụ, RESTful API và các công nghệ containerization hiện đại. Những lời khuyên và sự khắt khe về chuyên môn của Thầy chính là động lực lớn nhất để em hoàn thiện sản phẩm này.
+
+Em cũng xin cảm ơn gia đình và bạn bè đã luôn bên cạnh, động viên và hỗ trợ em về mọi mặt trong suốt thời gian qua.
+
+Em xin chân thành cảm ơn!
+
+
+LỜI CAM ĐOAN
+
+Em xin cam kết toàn bộ nội dung của đề tài là kết quả nghiên cứu của bản thân. Các kết quả, dữ liệu trong đề tài là trung thực và hoàn toàn khách quan. Em xin hoàn toàn chịu trách nhiệm về lời cam đoan của mình.
+
+
+MỤC LỤC
+
+CHƯƠNG 1: TỔNG QUAN	
+1.1	Đặt vấn đề	
+1.2	Mục tiêu đề tài	
+1.3	Đối tượng và phạm vi nghiên cứu	
+1.4	Phương pháp nghiên cứu	
+CHƯƠNG 2: CƠ SỞ LÝ THUYẾT	
+2.1	Kiến trúc hướng dịch vụ (Service-Oriented Architecture)	
+2.2	RESTful Web Services	
+2.3	Công nghệ Containerization với Docker	
+2.4	Công nghệ Backend	
+2.5	Công nghệ Frontend	
+2.6	Cơ sở dữ liệu	
+2.7	Tích hợp API bên ngoài	
+CHƯƠNG 3: PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG	
+3.1	Phân tích yêu cầu	
+3.2	Thiết kế kiến trúc hệ thống	
+3.3	Thiết kế RESTful API	
+3.4	Thiết kế cơ sở dữ liệu	
+3.5	Thiết kế giao diện người dùng	
+CHƯƠNG 4: TRIỂN KHAI VÀ KẾT QUẢ	
+4.1	Môi trường phát triển	
+4.2	Triển khai các Service	
+4.3	Triển khai Docker	
+4.4	Kết quả thực nghiệm	
+CHƯƠNG 5: KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN	
+5.1	Kết quả đạt được	
+5.2	Hạn chế	
+5.3	Hướng phát triển	
+DANH MỤC TÀI LIỆU THAM KHẢO	
+
+
+DANH MỤC HÌNH ẢNH
+
+Hình 1: Kiến trúc tổng quan hệ thống theo mô hình SOA
+Hình 2: Sơ đồ giao tiếp giữa các Service
+Hình 3: Kiến trúc Docker Containers
+Hình 4: Mô hình quan hệ thực thể (ERD)
+Hình 5: Giao diện trang chủ
+Hình 6: Giao diện đăng nhập
+Hình 7: Giao diện chat với AI
+Hình 8: Swagger UI - API Documentation
+
+
+DANH MỤC BẢNG BIỂU
+
+Bảng 1: So sánh kiến trúc Monolithic và Microservices
+Bảng 2: Danh sách API endpoints - Authentication Service
+Bảng 3: Danh sách API endpoints - Course Service
+Bảng 4: Danh sách API endpoints - AI Service
+Bảng 5: HTTP Status Codes sử dụng trong hệ thống
+Bảng 6: Cấu hình Docker Containers
+
+
+DANH MỤC TỪ VIẾT TẮT
+
+Từ viết tắt	Tiếng Anh đầy đủ	Tiếng Việt
+API	Application Programming Interface	Giao diện lập trình ứng dụng
+CRUD	Create, Read, Update, Delete	Các thao tác cơ bản trên dữ liệu
+HTTP	Hypertext Transfer Protocol	Giao thức truyền tải siêu văn bản
+JSON	JavaScript Object Notation	Định dạng trao đổi dữ liệu
+JWT	JSON Web Token	Mã xác thực dạng JSON
+REST	Representational State Transfer	Kiến trúc truyền trạng thái đại diện
+SOA	Service-Oriented Architecture	Kiến trúc hướng dịch vụ
+SQL	Structured Query Language	Ngôn ngữ truy vấn có cấu trúc
+
+
+TÓM TẮT
+
+Trong bối cảnh chuyển đổi số mạnh mẽ của ngành công nghiệp phần mềm, kiến trúc hướng dịch vụ (Service-Oriented Architecture - SOA) đã trở thành xu hướng tất yếu để xây dựng các hệ thống có khả năng mở rộng và bảo trì cao. Đồ án với đề tài "Xây dựng hệ thống học tập thông minh Agent For Edu theo kiến trúc hướng dịch vụ" được thực hiện nhằm nghiên cứu và áp dụng các nguyên lý SOA vào việc phát triển một nền tảng học tập trực tuyến thực tế.
+
+Hệ thống được thiết kế theo mô hình Microservices với hai backend service độc lập: Spring Boot Service (Java) đảm nhận các nghiệp vụ cốt lõi bao gồm xác thực người dùng, quản lý khóa học, bài học và tài liệu; FastAPI Service (Python) chuyên xử lý các tác vụ trí tuệ nhân tạo như chat với AI, tạo quiz tự động và tìm kiếm ngữ nghĩa. Hai service này giao tiếp với nhau thông qua RESTful API chuẩn hóa, tuân thủ đầy đủ các nguyên tắc REST với HTTP methods đúng ngữ nghĩa và xử lý lỗi theo HTTP status codes. Frontend được xây dựng bằng React.js với TypeScript, đóng vai trò là client tiêu thụ các API từ backend services.
+
+Điểm nổi bật của đề tài là việc containerize toàn bộ hệ thống với Docker và orchestrate bằng Docker Compose. Với cấu hình này, toàn bộ hệ thống bao gồm 4 containers (Frontend, Spring Boot, FastAPI, MySQL) có thể được khởi động chỉ với một lệnh duy nhất, đảm bảo tính nhất quán tuyệt đối giữa môi trường phát triển và production.
+
+Kết quả triển khai cho thấy hệ thống cung cấp hơn 40 RESTful API endpoints với đầy đủ các thao tác CRUD, cấu trúc JSON response nhất quán và API documentation tự động qua Swagger UI. Hệ thống đáp ứng tốt các tiêu chí của một ứng dụng hướng dịch vụ hiện đại: loose coupling giữa các service, khả năng deploy và scale độc lập, API contract rõ ràng và containerization hoàn chỉnh.
+
+
+CHƯƠNG 1: TỔNG QUAN
+
+1.1 Đặt vấn đề
+
+1.1.1 Bối cảnh phát triển phần mềm hiện đại
+
+Trong kỷ nguyên chuyển đổi số, ngành công nghiệp phần mềm đang chứng kiến sự chuyển dịch mạnh mẽ từ kiến trúc Monolithic truyền thống sang các mô hình phân tán như Service-Oriented Architecture (SOA) và Microservices. Theo báo cáo của Gartner (2024), hơn 85% các doanh nghiệp công nghệ hàng đầu đã áp dụng kiến trúc hướng dịch vụ cho các hệ thống quan trọng của mình.
+
+Sự chuyển đổi này được thúc đẩy bởi những yêu cầu ngày càng cao về khả năng mở rộng (scalability), tính sẵn sàng (availability) và tốc độ phát triển (time-to-market). Các ứng dụng hiện đại không còn là những khối đơn lẻ mà được cấu thành từ nhiều service độc lập, mỗi service đảm nhận một chức năng nghiệp vụ cụ thể và giao tiếp với nhau thông qua các giao thức chuẩn hóa như HTTP/REST.
+
+1.1.2 Thách thức của kiến trúc Monolithic
+
+Kiến trúc Monolithic, mặc dù đơn giản trong giai đoạn khởi đầu, đã bộc lộ nhiều hạn chế khi ứng dụng phát triển về quy mô:
+
+a) Khó khăn trong việc mở rộng quy mô
+
+Với kiến trúc Monolithic, toàn bộ ứng dụng phải được scale cùng lúc ngay cả khi chỉ một module cần xử lý lượng request lớn. Điều này dẫn đến lãng phí tài nguyên hệ thống và chi phí vận hành cao. Ví dụ, khi module xử lý AI cần nhiều tài nguyên hơn, ta buộc phải scale toàn bộ ứng dụng thay vì chỉ scale riêng module đó.
+
+b) Phụ thuộc công nghệ đơn nhất
+
+Trong kiến trúc Monolithic, toàn bộ ứng dụng thường được viết bằng một ngôn ngữ và framework duy nhất. Điều này hạn chế khả năng sử dụng công nghệ phù hợp nhất cho từng tác vụ. Chẳng hạn, Java mạnh về xử lý nghiệp vụ doanh nghiệp nhưng Python lại vượt trội trong lĩnh vực trí tuệ nhân tạo và machine learning.
+
+c) Rủi ro trong triển khai và bảo trì
+
+Mỗi lần cập nhật dù nhỏ đều đòi hỏi phải deploy lại toàn bộ ứng dụng, tăng nguy cơ downtime và ảnh hưởng đến trải nghiệm người dùng. Một lỗi nhỏ trong một module có thể làm sập toàn bộ hệ thống.
+
+1.1.3 Giải pháp từ kiến trúc hướng dịch vụ
+
+Service-Oriented Architecture (SOA) và biến thể hiện đại của nó là Microservices ra đời nhằm giải quyết các thách thức nêu trên. Triết lý cốt lõi của kiến trúc này là phân tách ứng dụng thành các service độc lập, mỗi service đảm nhận một chức năng nghiệp vụ cụ thể và giao tiếp với nhau thông qua các giao thức chuẩn hóa như HTTP/REST.
+
+Lợi ích đầu tiên và quan trọng nhất của kiến trúc hướng dịch vụ là khả năng mở rộng độc lập. Thay vì phải scale toàn bộ ứng dụng như trong kiến trúc Monolithic, mỗi service có thể được scale riêng biệt theo nhu cầu thực tế. Điều này không chỉ tối ưu hóa việc sử dụng tài nguyên mà còn giảm đáng kể chi phí vận hành hệ thống.
+
+Bên cạnh đó, kiến trúc hướng dịch vụ cho phép đa dạng hóa công nghệ (Polyglot Architecture). Mỗi service có thể được phát triển bằng ngôn ngữ và framework phù hợp nhất với chức năng của nó. Ví dụ, một service xử lý nghiệp vụ doanh nghiệp có thể sử dụng Java với Spring Boot, trong khi service xử lý AI có thể sử dụng Python với các thư viện machine learning mạnh mẽ.
+
+Một ưu điểm quan trọng khác là khả năng triển khai độc lập. Việc cập nhật một service không yêu cầu phải deploy lại toàn bộ hệ thống, từ đó giảm thiểu rủi ro và thời gian downtime. Ngoài ra, kiến trúc này còn cung cấp khả năng cô lập lỗi hiệu quả, khi một service gặp sự cố, các service khác vẫn có thể tiếp tục hoạt động bình thường, đảm bảo tính ổn định tổng thể của hệ thống.
+
+1.1.4 Vai trò của Containerization
+
+Song song với sự phát triển của kiến trúc hướng dịch vụ, công nghệ containerization với Docker đã trở thành tiêu chuẩn trong việc đóng gói và triển khai ứng dụng. Docker cho phép đóng gói mỗi service cùng với tất cả dependencies vào một container độc lập, đảm bảo tính nhất quán giữa môi trường phát triển, testing và production.
+
+Docker Compose mở rộng khả năng này bằng cách cho phép định nghĩa và quản lý multi-container applications, giúp việc orchestrate các service trở nên đơn giản và có thể tái tạo được.
+
+1.1.5 Lý do lựa chọn đề tài
+
+Xuất phát từ nhu cầu thực tiễn về một nền tảng học tập thông minh và mong muốn áp dụng các kiến thức về kiến trúc hướng dịch vụ vào thực tế, đề tài "Xây dựng hệ thống học tập thông minh Agent For Edu theo kiến trúc hướng dịch vụ" được lựa chọn với các lý do chính sau đây.
+
+Thứ nhất, về mặt học thuật, đề tài cho phép áp dụng trực tiếp các nguyên lý của SOA và Microservices vào việc thiết kế một hệ thống thực tế. Hệ thống được phân tách thành hai backend service độc lập: Spring Boot Service (Java) xử lý nghiệp vụ cốt lõi và FastAPI Service (Python) xử lý các tác vụ AI. Sự phân tách này minh họa rõ ràng cho nguyên tắc "single responsibility" trong thiết kế service, đồng thời thể hiện khả năng polyglot - sử dụng ngôn ngữ phù hợp nhất cho từng loại tác vụ.
+
+Thứ hai, về mặt kỹ năng thực hành, đề tài tạo cơ hội để thiết kế và triển khai RESTful API chuẩn hóa với đầy đủ các thao tác CRUD (Create, Read, Update, Delete), xử lý lỗi theo HTTP status codes (200, 400, 401, 404, 500...) và documentation tự động qua Swagger UI. Đây là những kỹ năng thiết yếu và được yêu cầu cao trong ngành phát triển phần mềm hiện đại.
+
+Thứ ba, về mặt DevOps, việc containerize toàn bộ hệ thống với Docker và Docker Compose giúp củng cố kiến thức về deployment hiện đại. Với Docker, hệ thống có thể được đóng gói và triển khai nhất quán trên mọi môi trường, từ máy phát triển của lập trình viên đến server production, giải quyết triệt để vấn đề "works on my machine".
+
+Cuối cùng, về mặt ứng dụng thực tiễn, hệ thống Agent For Edu hướng đến việc hỗ trợ sinh viên trong quá trình học tập với các tính năng như chat với trợ lý AI, tạo quiz tự động từ nội dung bài học và quản lý tài liệu học tập - những tính năng có giá trị thực tế cao trong bối cảnh giáo dục số hóa hiện nay.
+
+1.2 Mục tiêu đề tài
+
+1.2.1 Mục tiêu tổng quát
+
+Thiết kế và triển khai một hệ thống học tập thông minh theo kiến trúc hướng dịch vụ (Service-Oriented Architecture), trong đó các thành phần được phân tách thành các service độc lập, giao tiếp thông qua RESTful API chuẩn hóa và được containerize với Docker để đảm bảo tính nhất quán và khả năng mở rộng.
+
+1.2.2 Mục tiêu cụ thể
+
+a) Về kiến trúc hệ thống
+
+- Thiết kế kiến trúc Microservices với ít nhất hai backend service độc lập, mỗi service đảm nhận một domain nghiệp vụ riêng biệt.
+
+- Đảm bảo nguyên tắc loose coupling giữa các service, cho phép mỗi service có thể được phát triển, deploy và scale độc lập.
+
+- Xây dựng cơ chế giao tiếp giữa các service thông qua RESTful API với JSON là định dạng trao đổi dữ liệu.
+
+b) Về RESTful API
+
+- Thiết kế và triển khai tối thiểu 10 API endpoints (thực tế hệ thống có hơn 40 endpoints) tuân thủ các nguyên tắc REST.
+
+- Xây dựng đầy đủ các thao tác CRUD (Create, Read, Update, Delete) cho các resource chính của hệ thống.
+
+- Triển khai cơ chế xử lý lỗi chuẩn hóa với các HTTP status codes phù hợp (200, 201, 400, 401, 403, 404, 500).
+
+- Thiết kế cấu trúc JSON response nhất quán và có ý nghĩa.
+
+- Tích hợp Swagger/OpenAPI để tự động sinh API documentation.
+
+c) Về Containerization
+
+- Containerize toàn bộ hệ thống bao gồm Frontend, Backend Services và Database với Docker.
+
+- Sử dụng Docker Compose để orchestrate và quản lý multi-container application.
+
+- Đảm bảo hệ thống có thể được khởi động hoàn chỉnh chỉ với một lệnh docker-compose up.
+
+d) Về chức năng ứng dụng
+
+- Xây dựng hệ thống xác thực người dùng với JWT (JSON Web Token).
+
+- Triển khai các chức năng quản lý khóa học, bài học và tài liệu học tập.
+
+- Tích hợp trợ lý AI hỗ trợ học tập thông qua API của Google Gemini.
+
+- Xây dựng chức năng tạo quiz tự động và flashcard hỗ trợ ghi nhớ.
+
+1.3 Đối tượng và phạm vi nghiên cứu
+
+1.3.1 Đối tượng nghiên cứu
+
+a) Đối tượng lý thuyết
+
+- Kiến trúc hướng dịch vụ (Service-Oriented Architecture - SOA) và các nguyên tắc thiết kế Microservices.
+
+- Kiến trúc RESTful và các best practices trong thiết kế Web API.
+
+- Công nghệ containerization với Docker và container orchestration với Docker Compose.
+
+- Các design patterns trong phát triển ứng dụng phân tán.
+
+b) Đối tượng công nghệ
+
+- Backend Framework: Spring Boot (Java) và FastAPI (Python).
+
+- Frontend Framework: React.js với TypeScript.
+
+- Database: MySQL (relational) và ChromaDB (vector database).
+
+- Containerization: Docker và Docker Compose.
+
+- API Documentation: Swagger/OpenAPI.
+
+- Authentication: JWT (JSON Web Token).
+
+c) Đối tượng người dùng
+
+- Sinh viên: Sử dụng hệ thống để học tập, tương tác với AI và làm bài kiểm tra.
+
+- Giảng viên: Quản lý khóa học, tạo nội dung và theo dõi tiến độ học tập.
+
+- Quản trị viên: Quản lý người dùng và cấu hình hệ thống.
+
+1.3.2 Phạm vi nghiên cứu
+
+a) Phạm vi về kiến trúc
+
+- Tập trung vào kiến trúc Microservices với hai backend service chính.
+
+- Giao tiếp đồng bộ (synchronous) giữa các service qua HTTP/REST.
+
+- Không bao gồm message queue hay event-driven architecture.
+
+b) Phạm vi về công nghệ
+
+- Frontend: React.js, TypeScript, Tailwind CSS, Vite.
+
+- Backend Service 1 (Core): Spring Boot 3.x, Spring Security, Spring Data JPA.
+
+- Backend Service 2 (AI): FastAPI, Google Gemini API, ChromaDB.
+
+- Database: MySQL 8.0, ChromaDB.
+
+- Containerization: Docker, Docker Compose.
+
+- API Documentation: Swagger UI (Spring Boot), FastAPI Docs.
+
+c) Phạm vi về chức năng
+
+- Xác thực và phân quyền người dùng.
+
+- Quản lý khóa học, bài học và tài liệu.
+
+- Chat với trợ lý AI.
+
+- Tạo quiz và flashcard tự động.
+
+- Không bao gồm: thanh toán trực tuyến, video streaming, mobile app.
+
+1.4 Phương pháp nghiên cứu
+
+1.4.1 Phương pháp nghiên cứu lý thuyết
+
+a) Nghiên cứu tài liệu
+
+- Nghiên cứu các tài liệu học thuật và sách chuyên khảo về Service-Oriented Architecture, RESTful Web Services và Microservices patterns.
+
+- Tham khảo documentation chính thức của các công nghệ sử dụng: Spring Boot, FastAPI, Docker, React.js.
+
+- Phân tích các case studies về triển khai Microservices trong thực tế từ các công ty công nghệ lớn.
+
+b) Phân tích so sánh
+
+- So sánh ưu nhược điểm giữa kiến trúc Monolithic và Microservices để lựa chọn giải pháp phù hợp.
+
+- Đánh giá các framework backend (Spring Boot vs FastAPI vs Express.js) dựa trên tiêu chí phù hợp với từng loại service.
+
+- So sánh các phương pháp containerization và orchestration.
+
+1.4.2 Phương pháp nghiên cứu thực nghiệm
+
+a) Phân tích và thiết kế
+
+- Áp dụng phương pháp Domain-Driven Design (DDD) để xác định bounded contexts và phân tách service.
+
+- Sử dụng UML để mô hình hóa kiến trúc hệ thống và luồng dữ liệu.
+
+- Thiết kế API contract trước khi triển khai (API-first approach).
+
+b) Phát triển phần mềm
+
+- Áp dụng mô hình phát triển Agile với các sprint ngắn.
+
+- Phát triển từng service độc lập, đảm bảo mỗi service có thể hoạt động và test riêng biệt.
+
+- Sử dụng Git để quản lý mã nguồn và theo dõi phiên bản.
+
+c) Kiểm thử
+
+- Kiểm thử API với Postman và Swagger UI.
+
+- Kiểm thử tích hợp giữa các service.
+
+- Kiểm thử containerization bằng cách deploy trên các môi trường khác nhau.
+
+d) Triển khai
+
+- Viết Dockerfile cho từng service.
+
+- Cấu hình Docker Compose để orchestrate toàn bộ hệ thống.
+
+- Kiểm tra tính nhất quán giữa môi trường development và production.
+
+
+
+CHƯƠNG 2: CƠ SỞ LÝ THUYẾT
+
+2.1 Kiến trúc hướng dịch vụ (Service-Oriented Architecture)
+
+2.1.1 Khái niệm và định nghĩa
+
+Service-Oriented Architecture (SOA) là một phong cách kiến trúc phần mềm trong đó các chức năng của ứng dụng được tổ chức thành các đơn vị độc lập gọi là "service". Mỗi service đại diện cho một khả năng nghiệp vụ cụ thể, có thể được truy cập thông qua các giao thức truyền thông chuẩn hóa, thường là HTTP.
+
+Theo định nghĩa của Thomas Erl (2016), SOA là "một mô hình kiến trúc nhằm tăng cường tính hiệu quả, linh hoạt và năng suất của doanh nghiệp bằng cách định vị các service như phương tiện chính để thực hiện các mục tiêu chiến lược liên quan đến điện toán hướng dịch vụ".
+
+SOA được xây dựng dựa trên một số đặc điểm cốt lõi quan trọng. Đầu tiên là nguyên tắc Loose Coupling (Liên kết lỏng lẻo), theo đó các service được thiết kế để giảm thiểu sự phụ thuộc lẫn nhau, cho phép thay đổi trong một service mà không yêu cầu thay đổi trong các service khác. Tiếp theo là Service Abstraction (Trừu tượng hóa), mỗi service ẩn đi logic nội bộ và chỉ expose một interface chuẩn hóa cho bên ngoài, giúp đơn giản hóa việc tích hợp và sử dụng.
+
+Nguyên tắc Service Reusability (Tái sử dụng) đảm bảo các service được thiết kế để có thể tái sử dụng trong nhiều ngữ cảnh và ứng dụng khác nhau, tối đa hóa giá trị đầu tư phát triển. Service Autonomy (Tự chủ) cho phép mỗi service có quyền kiểm soát logic và tài nguyên của riêng mình, hoạt động độc lập với các service khác.
+
+Ngoài ra, Service Statelessness (Phi trạng thái) quy định rằng service không lưu trữ trạng thái của client giữa các request, giúp tăng khả năng mở rộng và đơn giản hóa việc quản lý. Cuối cùng, Service Discoverability (Khả năng khám phá) cho phép các service có thể được tìm thấy và sử dụng thông qua metadata mô tả, thường được cung cấp qua API documentation.
+
+
+2.1.2 Microservices - Biến thể hiện đại của SOA
+
+Microservices là một phương pháp tiếp cận kiến trúc để phát triển một ứng dụng đơn lẻ như một tập hợp các service nhỏ, mỗi service chạy trong process riêng của nó và giao tiếp với các cơ chế nhẹ, thường là HTTP API. Microservices có thể được coi là sự tiến hóa và cụ thể hóa của SOA, kế thừa các nguyên tắc cốt lõi nhưng áp dụng chúng ở mức độ chi tiết và thực tiễn hơn.
+
+Đặc điểm nổi bật đầu tiên của Microservices là việc phân tách ứng dụng thành các component độc lập dưới dạng service (Componentization via Services). Mỗi service được tổ chức xoay quanh một khả năng nghiệp vụ cụ thể (Organized around Business Capabilities), thay vì phân chia theo các tầng kỹ thuật như trong kiến trúc truyền thống. Điều này giúp team phát triển có cái nhìn toàn diện về domain mà họ phụ trách.
+
+Triết lý "Products not Projects" là một thay đổi tư duy quan trọng trong Microservices. Thay vì coi phần mềm như một dự án có điểm kết thúc, team sở hữu service trong suốt vòng đời của nó, từ phát triển đến vận hành và bảo trì. Điều này tạo ra trách nhiệm và sự gắn kết cao hơn với chất lượng sản phẩm.
+
+Về mặt giao tiếp, Microservices tuân theo nguyên tắc "Smart endpoints and dumb pipes", nghĩa là logic nghiệp vụ được đặt tại các service endpoints thay vì trong các middleware phức tạp như Enterprise Service Bus (ESB). Giao tiếp giữa các service thường đơn giản qua HTTP/REST hoặc lightweight messaging.
+
+Decentralized Governance cho phép mỗi team có thể chọn công nghệ phù hợp nhất cho service của mình, không bị ràng buộc bởi một technology stack duy nhất. Tương tự, Decentralized Data Management quy định mỗi service quản lý database riêng của nó, tránh việc chia sẻ database giữa các service có thể dẫn đến tight coupling.
+
+Infrastructure Automation là yếu tố không thể thiếu trong Microservices, với việc sử dụng CI/CD pipelines và containerization để tự động hóa quá trình build, test và deployment. Cuối cùng, nguyên tắc Design for Failure yêu cầu hệ thống được thiết kế để chịu được lỗi của các service riêng lẻ, với các cơ chế như circuit breaker, retry và fallback.
+
+
+2.1.3 So sánh kiến trúc Monolithic và Microservices
+
+Để hiểu rõ hơn về lợi ích của kiến trúc Microservices, cần so sánh với kiến trúc Monolithic truyền thống. Bảng 1 dưới đây trình bày sự khác biệt giữa hai kiến trúc này trên nhiều khía cạnh.
+
+Bảng 1: So sánh kiến trúc Monolithic và Microservices
+
+┌──────────────────────┬────────────────────────────┬────────────────────────────┐
+│ Tiêu chí             │ Monolithic                 │ Microservices              │
+├──────────────────────┼────────────────────────────┼────────────────────────────┤
+│ Cấu trúc             │ Một khối code duy nhất     │ Nhiều service độc lập      │
+├──────────────────────┼────────────────────────────┼────────────────────────────┤
+│ Deployment           │ Deploy toàn bộ ứng dụng    │ Deploy từng service riêng  │
+├──────────────────────┼────────────────────────────┼────────────────────────────┤
+│ Scaling              │ Vertical scaling           │ Horizontal scaling         │
+│                      │ (scale toàn bộ)            │ (scale từng service)       │
+├──────────────────────┼────────────────────────────┼────────────────────────────┤
+│ Technology Stack     │ Đồng nhất (một ngôn ngữ)   │ Đa dạng (polyglot)         │
+├──────────────────────┼────────────────────────────┼────────────────────────────┤
+│ Database             │ Shared database            │ Database per service       │
+├──────────────────────┼────────────────────────────┼────────────────────────────┤
+│ Team Structure       │ Tập trung                  │ Phân tán theo service      │
+├──────────────────────┼────────────────────────────┼────────────────────────────┤
+│ Fault Isolation      │ Lỗi ảnh hưởng toàn hệ thống│ Lỗi cô lập trong service   │
+├──────────────────────┼────────────────────────────┼────────────────────────────┤
+│ Development Speed    │ Nhanh ban đầu              │ Chậm ban đầu, nhanh sau    │
+├──────────────────────┼────────────────────────────┼────────────────────────────┤
+│ Complexity           │ Thấp ban đầu, cao sau      │ Cao ban đầu, quản lý được  │
+├──────────────────────┼────────────────────────────┼────────────────────────────┤
+│ Testing              │ Đơn giản                   │ Phức tạp hơn               │
+├──────────────────────┼────────────────────────────┼────────────────────────────┤
+│ Phù hợp với          │ Ứng dụng nhỏ, team nhỏ     │ Ứng dụng lớn, team lớn     │
+└──────────────────────┴────────────────────────────┴────────────────────────────┘
+
+Về ưu điểm, kiến trúc Microservices mang lại khả năng mở rộng linh hoạt khi có thể scale từng service theo nhu cầu thực tế. Tính độc lập công nghệ cho phép mỗi service sử dụng ngôn ngữ và framework phù hợp nhất với chức năng của nó. Khả năng chịu lỗi (Resilience) được cải thiện đáng kể khi lỗi trong một service không làm sập toàn bộ hệ thống. Việc triển khai trở nên dễ dàng hơn vì cập nhật một service không ảnh hưởng đến các service khác. Ngoài ra, các team có thể làm việc độc lập trên các service khác nhau (Team autonomy), tăng năng suất phát triển.
+
+Tuy nhiên, Microservices cũng có những nhược điểm cần cân nhắc. Độ phức tạp trong quản lý tăng lên khi phải điều phối nhiều service thay vì một ứng dụng đơn. Network latency là vấn đề cần quan tâm vì giao tiếp giữa các service qua network chậm hơn so với in-process call trong Monolithic. Việc đảm bảo tính nhất quán dữ liệu (Data consistency) giữa các service trở nên khó khăn hơn. Kiểm thử tích hợp phức tạp hơn và đòi hỏi infrastructure cùng tooling phức tạp hơn để vận hành hiệu quả.
+
+
+2.2 RESTful Web Services
+
+2.2.1 Khái niệm REST
+
+REST (Representational State Transfer) là một phong cách kiến trúc phần mềm được Roy Fielding giới thiệu trong luận án tiến sĩ năm 2000. REST định nghĩa một tập hợp các ràng buộc kiến trúc để tạo ra các web service có khả năng mở rộng, đơn giản và dễ bảo trì.
+
+RESTful Web Service là một web service được triển khai theo các nguyên tắc của REST. Nó sử dụng HTTP methods một cách rõ ràng và có cấu trúc URL có ý nghĩa để thao tác với các resource.
+
+2.2.2 Sáu ràng buộc của REST
+
+REST được định nghĩa bởi sáu ràng buộc kiến trúc, trong đó năm ràng buộc đầu tiên là bắt buộc và ràng buộc thứ sáu là tùy chọn.
+
+Ràng buộc đầu tiên là Client-Server Architecture, yêu cầu tách biệt giữa client (user interface) và server (data storage). Sự phân tách này cho phép client và server phát triển độc lập, miễn là interface giữa chúng không thay đổi. Lợi ích của ràng buộc này bao gồm tăng tính portable của user interface, cải thiện khả năng mở rộng bằng cách đơn giản hóa server components, và cho phép các component phát triển độc lập theo lộ trình riêng.
+
+Ràng buộc thứ hai là Stateless (Phi trạng thái), quy định mỗi request từ client đến server phải chứa tất cả thông tin cần thiết để hiểu và xử lý request đó. Server không lưu trữ bất kỳ trạng thái nào của client giữa các request. Điều này cải thiện đáng kể khả năng mở rộng vì không cần lưu session state, tăng reliability do dễ dàng recover từ lỗi, và đơn giản hóa việc triển khai server.
+
+Ràng buộc thứ ba là Cacheable (Có thể cache), yêu cầu response từ server phải được đánh dấu rõ ràng là cacheable hoặc non-cacheable. Nếu response được đánh dấu là cacheable, client có thể tái sử dụng response data cho các request tương tự sau này. Caching giúp giảm số lượng request đến server, cải thiện performance và user experience, đồng thời giảm tải cho server.
+
+Ràng buộc thứ tư và quan trọng nhất là Uniform Interface (Giao diện thống nhất). Ràng buộc này đơn giản hóa và tách biệt kiến trúc, cho phép mỗi phần phát triển độc lập. Uniform Interface bao gồm bốn nguyên tắc con: Resource Identification yêu cầu mỗi resource được xác định bởi một URI duy nhất như /api/courses/123; Resource Manipulation through Representations cho phép client thao tác với resource thông qua representations như JSON hoặc XML; Self-descriptive Messages đảm bảo mỗi message chứa đủ thông tin để mô tả cách xử lý message đó thông qua HTTP methods và headers; và HATEOAS (Hypermedia as the Engine of Application State) cho phép server cung cấp links để client có thể discover các actions có thể thực hiện tiếp theo.
+
+Ràng buộc thứ năm là Layered System (Hệ thống phân tầng), cho phép kiến trúc được tổ chức thành các tầng phân cấp, mỗi tầng chỉ biết về tầng liền kề. Điều này cho phép thêm các tầng trung gian như load balancers, caches, hoặc proxies mà không ảnh hưởng đến client.
+
+Ràng buộc thứ sáu và là ràng buộc tùy chọn duy nhất là Code on Demand, cho phép server tạm thời mở rộng chức năng của client bằng cách gửi code để thực thi, ví dụ như JavaScript.
+
+
+2.2.3 HTTP Methods trong RESTful API
+
+RESTful API sử dụng các HTTP methods để thực hiện các thao tác CRUD:
+
+┌────────┬─────────────┬──────────────────────────┬─────────────┬──────────────┐
+│ Method │ CRUD        │ Mô tả                    │ Idempotent  │ Safe         │
+├────────┼─────────────┼──────────────────────────┼─────────────┼──────────────┤
+│ GET    │ Read        │ Lấy thông tin resource   │ Yes         │ Yes          │
+├────────┼─────────────┼──────────────────────────┼─────────────┼──────────────┤
+│ POST   │ Create      │ Tạo resource mới         │ No          │ No           │
+├────────┼─────────────┼──────────────────────────┼─────────────┼──────────────┤
+│ PUT    │ Update      │ Cập nhật toàn bộ         │ Yes         │ No           │
+│        │             │ resource                 │             │              │
+├────────┼─────────────┼──────────────────────────┼─────────────┼──────────────┤
+│ PATCH  │ Update      │ Cập nhật một phần        │ No          │ No           │
+│        │             │ resource                 │             │              │
+├────────┼─────────────┼──────────────────────────┼─────────────┼──────────────┤
+│ DELETE │ Delete      │ Xóa resource             │ Yes         │ No           │
+└────────┴─────────────┴──────────────────────────┴─────────────┴──────────────┘
+
+Ví dụ sử dụng trong hệ thống Agent For Edu:
+
+GET    /api/courses           - Lấy danh sách tất cả khóa học
+GET    /api/courses/123       - Lấy thông tin khóa học có ID 123
+POST   /api/courses           - Tạo khóa học mới
+PUT    /api/courses/123       - Cập nhật toàn bộ thông tin khóa học 123
+PATCH  /api/courses/123       - Cập nhật một phần thông tin khóa học 123
+DELETE /api/courses/123       - Xóa khóa học 123
+
+2.2.4 HTTP Status Codes
+
+HTTP status codes được sử dụng để chỉ ra kết quả của request:
+
+Bảng 2: HTTP Status Codes sử dụng trong hệ thống
+
+┌──────┬─────────────────────┬────────────────────────────────────────────┐
+│ Code │ Tên                 │ Ý nghĩa                                    │
+├──────┼─────────────────────┼────────────────────────────────────────────┤
+│ 2xx  │ Success             │                                            │
+├──────┼─────────────────────┼────────────────────────────────────────────┤
+│ 200  │ OK                  │ Request thành công                         │
+│ 201  │ Created             │ Resource được tạo thành công               │
+│ 204  │ No Content          │ Thành công nhưng không có data trả về      │
+├──────┼─────────────────────┼────────────────────────────────────────────┤
+│ 4xx  │ Client Error        │                                            │
+├──────┼─────────────────────┼────────────────────────────────────────────┤
+│ 400  │ Bad Request         │ Request không hợp lệ (validation error)    │
+│ 401  │ Unauthorized        │ Chưa xác thực (thiếu hoặc sai token)      │
+│ 403  │ Forbidden           │ Không có quyền truy cập resource           │
+│ 404  │ Not Found           │ Resource không tồn tại                     │
+│ 409  │ Conflict            │ Xung đột dữ liệu (duplicate key)           │
+├──────┼─────────────────────┼────────────────────────────────────────────┤
+│ 5xx  │ Server Error        │                                            │
+├──────┼─────────────────────┼────────────────────────────────────────────┤
+│ 500  │ Internal Server     │ Lỗi server không xác định                  │
+│      │ Error               │                                            │
+│ 503  │ Service Unavailable │ Service tạm thời không khả dụng            │
+└──────┴─────────────────────┴────────────────────────────────────────────┘
+
+
+2.2.5 Cấu trúc JSON Response
+
+JSON (JavaScript Object Notation) là định dạng trao đổi dữ liệu phổ biến nhất trong RESTful API nhờ tính đơn giản, dễ đọc và được hỗ trợ rộng rãi bởi hầu hết các ngôn ngữ lập trình. Hệ thống Agent For Edu sử dụng cấu trúc JSON response nhất quán để đảm bảo tính thống nhất và dễ dàng xử lý ở phía client.
+
+Đối với response thành công, hệ thống trả về dữ liệu trực tiếp kèm theo status code 200 OK hoặc 201 Created. Cấu trúc response bao gồm các trường thông tin của resource được yêu cầu, ví dụ như id, title, description và timestamp. Điều này giúp client có thể parse và sử dụng dữ liệu một cách trực tiếp mà không cần unwrap từ các wrapper object phức tạp.
+
+Đối với response lỗi, hệ thống sử dụng cấu trúc nhất quán bao gồm status code, error type, message mô tả lỗi và timestamp. Trong trường hợp validation error, response còn bao gồm mảng details chứa thông tin chi tiết về từng trường bị lỗi, giúp client có thể hiển thị thông báo lỗi cụ thể cho người dùng. Cấu trúc này tuân theo best practices của RESTful API design và giúp việc xử lý lỗi ở phía client trở nên đơn giản và nhất quán.
+
+2.2.6 API Documentation với Swagger/OpenAPI
+
+OpenAPI Specification, trước đây được biết đến với tên gọi Swagger, là một chuẩn mô tả RESTful API được sử dụng rộng rãi trong ngành công nghiệp phần mềm. Swagger UI cung cấp giao diện trực quan cho phép developers khám phá và test API một cách tương tác.
+
+Việc sử dụng Swagger mang lại nhiều lợi ích quan trọng cho quá trình phát triển. Đầu tiên, documentation được tự động sinh từ code, đảm bảo tính đồng bộ giữa implementation và documentation. Giao diện interactive cho phép developers test API trực tiếp mà không cần sử dụng công cụ bên ngoài như Postman. Swagger còn hỗ trợ sinh client SDK tự động cho nhiều ngôn ngữ lập trình, giúp việc tích hợp API trở nên nhanh chóng. Quan trọng hơn, Swagger chuẩn hóa API contract giữa các team, giúp frontend và backend có thể làm việc song song dựa trên specification đã thống nhất.
+
+Trong hệ thống Agent For Edu, Spring Boot Service cung cấp Swagger UI tại địa chỉ http://localhost:8080/swagger-ui/index.html, trong khi FastAPI Service cung cấp auto-generated documentation tại http://localhost:8000/docs. Cả hai đều cho phép developers xem danh sách API endpoints, tham số đầu vào, response schema và thực hiện test calls trực tiếp.
+
+
+2.3 Công nghệ Containerization với Docker
+
+2.3.1 Khái niệm Container và Docker
+
+Container là một đơn vị phần mềm chuẩn hóa đóng gói code và tất cả dependencies của nó, cho phép ứng dụng chạy nhanh chóng và đáng tin cậy từ môi trường này sang môi trường khác. Container cô lập phần mềm khỏi môi trường xung quanh và đảm bảo nó hoạt động đồng nhất bất kể sự khác biệt giữa development và production.
+
+Docker là nền tảng containerization phổ biến nhất hiện nay, cung cấp khả năng build, ship và run các ứng dụng trong containers. Docker sử dụng công nghệ OS-level virtualization để cung cấp các container nhẹ và hiệu quả.
+
+2.3.2 So sánh Container và Virtual Machine
+
+┌──────────────────────┬────────────────────────────┬────────────────────────────┐
+│ Tiêu chí             │ Virtual Machine            │ Container                  │
+├──────────────────────┼────────────────────────────┼────────────────────────────┤
+│ Virtualization       │ Hardware-level             │ OS-level                   │
+├──────────────────────┼────────────────────────────┼────────────────────────────┤
+│ OS                   │ Mỗi VM có OS riêng         │ Chia sẻ OS kernel          │
+├──────────────────────┼────────────────────────────┼────────────────────────────┤
+│ Size                 │ Gigabytes                  │ Megabytes                  │
+├──────────────────────┼────────────────────────────┼────────────────────────────┤
+│ Boot time            │ Phút                       │ Giây                       │
+├──────────────────────┼────────────────────────────┼────────────────────────────┤
+│ Performance          │ Overhead cao               │ Near-native performance    │
+├──────────────────────┼────────────────────────────┼────────────────────────────┤
+│ Isolation            │ Hoàn toàn                  │ Process-level              │
+├──────────────────────┼────────────────────────────┼────────────────────────────┤
+│ Resource usage       │ Cao                        │ Thấp                       │
+└──────────────────────┴────────────────────────────┴────────────────────────────┘
+
+2.3.3 Các thành phần chính của Docker
+
+Docker ecosystem bao gồm nhiều thành phần quan trọng, mỗi thành phần đóng vai trò cụ thể trong quá trình containerization.
+
+Docker Image là một template read-only chứa instructions để tạo Docker container. Image bao gồm application code, runtime, libraries, environment variables và configuration files cần thiết để chạy ứng dụng. Một đặc điểm quan trọng của Docker Image là cấu trúc layers, trong đó mỗi layer đại diện cho một instruction trong Dockerfile. Cấu trúc này cho phép Docker tái sử dụng các layers chung giữa các images, tiết kiệm không gian lưu trữ và tăng tốc quá trình build.
+
+Docker Container là một instance đang chạy của Docker Image. Container cô lập ứng dụng và dependencies của nó khỏi host system và các container khác, tạo ra một môi trường runtime độc lập và nhất quán. Nhiều containers có thể được tạo từ cùng một image, mỗi container hoạt động như một instance riêng biệt với filesystem và network namespace riêng.
+
+Dockerfile là một text file chứa các instructions để build Docker Image. Mỗi instruction trong Dockerfile tạo một layer trong image cuối cùng. Dockerfile sử dụng các commands như FROM để chỉ định base image, COPY để sao chép files, RUN để thực thi commands, và CMD hoặc ENTRYPOINT để định nghĩa command mặc định khi container khởi động. Việc viết Dockerfile hiệu quả đòi hỏi hiểu biết về cách Docker caching hoạt động để tối ưu hóa thời gian build.
+
+Docker Registry là nơi lưu trữ và phân phối Docker Images. Docker Hub là public registry phổ biến nhất, cung cấp hàng triệu images sẵn có cho cộng đồng. Các tổ chức có thể sử dụng private registry để lưu trữ images nội bộ, đảm bảo bảo mật và kiểm soát truy cập. Registry đóng vai trò quan trọng trong CI/CD pipeline, cho phép tự động hóa việc push và pull images giữa các môi trường.
+
+
+2.3.4 Docker Compose
+
+Docker Compose là công cụ để định nghĩa và chạy multi-container Docker applications. Với Compose, developers sử dụng file YAML để cấu hình các services của ứng dụng, sau đó với một lệnh duy nhất có thể tạo và khởi động tất cả services được định nghĩa.
+
+Docker Compose hoạt động dựa trên ba khái niệm chính. Services định nghĩa các container cần chạy, bao gồm image hoặc build context, ports mapping, environment variables và dependencies. Networks cấu hình mạng để các container có thể giao tiếp với nhau một cách an toàn và cô lập. Volumes định nghĩa persistent storage cho data, đảm bảo dữ liệu không bị mất khi container bị xóa hoặc recreate.
+
+Trong hệ thống Agent For Edu, Docker Compose được sử dụng để orchestrate bốn containers: MySQL database, Spring Boot service, FastAPI service và Frontend với Nginx. File docker-compose.yml định nghĩa cấu hình cho từng service, bao gồm build context, port mappings, environment variables và dependencies giữa các services. Ví dụ, Spring Boot service được cấu hình để depends_on MySQL, đảm bảo database khởi động trước khi application service bắt đầu.
+
+Docker Compose mang lại nhiều lợi ích quan trọng cho việc phát triển và triển khai ứng dụng. Single command deployment cho phép khởi động toàn bộ hệ thống với lệnh docker-compose up, đơn giản hóa đáng kể quá trình setup môi trường. Environment consistency đảm bảo môi trường giống nhau trên mọi máy, từ máy phát triển của developer đến server staging và production. Service dependencies được tự động quản lý, đảm bảo thứ tự khởi động đúng. Network isolation cho phép các services giao tiếp qua internal network mà không expose ra bên ngoài không cần thiết. Cuối cùng, easy scaling cho phép tăng số lượng instances của một service với lệnh docker-compose scale.
+
+
+2.4 Công nghệ Backend
+
+2.4.1 Spring Boot (Java)
+
+Spring Boot là một framework mã nguồn mở dựa trên Spring Framework, được thiết kế để đơn giản hóa việc tạo các ứng dụng Spring độc lập, production-grade. Spring Boot tuân theo triết lý "convention over configuration", giảm thiểu đáng kể lượng cấu hình boilerplate mà developers phải viết.
+
+Spring Boot nổi bật với khả năng Auto-configuration, tự động cấu hình ứng dụng dựa trên các dependencies có trong classpath. Ví dụ, khi thêm spring-boot-starter-data-jpa và MySQL connector vào project, Spring Boot tự động cấu hình DataSource và EntityManager mà không cần XML configuration phức tạp. Embedded Server là một đặc điểm quan trọng khác, cho phép đóng gói ứng dụng cùng với web server như Tomcat, Jetty hoặc Undertow thành một JAR file duy nhất, đơn giản hóa việc deployment. Starter Dependencies cung cấp các dependency packages được cấu hình sẵn cho các use cases phổ biến, giúp developers nhanh chóng bắt đầu mà không cần lo lắng về version compatibility. Ngoài ra, Spring Boot còn cung cấp các production-ready features như metrics, health checks và externalized configuration.
+
+Trong hệ thống Agent For Edu, Spring Boot Service sử dụng nhiều modules quan trọng. Spring Boot Starter Web cung cấp nền tảng để xây dựng RESTful web services với embedded Tomcat. Spring Boot Starter Data JPA cho phép tương tác với database thông qua ORM, giảm thiểu boilerplate code cho data access layer. Spring Boot Starter Security cung cấp framework mạnh mẽ cho xác thực và phân quyền. Spring Boot Starter Validation hỗ trợ validation dữ liệu đầu vào với annotations. SpringDoc OpenAPI tự động sinh Swagger documentation từ code.
+
+Spring Boot Service đóng vai trò là Core Service trong kiến trúc hệ thống, xử lý các nghiệp vụ chính bao gồm Authentication và Authorization với JWT, quản lý User, Course, Lesson và Material, Quiz management và scoring, cùng với logging và audit trail.
+
+2.4.2 FastAPI (Python)
+
+FastAPI là một modern, high-performance web framework cho Python, được xây dựng trên Starlette và Pydantic. FastAPI nổi bật với tốc độ cao tương đương NodeJS và Go, đồng thời cung cấp khả năng tự động sinh documentation.
+
+Về hiệu năng, FastAPI là một trong những Python frameworks nhanh nhất hiện nay nhờ sử dụng Starlette cho web parts và Pydantic cho data parts. Automatic Documentation là một điểm mạnh đáng chú ý, framework tự động sinh Swagger UI và ReDoc từ code mà không cần cấu hình thêm. FastAPI tận dụng Python type hints không chỉ cho documentation mà còn cho validation dữ liệu đầu vào, giúp phát hiện lỗi sớm trong quá trình development. Async Support cho phép xử lý non-blocking I/O với async/await syntax, phù hợp cho các tác vụ I/O-bound như gọi external APIs. Pydantic Integration cung cấp data validation và serialization mạnh mẽ với syntax đơn giản.
+
+FastAPI Service đóng vai trò là AI Service trong hệ thống Agent For Edu, xử lý các tác vụ liên quan đến trí tuệ nhân tạo. Service này tích hợp với Google Gemini API để cung cấp khả năng chat với AI, sử dụng ChromaDB cho RAG (Retrieval-Augmented Generation) để tăng cường độ chính xác của câu trả lời, tự động sinh quiz từ nội dung bài học, và xử lý document với OCR.
+
+Việc lựa chọn kiến trúc Dual-Backend với Spring Boot và FastAPI được đưa ra dựa trên nhiều cân nhắc. Java với Spring Boot mạnh về enterprise features, security và transaction management, phù hợp cho các nghiệp vụ cốt lõi. Python với FastAPI mạnh về AI/ML libraries và async processing, phù hợp cho các tác vụ AI. Kiến trúc này cho phép mỗi service có thể scale độc lập theo nhu cầu và team có thể làm việc song song trên các services khác nhau.
+
+
+2.5 Công nghệ Frontend
+
+2.5.1 React.js
+
+React.js là một thư viện JavaScript mã nguồn mở được phát triển bởi Meta (Facebook) để xây dựng giao diện người dùng. React sử dụng component-based architecture và Virtual DOM để tối ưu hóa hiệu năng rendering.
+
+React được xây dựng dựa trên triết lý Component-Based, trong đó UI được chia thành các component độc lập và có thể tái sử dụng. Mỗi component quản lý state và logic riêng của nó, giúp code dễ maintain và test. Virtual DOM là một trong những đặc điểm quan trọng nhất của React, cho phép tối ưu hóa việc cập nhật DOM thực bằng cách so sánh virtual DOM tree trước và sau khi state thay đổi, chỉ cập nhật những phần thực sự thay đổi. Declarative programming model cho phép developers mô tả UI theo trạng thái mong muốn, React tự động xử lý việc cập nhật DOM để đạt được trạng thái đó. One-way Data Flow đảm bảo dữ liệu chảy một chiều từ parent đến child components, giúp dễ dàng debug và hiểu luồng dữ liệu trong ứng dụng.
+- One-way Data Flow: Dữ liệu chảy một chiều từ parent đến child
+
+2.5.2 TypeScript
+
+TypeScript là superset của JavaScript, bổ sung static typing vào ngôn ngữ. TypeScript giúp phát hiện lỗi sớm trong quá trình development và cải thiện đáng kể khả năng maintain code trong các dự án lớn.
+
+Trong dự án Agent For Edu, TypeScript mang lại nhiều lợi ích quan trọng. Type safety cho API responses đảm bảo dữ liệu nhận từ backend được xử lý đúng cách, giảm thiểu runtime errors. IntelliSense và auto-completion được cải thiện đáng kể nhờ type information, giúp developers viết code nhanh hơn và chính xác hơn. Việc refactoring trở nên an toàn hơn vì TypeScript compiler sẽ báo lỗi nếu có breaking changes. Ngoài ra, types còn đóng vai trò như documentation tự động, giúp developers mới dễ dàng hiểu cấu trúc dữ liệu trong project.
+
+2.5.3 Các thư viện hỗ trợ
+
+Frontend của hệ thống Agent For Edu sử dụng một số thư viện hỗ trợ quan trọng. Tailwind CSS là utility-first CSS framework được sử dụng cho styling, cho phép xây dựng giao diện nhanh chóng với các utility classes có sẵn. React Query đảm nhận việc quản lý server state và caching, tự động hóa việc fetching, caching và synchronizing data với server. Zustand là lightweight state management library được chọn thay vì Redux vì sự đơn giản và hiệu năng cao. Axios được sử dụng làm HTTP client cho API calls với khả năng interceptors và error handling mạnh mẽ. React Router cung cấp client-side routing cho Single Page Application.
+
+Trong kiến trúc SOA, Frontend đóng vai trò là API Consumer, gọi đến các backend services qua RESTful API. Frontend không chứa business logic mà chỉ tập trung vào presentation layer và user interaction, tuân thủ nguyên tắc separation of concerns.
+
+
+2.6 Cơ sở dữ liệu
+
+2.6.1 MySQL
+
+MySQL là hệ quản trị cơ sở dữ liệu quan hệ (RDBMS) mã nguồn mở phổ biến nhất thế giới, được sử dụng trong Spring Boot Service để lưu trữ dữ liệu có cấu trúc của hệ thống.
+
+MySQL được lựa chọn nhờ nhiều đặc điểm quan trọng. ACID compliance đảm bảo tính toàn vẹn dữ liệu với các thuộc tính Atomicity, Consistency, Isolation và Durability. Relational model cho phép dữ liệu được tổ chức trong các bảng có quan hệ với nhau thông qua foreign keys, phù hợp với dữ liệu có cấu trúc rõ ràng như users, courses và lessons. SQL support cung cấp ngôn ngữ truy vấn chuẩn được hỗ trợ rộng rãi. Khả năng scalability với replication và clustering cho phép mở rộng hệ thống khi cần thiết.
+
+Trong hệ thống Agent For Edu, MySQL lưu trữ các bảng chính bao gồm users chứa thông tin người dùng, courses chứa thông tin khóa học, lessons chứa nội dung bài học, materials chứa tài liệu học tập, quizzes chứa bài kiểm tra, và chat_sessions lưu trữ lịch sử phiên chat với AI.
+
+2.6.2 ChromaDB
+
+ChromaDB là một vector database mã nguồn mở, được thiết kế đặc biệt cho các ứng dụng AI. Trong hệ thống Agent For Edu, ChromaDB được sử dụng trong FastAPI Service để lưu trữ embeddings cho RAG (Retrieval-Augmented Generation).
+
+ChromaDB có nhiều đặc điểm phù hợp với yêu cầu của hệ thống. Vector storage cho phép lưu trữ và tìm kiếm vector embeddings một cách hiệu quả. Semantic search hỗ trợ tìm kiếm dựa trên ý nghĩa ngữ nghĩa thay vì keyword matching truyền thống. ChromaDB tích hợp tốt với LangChain và các AI frameworks phổ biến khác. Tính lightweight cho phép chạy embedded trong ứng dụng Python mà không cần setup server riêng.
+
+Trong hệ thống, ChromaDB đóng vai trò lưu trữ embeddings của tài liệu học tập, hỗ trợ semantic search cho AI chatbot để tìm kiếm thông tin liên quan, và cung cấp context cho RAG pipeline giúp AI trả lời chính xác hơn dựa trên nội dung bài học.
+
+2.6.3 Database per Service Pattern
+
+Theo nguyên tắc Microservices, mỗi service quản lý database riêng của mình. Trong hệ thống Agent For Edu, Spring Boot Service sử dụng MySQL cho relational data như users, courses và lessons, trong khi FastAPI Service sử dụng ChromaDB cho vector data phục vụ AI features.
+
+Pattern này mang lại nhiều lợi ích quan trọng. Loose coupling đảm bảo các services không phụ thuộc vào schema của nhau, cho phép thay đổi database schema của một service mà không ảnh hưởng đến service khác. Technology flexibility cho phép mỗi service chọn loại database phù hợp nhất với use case của nó, ví dụ relational database cho structured data và vector database cho AI embeddings. Independent scaling cho phép database của mỗi service được scale riêng biệt theo nhu cầu. Fault isolation đảm bảo lỗi database của một service không ảnh hưởng đến service khác.
+
+
+2.7 Tích hợp API bên ngoài
+
+2.7.1 Google Gemini API
+
+Google Gemini là mô hình ngôn ngữ lớn (LLM) đa phương thức của Google, hỗ trợ xử lý văn bản, hình ảnh và code. Hệ thống Agent For Edu tích hợp Gemini API để cung cấp khả năng AI cho chatbot hỗ trợ học tập.
+
+Hệ thống sử dụng nhiều tính năng của Gemini API. Text generation cho phép trả lời câu hỏi của sinh viên một cách tự nhiên và chính xác. Content summarization hỗ trợ tóm tắt tài liệu học tập dài thành các điểm chính dễ hiểu. Quiz generation tự động tạo câu hỏi trắc nghiệm từ nội dung bài học, giúp sinh viên ôn tập hiệu quả. Code explanation giải thích code cho sinh viên IT, đặc biệt hữu ích trong các khóa học lập trình.
+
+2.7.2 Google OAuth 2.0
+
+OAuth 2.0 là giao thức ủy quyền tiêu chuẩn công nghiệp, được sử dụng rộng rãi để cho phép ứng dụng truy cập tài nguyên của người dùng mà không cần biết mật khẩu. Hệ thống Agent For Edu sử dụng Google OAuth để cho phép người dùng đăng nhập bằng tài khoản Google, mang lại trải nghiệm đăng nhập nhanh chóng và an toàn.
+
+Flow xác thực OAuth 2.0 trong hệ thống diễn ra như sau. Đầu tiên, user click nút "Đăng nhập với Google" trên giao diện. Sau đó, hệ thống redirect user đến Google Authorization Server. User đồng ý cấp quyền cho ứng dụng truy cập thông tin cơ bản. Google trả về authorization code cho backend. Backend đổi authorization code lấy access token từ Google. Cuối cùng, backend sử dụng access token để lấy thông tin user từ Google API và tạo JWT token cho hệ thống.
+
+2.7.3 Nguyên tắc tích hợp API trong SOA
+
+Khi tích hợp external APIs trong kiến trúc hướng dịch vụ, cần tuân thủ một số nguyên tắc quan trọng. Abstraction yêu cầu wrap external API trong internal service, tạo một layer trừu tượng giúp dễ dàng thay đổi provider nếu cần. Fault tolerance đảm bảo hệ thống xử lý gracefully khi external API không khả dụng, với các cơ chế fallback phù hợp. Caching được áp dụng để cache responses nhằm giảm latency và cost, đặc biệt quan trọng với các API có rate limiting hoặc tính phí theo request. Rate limiting đảm bảo tuân thủ giới hạn của external API để tránh bị block. Monitoring theo dõi health và performance của integration để phát hiện sớm các vấn đề.
+
+2.8 Cơ chế xác thực với JWT
+
+2.8.1 Khái niệm JWT
+
+JSON Web Token (JWT) là một chuẩn mở được định nghĩa trong RFC 7519, quy định cách truyền thông tin an toàn giữa các bên dưới dạng JSON object. JWT được sử dụng phổ biến cho authentication trong RESTful APIs nhờ tính compact và self-contained.
+
+Cấu trúc của JWT gồm ba phần được phân tách bởi dấu chấm. Header chứa thông tin về loại token (JWT) và thuật toán mã hóa được sử dụng như HS256 hoặc RS256. Payload chứa các claims, là các thông tin về user như user ID, username, role và thời gian hết hạn. Signature là chữ ký số được tạo bằng cách mã hóa header và payload với secret key, dùng để verify tính toàn vẹn của token.
+
+2.8.2 JWT trong kiến trúc Microservices
+
+JWT đặc biệt phù hợp với kiến trúc Microservices nhờ tính stateless của nó. Không cần shared session store giữa các services vì tất cả thông tin cần thiết đã được encode trong token. Mỗi service có thể verify token độc lập chỉ cần biết secret key hoặc public key. Điều này giảm latency đáng kể vì không cần query database cho mỗi request để kiểm tra session. Horizontal scaling trở nên dễ dàng vì không có session state cần đồng bộ giữa các instances.
+
+Flow xác thực trong hệ thống Agent For Edu diễn ra như sau. User đăng nhập qua Spring Boot Service với username và password. Spring Boot verify credentials với database và tạo JWT token chứa thông tin user. Frontend lưu JWT token trong localStorage và gửi kèm trong header Authorization của mỗi request. Cả Spring Boot và FastAPI đều có khả năng verify JWT token độc lập. Các services extract user info từ JWT payload để xử lý authorization.
+
+2.9 Tóm tắt Chương 2
+
+Chương này đã trình bày các cơ sở lý thuyết quan trọng cho việc xây dựng ứng dụng hướng dịch vụ.
+
+Về kiến trúc SOA và Microservices, chương đã phân tích các nguyên tắc thiết kế hệ thống phân tán với các service độc lập và loose coupling. So sánh giữa kiến trúc Monolithic và Microservices cho thấy ưu điểm của việc phân tách ứng dụng thành các service nhỏ có thể scale và deploy độc lập.
+
+Về RESTful Web Services, chương đã trình bày chuẩn thiết kế API với HTTP methods, status codes và JSON format. Sáu ràng buộc của REST được phân tích chi tiết, đặc biệt là Uniform Interface và Stateless - hai ràng buộc quan trọng nhất cho việc thiết kế API trong kiến trúc Microservices.
+
+Về Docker Containerization, chương đã giới thiệu công nghệ đóng gói và triển khai ứng dụng đảm bảo tính nhất quán giữa các môi trường. Docker Compose được trình bày như công cụ orchestrate multi-container applications.
+
+Về công nghệ Backend, Spring Boot được chọn cho core business logic nhờ enterprise features mạnh mẽ, trong khi FastAPI được chọn cho AI services nhờ hiệu năng cao và ecosystem AI/ML phong phú của Python.
+
+Về công nghệ Frontend, React.js với TypeScript đóng vai trò API consumer, tập trung vào presentation layer và user interaction.
+
+Về cơ sở dữ liệu, MySQL được sử dụng cho relational data và ChromaDB cho vector data, tuân theo pattern Database per Service của Microservices.
+
+Về tích hợp API, Google Gemini cung cấp khả năng AI và OAuth 2.0 cho authentication, với các nguyên tắc tích hợp đảm bảo fault tolerance và performance.
+
+Về JWT, cơ chế xác thực stateless này phù hợp hoàn hảo với Microservices, cho phép các services verify token độc lập mà không cần shared session store.
+
+Các kiến thức này sẽ được áp dụng trong Chương 3 để thiết kế và Chương 4 để triển khai hệ thống Agent For Edu.
+
+
+
+CHƯƠNG 3: PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG
+
+3.1 Phân tích yêu cầu
+
+3.1.1 Mô tả bài toán
+
+Hệ thống Agent For Edu là một nền tảng học tập thông minh được thiết kế theo kiến trúc hướng dịch vụ, nhằm hỗ trợ sinh viên trong quá trình học tập. Hệ thống cung cấp các chức năng chính bao gồm quản lý khóa học và bài học trực tuyến, trợ lý AI hỗ trợ giải đáp thắc mắc, tạo quiz và flashcard tự động từ nội dung bài học, và quản lý tài liệu học tập.
+
+Hệ thống được xây dựng với kiến trúc Microservices, bao gồm hai backend services độc lập giao tiếp qua RESTful API, được containerize với Docker để đảm bảo tính nhất quán và khả năng mở rộng.
+
+3.1.2 Yêu cầu chức năng
+
+a) Phân hệ Xác thực (Authentication Service)
+
+- FR01: Đăng ký tài khoản mới với username, email, password
+- FR02: Đăng nhập bằng username/password
+- FR03: Đăng nhập bằng Google OAuth 2.0
+- FR04: Xem và cập nhật thông tin cá nhân
+- FR05: Đổi mật khẩu
+- FR06: Đăng xuất
+
+b) Phân hệ Quản lý Khóa học (Course Service)
+
+- FR07: Xem danh sách khóa học
+- FR08: Xem chi tiết khóa học
+- FR09: Tạo khóa học mới (Teacher/Admin)
+- FR10: Cập nhật thông tin khóa học
+- FR11: Xóa khóa học
+- FR12: Đăng ký tham gia khóa học
+
+c) Phân hệ Quản lý Bài học (Lesson Service)
+
+- FR13: Xem danh sách bài học trong khóa học
+- FR14: Xem nội dung bài học
+- FR15: Tạo bài học mới
+- FR16: Cập nhật bài học
+- FR17: Xóa bài học
+
+d) Phân hệ Tài liệu (Material Service)
+
+- FR18: Upload tài liệu học tập
+- FR19: Xem danh sách tài liệu
+- FR20: Tải xuống tài liệu
+- FR21: Xóa tài liệu
+
+e) Phân hệ AI Chat (AI Service)
+
+- FR22: Tạo phiên chat mới
+- FR23: Gửi tin nhắn và nhận phản hồi từ AI
+- FR24: Xem lịch sử chat
+- FR25: Xóa phiên chat
+
+f) Phân hệ Quiz (Quiz Service)
+
+- FR26: Tạo quiz tự động từ nội dung bài học
+- FR27: Làm bài quiz
+- FR28: Xem kết quả và đáp án
+- FR29: Xem lịch sử làm bài
+
+
+3.1.3 Yêu cầu phi chức năng
+
+- NFR01: Hiệu năng - API response time < 2 giây cho các request thông thường
+- NFR02: Bảo mật - Xác thực JWT, mã hóa password với BCrypt
+- NFR03: Khả năng mở rộng - Kiến trúc cho phép scale từng service độc lập
+- NFR04: Tính sẵn sàng - Hệ thống hoạt động ổn định với Docker containers
+- NFR05: Khả năng bảo trì - Code được tổ chức theo modules, có documentation
+- NFR06: Tương thích - Hỗ trợ các trình duyệt hiện đại (Chrome, Firefox, Edge)
+
+3.1.4 Danh sách tác nhân (Actors)
+
+┌──────────────┬────────────────────────────────────────────────────────────┐
+│ Tác nhân     │ Mô tả                                                      │
+├──────────────┼────────────────────────────────────────────────────────────┤
+│ Guest        │ Người dùng chưa đăng nhập, chỉ xem trang chủ              │
+├──────────────┼────────────────────────────────────────────────────────────┤
+│ Student      │ Sinh viên đã đăng ký, học tập và làm bài                  │
+├──────────────┼────────────────────────────────────────────────────────────┤
+│ Teacher      │ Giảng viên, tạo và quản lý khóa học                       │
+├──────────────┼────────────────────────────────────────────────────────────┤
+│ Admin        │ Quản trị viên, quản lý toàn bộ hệ thống                   │
+└──────────────┴────────────────────────────────────────────────────────────┘
+
+3.2 Thiết kế kiến trúc hệ thống
+
+3.2.1 Kiến trúc tổng quan
+
+Hệ thống Agent For Edu được thiết kế theo kiến trúc Microservices với các thành phần chính:
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              CLIENT LAYER                                   │
+│                     React.js Frontend (Port 80)                             │
+│                    - Single Page Application                                │
+│                    - API Consumer                                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    │ HTTP/REST (JSON)
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                            SERVICE LAYER                                    │
+│  ┌─────────────────────────────┐    ┌─────────────────────────────┐        │
+│  │   CORE SERVICE              │    │   AI SERVICE                │        │
+│  │   (Spring Boot - Port 8080) │    │   (FastAPI - Port 8000)     │        │
+│  │                             │    │                             │        │
+│  │   - Authentication API      │    │   - Chat AI API             │        │
+│  │   - User Management API     │    │   - RAG API                 │        │
+│  │   - Course API              │    │   - Quiz Generation API     │        │
+│  │   - Lesson API              │    │   - Document API            │        │
+│  │   - Quiz API                │    │                             │        │
+│  │   - Material API            │    │                             │        │
+│  └──────────────┬──────────────┘    └──────────────┬──────────────┘        │
+│                 │                                   │                       │
+└─────────────────┼───────────────────────────────────┼───────────────────────┘
+                  │                                   │
+                  ▼                                   ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                             DATA LAYER                                      │
+│  ┌─────────────────────────────┐    ┌─────────────────────────────┐        │
+│  │   MySQL Database            │    │   ChromaDB                  │        │
+│  │   (Port 3306)               │    │   (Vector Database)         │        │
+│  │                             │    │                             │        │
+│  │   - users                   │    │   - document embeddings     │        │
+│  │   - courses                 │    │   - semantic search index   │        │
+│  │   - lessons                 │    │                             │        │
+│  │   - materials               │    │                             │        │
+│  │   - quizzes                 │    │                             │        │
+│  │   - chat_sessions           │    │                             │        │
+│  └─────────────────────────────┘    └─────────────────────────────┘        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Hình 1: Kiến trúc tổng quan hệ thống theo mô hình SOA
+
+
+3.2.2 Giao tiếp giữa các Service
+
+Các service trong hệ thống giao tiếp với nhau theo mô hình sau:
+
+┌──────────────┐         ┌──────────────┐         ┌──────────────┐
+│   Frontend   │ ──────► │ Spring Boot  │ ──────► │    MySQL     │
+│   (React)    │         │   Service    │         │   Database   │
+└──────────────┘         └──────────────┘         └──────────────┘
+       │                        │
+       │                        │ Internal REST
+       │                        ▼
+       │                 ┌──────────────┐         ┌──────────────┐
+       └───────────────► │   FastAPI    │ ──────► │   ChromaDB   │
+                         │   Service    │         │              │
+                         └──────────────┘         └──────────────┘
+                                │
+                                │ External API
+                                ▼
+                         ┌──────────────┐
+                         │ Google APIs  │
+                         │ (Gemini,     │
+                         │  OAuth)      │
+                         └──────────────┘
+
+Hình 2: Sơ đồ giao tiếp giữa các Service
+
+Nguyên tắc giao tiếp:
+
+1. Frontend → Backend: REST API với JSON payload
+2. Spring Boot ↔ FastAPI: Internal REST calls qua Docker network
+3. Services → Database: ORM (JPA) và native client
+4. FastAPI → External APIs: HTTP client với authentication
+
+3.2.3 Kiến trúc Docker Containers
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        Docker Host                                          │
+│  ┌───────────────────────────────────────────────────────────────────────┐ │
+│  │                    agentforedu-network (bridge)                        │ │
+│  │                                                                        │ │
+│  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐     │ │
+│  │  │  frontend   │ │   spring    │ │   fastapi   │ │    mysql    │     │ │
+│  │  │  container  │ │  container  │ │  container  │ │  container  │     │ │
+│  │  │             │ │             │ │             │ │             │     │ │
+│  │  │  Port: 80   │ │ Port: 8080  │ │ Port: 8000  │ │ Port: 3306  │     │ │
+│  │  │             │ │             │ │             │ │             │     │ │
+│  │  │   Nginx     │ │ Spring Boot │ │   FastAPI   │ │   MySQL 8   │     │ │
+│  │  │   React     │ │   Java 17   │ │  Python 3.11│ │             │     │ │
+│  │  └─────────────┘ └─────────────┘ └─────────────┘ └──────┬──────┘     │ │
+│  │                                                          │            │ │
+│  └──────────────────────────────────────────────────────────┼────────────┘ │
+│                                                              │              │
+│  ┌───────────────────────────────────────────────────────────┼────────────┐ │
+│  │                         Volumes                           │            │ │
+│  │                                                           ▼            │ │
+│  │                                                    ┌─────────────┐     │ │
+│  │                                                    │ mysql_data  │     │ │
+│  │                                                    │  (volume)   │     │ │
+│  │                                                    └─────────────┘     │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Hình 3: Kiến trúc Docker Containers
+
+Bảng 6: Cấu hình Docker Containers
+
+┌─────────────────┬─────────────────┬──────────┬─────────────────────────────┐
+│ Container       │ Image           │ Port     │ Mô tả                       │
+├─────────────────┼─────────────────┼──────────┼─────────────────────────────┤
+│ agentforedu-    │ nginx:alpine    │ 80:80    │ Serve React app, reverse    │
+│ frontend        │ + React build   │          │ proxy cho API               │
+├─────────────────┼─────────────────┼──────────┼─────────────────────────────┤
+│ agentforedu-    │ Custom build    │ 8080:8080│ Core business logic,        │
+│ spring          │ (Java 17)       │          │ authentication, CRUD        │
+├─────────────────┼─────────────────┼──────────┼─────────────────────────────┤
+│ agentforedu-    │ Custom build    │ 8000:8000│ AI services, RAG,           │
+│ fastapi         │ (Python 3.11)   │          │ quiz generation.            │
+│                 │                 │          │ ChromaDB embedded inside    │
+├─────────────────┼─────────────────┼──────────┼─────────────────────────────┤
+│ agentforedu-    │ mysql:8.0       │ 3307:3306│ Relational database         │
+│ mysql           │                 │          │ for structured data         │
+└─────────────────┴─────────────────┴──────────┴─────────────────────────────┘
+
+Lưu ý: ChromaDB chạy embedded trong FastAPI container, không phải container riêng biệt. Data được persist qua volume chroma_data.
+
+
+3.3 Thiết kế RESTful API
+
+3.3.1 Nguyên tắc thiết kế API
+
+Các API trong hệ thống được thiết kế theo các nguyên tắc RESTful nghiêm ngặt. Resource-based URLs được sử dụng với các đường dẫn có ý nghĩa như /api/courses, /api/users và /api/lessons. HTTP methods được sử dụng đúng ngữ nghĩa với GET cho read, POST cho create, PUT cho update và DELETE cho delete. Nguyên tắc Stateless được tuân thủ với mỗi request chứa đủ thông tin cần thiết, sử dụng JWT token cho authentication. JSON format được sử dụng cho cả request và response. Proper status codes được áp dụng bao gồm 200, 201, 400, 401, 403, 404 và 500. Versioning được thiết kế với prefix /api/v1/... để hỗ trợ mở rộng trong tương lai.
+
+3.3.2 API Endpoints - Spring Boot Service (Port 8080)
+
+Bảng 2: Danh sách API endpoints - Authentication Service
+
+┌────────┬──────────────────────────────┬────────────────────────────────────┐
+│ Method │ Endpoint                     │ Mô tả                              │
+├────────┼──────────────────────────────┼────────────────────────────────────┤
+│ POST   │ /api/auth/register           │ Đăng ký tài khoản mới              │
+│ POST   │ /api/auth/login              │ Đăng nhập, nhận JWT token          │
+│ GET    │ /api/auth/profile            │ Lấy thông tin user hiện tại        │
+│ PUT    │ /api/auth/update-profile     │ Cập nhật thông tin cá nhân         │
+│ POST   │ /api/auth/change-password    │ Đổi mật khẩu                       │
+│ GET    │ /api/admin/users             │ Lấy danh sách users (Admin)        │
+│ GET    │ /api/admin/users/{id}        │ Lấy user theo ID (Admin)           │
+│ DELETE │ /api/admin/users/{id}        │ Xóa user (Admin)                   │
+└────────┴──────────────────────────────┴────────────────────────────────────┘
+
+Bảng 3: Danh sách API endpoints - Course Service
+
+┌────────┬──────────────────────────────┬────────────────────────────────────┐
+│ Method │ Endpoint                     │ Mô tả                              │
+├────────┼──────────────────────────────┼────────────────────────────────────┤
+│ GET    │ /api/courses                 │ Lấy danh sách khóa học             │
+│ GET    │ /api/courses/{id}            │ Lấy chi tiết khóa học              │
+│ POST   │ /api/courses                 │ Tạo khóa học mới                   │
+│ PUT    │ /api/courses/{id}            │ Cập nhật khóa học                  │
+│ DELETE │ /api/courses/{id}            │ Xóa khóa học                       │
+│ GET    │ /api/courses/{id}/lessons    │ Lấy bài học của khóa học           │
+│ POST   │ /api/courses/{id}/lessons    │ Tạo bài học mới                    │
+│ GET    │ /api/lessons/{id}            │ Lấy chi tiết bài học               │
+│ PUT    │ /api/lessons/{id}            │ Cập nhật bài học                   │
+│ DELETE │ /api/lessons/{id}            │ Xóa bài học                        │
+│ GET    │ /api/courses/{id}/materials  │ Lấy tài liệu của khóa học          │
+│ POST   │ /api/materials/upload        │ Upload tài liệu                    │
+│ DELETE │ /api/materials/{id}          │ Xóa tài liệu                       │
+├────────┼──────────────────────────────┼────────────────────────────────────┤
+│ GET    │ /api/chat/sessions           │ Lấy danh sách phiên chat           │
+│ POST   │ /api/chat/sessions           │ Tạo phiên chat mới                 │
+│ GET    │ /api/chat/sessions/{id}/     │ Lấy tin nhắn trong phiên           │
+│        │ messages                     │                                    │
+│ DELETE │ /api/chat/sessions/{id}      │ Xóa phiên chat                     │
+├────────┼──────────────────────────────┼────────────────────────────────────┤
+│ POST   │ /api/quiz/generate           │ Tạo quiz từ bài học (AI)           │
+│ GET    │ /api/quiz/{id}               │ Lấy quiz theo ID                   │
+│ POST   │ /api/quiz/{id}/submit        │ Nộp bài quiz                       │
+└────────┴──────────────────────────────┴────────────────────────────────────┘
+
+
+3.3.3 API Endpoints - FastAPI Service (Port 8000)
+
+Bảng 4: Danh sách API endpoints - AI Service
+
+┌────────┬──────────────────────────────┬────────────────────────────────────┐
+│ Method │ Endpoint                     │ Mô tả                              │
+├────────┼──────────────────────────────┼────────────────────────────────────┤
+│ GET    │ /                            │ Health check                       │
+│ POST   │ /api/chat                    │ Chat với AI (có RAG)               │
+│ POST   │ /api/rag/prompt              │ Thêm kiến thức vào RAG             │
+│ POST   │ /api/documents/search        │ Tìm kiếm semantic trong RAG        │
+│ GET    │ /api/documents               │ Lấy tất cả documents               │
+│ DELETE │ /api/documents               │ Xóa tất cả documents               │
+│ GET    │ /api/documents/count         │ Đếm số documents                   │
+│ GET    │ /api/rag/stats               │ Thống kê RAG                       │
+│ GET    │ /api/models                  │ Liệt kê AI models                  │
+│ POST   │ /api/ai/generate-quiz        │ Tạo quiz từ nội dung               │
+│ POST   │ /api/ai/summarize            │ Tóm tắt văn bản                    │
+│ POST   │ /api/ai/explain              │ Giải thích như giáo viên           │
+│ POST   │ /api/ai/ingest               │ Ingest document vào RAG            │
+└────────┴──────────────────────────────┴────────────────────────────────────┘
+
+3.3.4 Cấu trúc Request/Response
+
+Request với Authentication:
+Headers:
+  Authorization: Bearer <jwt_token>
+  Content-Type: application/json
+
+Response thành công (200 OK):
+{
+  "id": 1,
+  "title": "Lập trình Python",
+  "description": "Khóa học Python cơ bản",
+  "createdAt": "2025-01-15T10:00:00Z"
+}
+
+Response lỗi (400 Bad Request):
+{
+  "status": 400,
+  "error": "Bad Request",
+  "message": "Validation failed",
+  "timestamp": "2025-01-15T10:00:00Z"
+}
+
+Response lỗi (401 Unauthorized):
+{
+  "status": 401,
+  "error": "Unauthorized",
+  "message": "Invalid or expired token"
+}
+
+Response lỗi (404 Not Found):
+{
+  "status": 404,
+  "error": "Not Found",
+  "message": "Course not found with id: 999"
+}
+
+
+3.4 Thiết kế cơ sở dữ liệu
+
+3.4.1 Mô hình quan hệ thực thể (ERD)
+
+┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
+│     users       │       │    courses      │       │    lessons      │
+├─────────────────┤       ├─────────────────┤       ├─────────────────┤
+│ id (PK)         │       │ id (PK)         │       │ id (PK)         │
+│ username        │       │ title           │       │ title           │
+│ email           │       │ description     │       │ content         │
+│ password        │       │ created_by (FK) │───────│ course_id (FK)  │
+│ full_name       │───────│ created_at      │       │ order_index     │
+│ avatar_url      │       │ updated_at      │       │ created_at      │
+│ role            │       │ is_public       │       └─────────────────┘
+│ created_at      │       └─────────────────┘               │
+└─────────────────┘               │                         │
+        │                         │                         │
+        │                         ▼                         ▼
+        │               ┌─────────────────┐       ┌─────────────────┐
+        │               │   materials     │       │    quizzes      │
+        │               ├─────────────────┤       ├─────────────────┤
+        │               │ id (PK)         │       │ id (PK)         │
+        │               │ title           │       │ course_id (FK)  │
+        │               │ file_url        │       │ lesson_id (FK)  │
+        │               │ type            │       │ difficulty      │
+        │               │ course_id (FK)  │       │ created_by (FK) │
+        │               │ created_at      │       │ created_at      │
+        │               └─────────────────┘       └─────────────────┘
+        │                                                 │
+        ▼                                                 ▼
+┌─────────────────┐                             ┌─────────────────┐
+│ chat_sessions   │                             │ quiz_questions  │
+├─────────────────┤                             ├─────────────────┤
+│ id (PK)         │                             │ id (PK)         │
+│ user_id (FK)    │                             │ quiz_id (FK)    │
+│ title           │                             │ question        │
+│ created_at      │                             │ option_a        │
+└─────────────────┘                             │ option_b        │
+        │                                       │ option_c        │
+        ▼                                       │ option_d        │
+┌─────────────────┐                             │ correct_answer  │
+│ chat_messages   │                             └─────────────────┘
+├─────────────────┤
+│ id (PK)         │
+│ session_id (FK) │
+│ role            │
+│ content         │
+│ created_at      │
+└─────────────────┘
+
+Hình 4: Mô hình quan hệ thực thể (ERD)
+
+3.4.2 Chi tiết các bảng chính
+
+Bảng users:
+- id: BIGINT, Primary Key, Auto Increment
+- username: VARCHAR(50), Unique, Not Null
+- email: VARCHAR(100), Unique, Not Null
+- password: VARCHAR(255), Not Null (BCrypt hash)
+- full_name: VARCHAR(100)
+- avatar_url: VARCHAR(500)
+- role: ENUM('STUDENT', 'TEACHER', 'ADMIN')
+- created_at: DATETIME
+
+Bảng courses:
+- id: BIGINT, Primary Key, Auto Increment
+- title: VARCHAR(200), Not Null
+- description: TEXT
+- created_by: BIGINT, Foreign Key → users(id)
+- is_public: BOOLEAN, Default TRUE
+- created_at: DATETIME
+- updated_at: DATETIME
+
+
+3.5 Thiết kế giao diện người dùng
+
+3.5.1 Nguyên tắc thiết kế
+
+Giao diện được thiết kế theo các nguyên tắc hiện đại để đảm bảo trải nghiệm người dùng tốt nhất. Responsive Design đảm bảo giao diện tương thích với desktop, tablet và mobile, tự động điều chỉnh layout theo kích thước màn hình. Consistent UI được đảm bảo thông qua việc sử dụng design system nhất quán với Tailwind CSS, các components được thiết kế với style thống nhất. User-friendly là nguyên tắc quan trọng với giao diện trực quan, dễ sử dụng, các chức năng được tổ chức logic. Accessibility được quan tâm với việc tuân thủ các tiêu chuẩn accessibility cơ bản như contrast ratio, keyboard navigation và screen reader support.
+
+3.5.2 Các màn hình chính
+
+a) Trang chủ (Landing Page)
+- Giới thiệu hệ thống
+- Nút đăng nhập/đăng ký
+- Danh sách khóa học nổi bật
+
+b) Trang đăng nhập/đăng ký
+- Form đăng nhập với username/password
+- Nút đăng nhập với Google
+- Link chuyển đổi giữa đăng nhập và đăng ký
+
+c) Dashboard
+- Thống kê tổng quan
+- Khóa học đang học
+- Hoạt động gần đây
+
+d) Trang khóa học
+- Danh sách khóa học
+- Bộ lọc và tìm kiếm
+- Card hiển thị thông tin khóa học
+
+e) Trang chi tiết khóa học
+- Thông tin khóa học
+- Danh sách bài học
+- Tài liệu đính kèm
+
+f) Trang Chat AI
+- Giao diện chat
+- Lịch sử hội thoại
+- Hỗ trợ markdown và code highlighting
+
+g) Trang Quiz
+- Hiển thị câu hỏi
+- Chọn đáp án
+- Kết quả và giải thích
+
+
+CHƯƠNG 4: TRIỂN KHAI VÀ KẾT QUẢ
+
+4.1 Môi trường phát triển
+
+4.1.1 Công cụ phát triển
+
+┌─────────────────────┬─────────────────────────────────────────────────────┐
+│ Công cụ            │ Mô tả                                               │
+├─────────────────────┼─────────────────────────────────────────────────────┤
+│ Visual Studio Code │ IDE chính cho Frontend và FastAPI                   │
+│ IntelliJ IDEA      │ IDE cho Spring Boot                                 │
+│ Docker Desktop     │ Containerization platform                           │
+│ MySQL Workbench    │ Database management                                 │
+│ Postman            │ API testing                                         │
+│ Git                │ Version control                                     │
+│ Chrome DevTools    │ Frontend debugging                                  │
+└─────────────────────┴─────────────────────────────────────────────────────┘
+
+4.1.2 Cấu hình hệ thống
+
+- OS: Windows 11 / macOS / Linux
+- RAM: Tối thiểu 8GB (khuyến nghị 16GB cho Docker)
+- Docker: Version 24.x trở lên
+- Node.js: Version 20.x
+- Java: JDK 17
+- Python: 3.11
+
+
+4.2 Triển khai các Service
+
+4.2.1 Spring Boot Service
+
+Cấu trúc project:
+backend/SpringService/agentforedu/
+├── src/main/java/aiagent/dacn/agentforedu/
+│   ├── controller/     # REST Controllers
+│   ├── service/        # Business Logic
+│   ├── repository/     # Data Access Layer
+│   ├── model/          # Entity classes
+│   ├── dto/            # Data Transfer Objects
+│   ├── security/       # JWT, Security Config
+│   └── config/         # Application Config
+├── src/main/resources/
+│   └── application.properties
+├── pom.xml
+└── Dockerfile
+
+Các dependencies chính (pom.xml):
+- spring-boot-starter-web
+- spring-boot-starter-data-jpa
+- spring-boot-starter-security
+- spring-boot-starter-validation
+- mysql-connector-j
+- jjwt (JWT library)
+- springdoc-openapi (Swagger)
+- lombok
+
+4.2.2 FastAPI Service
+
+Cấu trúc project:
+backend/PythonService/
+├── main.py              # FastAPI application
+├── ai_service.py        # AI chat logic
+├── chroma_vector_service.py  # RAG service
+├── google_oauth_service.py   # OAuth integration
+├── requirements.txt
+└── Dockerfile
+
+Các dependencies chính (requirements.txt):
+- fastapi
+- uvicorn
+- google-generativeai
+- chromadb
+- langchain
+- python-multipart
+- pydantic
+
+4.2.3 Frontend Service
+
+Cấu trúc project:
+fronend_web/
+├── src/
+│   ├── components/     # Reusable components
+│   ├── pages/          # Page components
+│   ├── services/       # API services
+│   ├── stores/         # Zustand stores
+│   ├── types/          # TypeScript types
+│   └── App.tsx
+├── package.json
+├── vite.config.ts
+├── Dockerfile
+└── nginx.conf
+
+
+4.3 Triển khai Docker
+
+4.3.1 Dockerfile cho từng Service
+
+a) Spring Boot Dockerfile:
+
+FROM maven:3.9-eclipse-temurin-17 AS build
+WORKDIR /app
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
+COPY src ./src
+RUN mvn clean package -DskipTests
+
+FROM eclipse-temurin:17-jre-alpine
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]
+
+b) FastAPI Dockerfile:
+
+FROM python:3.11-slim
+WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    tesseract-ocr curl && rm -rf /var/lib/apt/lists/*
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+EXPOSE 8000
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+c) Frontend Dockerfile:
+
+FROM node:20-alpine AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+FROM nginx:alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+
+4.3.2 Docker Compose Configuration
+
+File docker-compose.yml định nghĩa toàn bộ hệ thống:
+
+version: '3.8'
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: agentforedu-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: agentforedu
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - agentforedu-network
+
+  spring-service:
+    build: ./backend/SpringService/agentforedu
+    container_name: agentforedu-spring
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/agentforedu
+    depends_on:
+      - mysql
+    networks:
+      - agentforedu-network
+
+  fastapi-service:
+    build: ./backend/PythonService
+    container_name: agentforedu-fastapi
+    ports:
+      - "8000:8000"
+    environment:
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+    networks:
+      - agentforedu-network
+
+  frontend:
+    build: ./fronend_web
+    container_name: agentforedu-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - spring-service
+      - fastapi-service
+    networks:
+      - agentforedu-network
+
+volumes:
+  mysql_data:
+
+networks:
+  agentforedu-network:
+    driver: bridge
+
+4.3.3 Lệnh triển khai
+
+# Build tất cả images
+docker-compose build
+
+# Khởi động hệ thống
+docker-compose up -d
+
+# Kiểm tra trạng thái
+docker-compose ps
+
+# Xem logs
+docker-compose logs -f
+
+# Dừng hệ thống
+docker-compose down
+
+
+4.4 Kết quả thực nghiệm
+
+4.4.1 Kết quả triển khai API
+
+Hệ thống đã triển khai thành công hơn 40 RESTful API endpoints:
+
+- Authentication APIs: 8 endpoints
+- Course Management APIs: 13 endpoints
+- AI Service APIs: 13 endpoints
+- Quiz APIs: 3 endpoints
+- Chat APIs: 4 endpoints
+
+Tất cả APIs đều:
+- Tuân thủ chuẩn RESTful
+- Có đầy đủ CRUD operations
+- Xử lý lỗi với HTTP status codes phù hợp
+- Được document qua Swagger UI
+
+4.4.2 Kết quả triển khai Docker
+
+Hệ thống được containerize hoàn chỉnh với 4 containers:
+- agentforedu-frontend: React app served by Nginx
+- agentforedu-spring: Spring Boot service
+- agentforedu-fastapi: FastAPI service (ChromaDB embedded inside)
+- agentforedu-mysql: MySQL database
+
+Lưu ý: ChromaDB chạy embedded trong FastAPI container thay vì container riêng, giúp đơn giản hóa deployment và giảm overhead. Data được persist thông qua Docker volume chroma_data.
+
+Toàn bộ hệ thống có thể khởi động với một lệnh:
+$ docker-compose up -d
+
+4.4.3 Hình ảnh giao diện
+
+Hình 5: Giao diện trang chủ
+[Screenshot trang chủ với hero section và danh sách khóa học]
+
+Hình 6: Giao diện đăng nhập
+[Screenshot form đăng nhập với option Google OAuth]
+
+Hình 7: Giao diện chat với AI
+[Screenshot giao diện chat với AI assistant]
+
+Hình 8: Swagger UI - API Documentation
+[Screenshot Swagger UI hiển thị danh sách APIs]
+
+4.4.4 Đánh giá kết quả
+
+┌─────────────────────────────────┬─────────────┬─────────────────────────────┐
+│ Tiêu chí                        │ Yêu cầu     │ Kết quả                     │
+├─────────────────────────────────┼─────────────┼─────────────────────────────┤
+│ Số lượng API endpoints          │ ≥ 10        │ 41 endpoints ✓             │
+├─────────────────────────────────┼─────────────┼─────────────────────────────┤
+│ CRUD operations                 │ Đầy đủ      │ Đầy đủ cho tất cả resources✓│
+├─────────────────────────────────┼─────────────┼─────────────────────────────┤
+│ Error handling                  │ Có          │ 200, 201, 400, 401, 403,   │
+│                                 │             │ 404, 500 ✓                  │
+├─────────────────────────────────┼─────────────┼─────────────────────────────┤
+│ JSON format                     │ Chuẩn       │ Chuẩn RESTful ✓            │
+├─────────────────────────────────┼─────────────┼─────────────────────────────┤
+│ Docker deployment               │ Có          │ 4 containers với           │
+│                                 │             │ docker-compose ✓            │
+├─────────────────────────────────┼─────────────┼─────────────────────────────┤
+│ API Documentation               │ Có          │ Swagger UI ✓               │
+├─────────────────────────────────┼─────────────┼─────────────────────────────┤
+│ Giao diện                       │ Hài hòa     │ React + Tailwind CSS ✓     │
+└─────────────────────────────────┴─────────────┴─────────────────────────────┘
+
+
+
+CHƯƠNG 5: KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN
+
+5.1 Kết quả đạt được
+
+5.1.1 Về kiến trúc hướng dịch vụ
+
+Đề tài đã thành công trong việc thiết kế và triển khai hệ thống theo kiến trúc Microservices với các đặc điểm quan trọng.
+
+Nguyên tắc Loose Coupling được đảm bảo với hai backend services là Spring Boot và FastAPI hoạt động hoàn toàn độc lập, giao tiếp với nhau thông qua RESTful API chuẩn hóa. Mỗi service có thể được phát triển, test và deploy riêng biệt mà không ảnh hưởng đến service còn lại.
+
+Nguyên tắc Single Responsibility được tuân thủ với mỗi service đảm nhận một domain nghiệp vụ riêng biệt. Spring Boot Service chịu trách nhiệm cho core business bao gồm authentication, user management và course management. FastAPI Service chuyên xử lý các tác vụ AI như chat, quiz generation và RAG.
+
+Technology Diversity được thể hiện qua việc sử dụng Java cho enterprise features và Python cho AI/ML, minh họa rõ ràng khả năng polyglot của kiến trúc Microservices. Mỗi ngôn ngữ được chọn dựa trên thế mạnh phù hợp với chức năng của service.
+
+Independent Deployment được đảm bảo với mỗi service có thể được build, test và deploy độc lập thông qua Docker containers riêng biệt.
+
+5.1.2 Về RESTful API
+
+Hệ thống cung cấp hơn 40 RESTful API endpoints với chất lượng cao.
+
+Đầy đủ CRUD operations được triển khai cho tất cả resources chính của hệ thống bao gồm users, courses, lessons, materials, quizzes và chat sessions. HTTP methods được sử dụng đúng ngữ nghĩa với GET cho read, POST cho create, PUT cho update và DELETE cho delete. Error handling được chuẩn hóa với các HTTP status codes phù hợp bao gồm 200, 201, 400, 401, 403, 404 và 500. JSON request/response format nhất quán được áp dụng xuyên suốt hệ thống. API documentation tự động được cung cấp qua Swagger UI cho cả hai backend services.
+
+5.1.3 Về Containerization
+
+Toàn bộ hệ thống được containerize hoàn chỉnh với Docker.
+
+Hệ thống bao gồm 4 Docker containers cho các thành phần khác nhau: frontend với Nginx, Spring Boot service, FastAPI service và MySQL database. Docker Compose được sử dụng để orchestrate multi-container application, định nghĩa dependencies và networking giữa các containers. Một lệnh duy nhất docker-compose up có thể khởi động toàn bộ hệ thống, đơn giản hóa đáng kể quá trình deployment. Tính nhất quán giữa các môi trường được đảm bảo, giải quyết triệt để vấn đề "works on my machine".
+
+5.1.4 Về chức năng ứng dụng
+
+Hệ thống Agent For Edu cung cấp đầy đủ các chức năng hỗ trợ học tập.
+
+Xác thực người dùng được triển khai với JWT cho session management và Google OAuth cho social login. Quản lý khóa học, bài học và tài liệu với đầy đủ CRUD operations. Chat với trợ lý AI được tích hợp Google Gemini, hỗ trợ RAG để trả lời chính xác dựa trên nội dung bài học. Tạo quiz tự động từ nội dung bài học giúp sinh viên ôn tập hiệu quả. Giao diện responsive được xây dựng với React và Tailwind CSS, tương thích với nhiều thiết bị.
+
+5.2 Hạn chế
+
+5.2.1 Hạn chế về kỹ thuật
+
+Mặc dù hệ thống đã đạt được các mục tiêu đề ra, vẫn còn một số hạn chế về mặt kỹ thuật cần được cải thiện trong tương lai.
+
+Hệ thống chưa triển khai message queue cho asynchronous communication giữa các services. Hiện tại, giao tiếp giữa các services là synchronous qua HTTP, có thể gây blocking trong một số trường hợp. Chưa có service discovery và load balancing, các services được cấu hình với địa chỉ cố định trong Docker network. Circuit breaker pattern chưa được implement cho fault tolerance, khi một service gặp sự cố có thể ảnh hưởng đến các services phụ thuộc. Monitoring và logging chưa được tập trung hóa, việc debug và theo dõi hệ thống còn phân tán.
+
+5.2.2 Hạn chế về phạm vi
+
+Về phạm vi chức năng, hệ thống còn một số hạn chế. Chưa có mobile application, người dùng chỉ có thể truy cập qua web browser. Chưa tích hợp thanh toán trực tuyến cho các khóa học có phí. Chưa hỗ trợ video streaming cho các bài học dạng video. Hệ thống chưa được triển khai lên cloud platform, hiện chỉ chạy trên môi trường local với Docker.
+
+5.3 Hướng phát triển
+
+5.3.1 Ngắn hạn (1-3 tháng)
+
+Trong giai đoạn ngắn hạn, hệ thống sẽ được bổ sung API Gateway sử dụng Kong hoặc Spring Cloud Gateway để centralize routing, authentication và rate limiting. Centralized logging sẽ được implement với ELK Stack (Elasticsearch, Logstash, Kibana) để dễ dàng theo dõi và debug. Monitoring sẽ được thêm với Prometheus và Grafana để theo dõi health và performance của các services. Unit tests và integration tests sẽ được viết để đảm bảo chất lượng code.
+
+5.3.2 Trung hạn (3-6 tháng)
+
+Trong giai đoạn trung hạn, hệ thống sẽ được triển khai lên cloud platform như AWS, GCP hoặc Azure để tăng khả năng mở rộng và availability. CI/CD pipeline sẽ được implement để tự động hóa quá trình build, test và deploy. Message queue như RabbitMQ hoặc Kafka sẽ được thêm cho asynchronous communication giữa các services. Mobile app sẽ được phát triển với React Native để mở rộng khả năng tiếp cận người dùng.
+
+5.3.3 Dài hạn (6-12 tháng)
+
+Trong giai đoạn dài hạn, Kubernetes orchestration sẽ được triển khai để quản lý containers ở quy mô lớn với auto-scaling và self-healing. Service mesh với Istio sẽ được implement để quản lý traffic, security và observability giữa các services. Các Microservices patterns nâng cao như Saga pattern cho distributed transactions và CQRS cho read/write separation sẽ được áp dụng. AI features sẽ được mở rộng với các tính năng như personalized learning path và intelligent tutoring system.
+
+
+DANH MỤC TÀI LIỆU THAM KHẢO
+
+[1] Thomas Erl, "Service-Oriented Architecture: Concepts, Technology, and Design", Prentice Hall, 2016.
+
+[2] Sam Newman, "Building Microservices: Designing Fine-Grained Systems", O'Reilly Media, 2021.
+
+[3] Roy Fielding, "Architectural Styles and the Design of Network-based Software Architectures", Doctoral dissertation, University of California, Irvine, 2000.
+
+[4] Docker Documentation, https://docs.docker.com/
+
+[5] Spring Boot Documentation, https://spring.io/projects/spring-boot
+
+[6] FastAPI Documentation, https://fastapi.tiangolo.com/
+
+[7] React Documentation, https://react.dev/
+
+[8] OpenAPI Specification, https://swagger.io/specification/
+
+[9] Google Gemini API Documentation, https://ai.google.dev/docs
+
+[10] MySQL Documentation, https://dev.mysql.com/doc/
+
+

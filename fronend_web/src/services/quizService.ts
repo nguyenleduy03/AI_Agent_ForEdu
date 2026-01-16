@@ -7,6 +7,11 @@ export interface CreateQuizRequest {
   title: string;
   description?: string;
   difficulty?: 'EASY' | 'MEDIUM' | 'HARD';
+  deadline?: string; // ISO datetime string - hạn làm bài
+  timeLimitMinutes?: number; // Thời gian làm bài (phút)
+  maxAttempts?: number; // Số lần làm bài tối đa
+  shuffleQuestions?: boolean; // Xáo trộn câu hỏi
+  shuffleOptions?: boolean; // Xáo trộn đáp án
   questions: {
     question: string;
     optionA: string;
@@ -25,11 +30,30 @@ export interface QuizListItem {
   description?: string;
   difficulty: string;
   totalQuestions: number;
+  createdBy: number; // ID người tạo quiz
   creatorName: string;
   createdAt: string;
+  deadline?: string; // Hạn làm bài
+  timeLimitMinutes?: number; // Thời gian làm bài (phút)
+  maxAttempts?: number; // Số lần làm bài tối đa
+  isExpired?: boolean; // Quiz đã hết hạn chưa
   isPublic: boolean;
   isCompleted?: boolean;
   lastScore?: number;
+  attemptCount?: number; // Số lần đã làm
+  canAttempt?: boolean; // Còn được làm không
+}
+
+export interface UpdateQuizRequest {
+  title?: string;
+  description?: string;
+  difficulty?: 'EASY' | 'MEDIUM' | 'HARD';
+  deadline?: string | null; // ISO datetime string - null để xóa deadline
+  timeLimitMinutes?: number | null;
+  maxAttempts?: number | null;
+  shuffleQuestions?: boolean;
+  shuffleOptions?: boolean;
+  isPublic?: boolean;
 }
 
 export const quizService = {
@@ -60,5 +84,14 @@ export const quizService = {
   submitQuiz: async (id: number, answers: Record<number, string>): Promise<QuizResult> => {
     const response = await springApi.post(ENDPOINTS.QUIZ.SUBMIT(id), { answers });
     return response.data;
+  },
+
+  updateQuiz: async (id: number, data: UpdateQuizRequest): Promise<Quiz> => {
+    const response = await springApi.put(`/api/quiz/${id}`, data);
+    return response.data;
+  },
+
+  deleteQuiz: async (id: number): Promise<void> => {
+    await springApi.delete(`/api/quiz/${id}`);
   },
 };

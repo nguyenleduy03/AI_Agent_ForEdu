@@ -293,6 +293,22 @@ async def delete_all_documents():
             detail=f"Lỗi khi xóa documents: {str(e)}"
         )
 
+@app.delete("/api/documents/{doc_id}", tags=["RAG - Knowledge Base"])
+async def delete_document_by_id(doc_id: str):
+    """Xóa document theo ID"""
+    try:
+        result = vector_db.delete_documents([doc_id])
+        return {
+            "status": "success",
+            "message": f"Đã xóa document {doc_id}",
+            "total_documents": vector_db.get_count()
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Lỗi khi xóa document: {str(e)}"
+        )
+
 @app.get("/api/documents/count", tags=["RAG - Knowledge Base"])
 async def get_document_count():
     """Lấy số lượng documents trong Vector Database"""

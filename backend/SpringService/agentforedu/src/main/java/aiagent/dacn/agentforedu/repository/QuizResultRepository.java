@@ -16,6 +16,9 @@ public interface QuizResultRepository extends JpaRepository<QuizResult, Long> {
     List<QuizResult> findByQuizId(Long quizId);
     Optional<QuizResult> findTopByQuizIdAndUserIdOrderByCreatedAtDesc(Long quizId, Long userId);
     
+    // Đếm số lần làm bài của user cho quiz
+    int countByQuizIdAndUserId(Long quizId, Long userId);
+    
     @Modifying
     @Query("DELETE FROM QuizResult qr WHERE qr.quizId = :quizId")
     void deleteByQuizId(@Param("quizId") Long quizId);

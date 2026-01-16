@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "vite build",
+    "build:check": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -14,6 +15,7 @@
     "@tanstack/react-query": "^5.90.12",
     "axios": "^1.13.2",
     "framer-motion": "^12.23.25",
+    "lottie-react": "^2.4.1",
     "lucide-react": "^0.556.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

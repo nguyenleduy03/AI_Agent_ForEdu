@@ -96,4 +96,42 @@ public class CourseController {
         courseService.unenrollCourse(id, user);
         return ResponseEntity.ok(Map.of("message", "Đã hủy đăng ký khóa học"));
     }
+    
+    @PutMapping("/{id}/thumbnail")
+    @Operation(summary = "Cập nhật ảnh đại diện khóa học")
+    public ResponseEntity<CourseResponse> updateThumbnail(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> request,
+            @AuthenticationPrincipal User user) {
+        String thumbnailUrl = request.get("thumbnailUrl");
+        String thumbnailDriveId = request.get("thumbnailDriveId");
+        
+        if (thumbnailUrl == null || thumbnailUrl.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        
+        return ResponseEntity.ok(courseService.updateThumbnail(id, thumbnailUrl, thumbnailDriveId, user));
+    }
+    
+    // ============================================================================
+    // INTERNAL ENDPOINTS - No authentication required (for AI service)
+    // ============================================================================
+    
+    @GetMapping("/internal/all")
+    @Operation(summary = "Internal: Lấy tất cả khóa học (không cần auth)")
+    public ResponseEntity<List<CourseResponse>> getAllCoursesInternal() {
+        return ResponseEntity.ok(courseService.getAllCoursesPublic());
+    }
+    
+    @GetMapping("/internal/{id}")
+    @Operation(summary = "Internal: Lấy khóa học theo ID (không cần auth)")
+    public ResponseEntity<CourseResponse> getCourseByIdInternal(@PathVariable Long id) {
+        return ResponseEntity.ok(courseService.getCourseByIdPublic(id));
+    }
+    
+    @GetMapping("/internal/{courseId}/lessons")
+    @Operation(summary = "Internal: Lấy bài học của khóa học (không cần auth)")
+    public ResponseEntity<?> getLessonsInternal(@PathVariable Long courseId) {
+        return ResponseEntity.ok(courseService.getLessonsByCoursePublic(courseId));
+    }
 }

@@ -156,7 +156,7 @@ const GoogleCalendarPageSimple: React.FC = () => {
   if (loading && events.length === 0) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500"></div>
       </div>
     );
   }
@@ -167,7 +167,7 @@ const GoogleCalendarPageSimple: React.FC = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
         <div>
           <h1 className="text-3xl font-bold dark:text-white flex items-center gap-3">
-            <Calendar size={32} className="text-blue-500" />
+            <Calendar size={32} className="text-green-500" />
             Google Calendar
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1">
@@ -187,7 +187,7 @@ const GoogleCalendarPageSimple: React.FC = () => {
 
           <button
             onClick={() => toast.info('Tính năng đang phát triển')}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+            className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
           >
             <Plus size={18} />
             Tạo sự kiện
@@ -220,7 +220,7 @@ const GoogleCalendarPageSimple: React.FC = () => {
 
         <button
           onClick={loadEvents}
-          className="p-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg"
+          className="p-2 text-green-500 hover:bg-green-50 dark:hover:bg-blue-900/20 rounded-lg"
         >
           <RefreshCw size={20} />
         </button>
@@ -249,11 +249,11 @@ const GoogleCalendarPageSimple: React.FC = () => {
                 key={index}
                 className={`min-h-[120px] border-r border-b border-gray-200 dark:border-gray-700 p-2 ${
                   !isCurrentMonthDate ? 'bg-gray-50 dark:bg-dark-900' : ''
-                } ${isTodayDate ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}
+                } ${isTodayDate ? 'bg-green-50 dark:bg-blue-900/20' : ''}`}
               >
                 <div className={`text-sm font-semibold mb-1 ${
                   isTodayDate 
-                    ? 'text-blue-600 dark:text-blue-400' 
+                    ? 'text-green-600 dark:text-blue-400' 
                     : isCurrentMonthDate 
                       ? 'text-gray-900 dark:text-white' 
                       : 'text-gray-400 dark:text-gray-600'
@@ -265,7 +265,7 @@ const GoogleCalendarPageSimple: React.FC = () => {
                   {dayEvents.slice(0, 3).map(event => (
                     <div
                       key={event.id}
-                      className="text-xs p-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded cursor-pointer hover:bg-blue-200 dark:hover:bg-blue-900/50 truncate"
+                      className="text-xs p-1 bg-green-100 dark:bg-blue-900/30 text-green-800 dark:text-blue-300 rounded cursor-pointer hover:bg-green-200 dark:hover:bg-blue-900/50 truncate"
                       title={`${event.summary}\n${formatTime(event.start)} - ${formatTime(event.end)}`}
                     >
                       {formatTime(event.start)} {event.summary}

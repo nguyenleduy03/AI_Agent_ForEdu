@@ -288,7 +288,7 @@ const CreateLessonPage = () => {
           </div>
 
           {/* Course Info */}
-          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4 flex items-center space-x-3">
+          <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 flex items-center space-x-3">
             <BookOpen className="w-5 h-5 text-primary-600" />
             <div>
               <p className="text-sm text-gray-600">Khóa học:</p>
@@ -470,7 +470,7 @@ print('Hello World')
                             <CheckCircle className="w-4 h-4 text-green-500" />
                           )}
                           {upload.status === 'saving' && (
-                            <Loader className="w-4 h-4 animate-spin text-blue-600" />
+                            <Loader className="w-4 h-4 animate-spin text-green-600" />
                           )}
                           {upload.status === 'saved' && (
                             <CheckCircle className="w-4 h-4 text-green-500" />
@@ -507,14 +507,14 @@ print('Hello World')
             </div>
 
             {/* Info Box */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h3 className="font-semibold text-blue-900 mb-2">💡 Markdown Tips:</h3>
-              <div className="text-sm text-blue-800 space-y-1">
-                <p><code className="bg-blue-100 px-1 rounded"># Heading</code> - Tiêu đề</p>
-                <p><code className="bg-blue-100 px-1 rounded">**bold**</code> - Chữ đậm</p>
-                <p><code className="bg-blue-100 px-1 rounded">*italic*</code> - Chữ nghiêng</p>
-                <p><code className="bg-blue-100 px-1 rounded">```code```</code> - Code block</p>
-                <p><code className="bg-blue-100 px-1 rounded">- item</code> - List</p>
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <h3 className="font-semibold text-green-900 mb-2">💡 Markdown Tips:</h3>
+              <div className="text-sm text-green-800 space-y-1">
+                <p><code className="bg-green-100 px-1 rounded"># Heading</code> - Tiêu đề</p>
+                <p><code className="bg-green-100 px-1 rounded">**bold**</code> - Chữ đậm</p>
+                <p><code className="bg-green-100 px-1 rounded">*italic*</code> - Chữ nghiêng</p>
+                <p><code className="bg-green-100 px-1 rounded">```code```</code> - Code block</p>
+                <p><code className="bg-green-100 px-1 rounded">- item</code> - List</p>
               </div>
             </div>
 

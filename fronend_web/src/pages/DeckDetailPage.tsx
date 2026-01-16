@@ -137,7 +137,7 @@ const DeckDetailPage: React.FC = () => {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto mb-4"></div>
           <p className="text-gray-600 dark:text-gray-400">Đang tải...</p>
         </div>
       </div>
@@ -151,7 +151,7 @@ const DeckDetailPage: React.FC = () => {
           <h2 className="text-2xl font-bold mb-4 dark:text-white">Không tìm thấy bộ thẻ</h2>
           <button
             onClick={() => navigate('/flashcards')}
-            className="text-blue-500 hover:text-blue-600"
+            className="text-green-500 hover:text-green-600"
           >
             Quay lại danh sách
           </button>
@@ -189,7 +189,7 @@ const DeckDetailPage: React.FC = () => {
           <div className="flex gap-3">
             <button
               onClick={openAddModal}
-              className="flex items-center gap-2 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors shadow-lg"
+              className="flex items-center gap-2 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors shadow-lg"
             >
               <Plus size={20} />
               Thêm thẻ mới
@@ -210,7 +210,7 @@ const DeckDetailPage: React.FC = () => {
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
         <div className="bg-white dark:bg-dark-800 rounded-lg p-4 shadow">
-          <div className="text-2xl font-bold text-blue-500">{deck.totalCards}</div>
+          <div className="text-2xl font-bold text-green-500">{deck.totalCards}</div>
           <div className="text-sm text-gray-600 dark:text-gray-400">Tổng số thẻ</div>
         </div>
         <div className="bg-white dark:bg-dark-800 rounded-lg p-4 shadow">
@@ -270,7 +270,7 @@ const DeckDetailPage: React.FC = () => {
                 <div className="flex gap-2">
                   <button
                     onClick={() => openEditModal(card)}
-                    className="p-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
+                    className="p-2 text-green-500 hover:bg-green-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
                     title="Sửa"
                   >
                     <Edit size={18} />
@@ -314,7 +314,7 @@ const DeckDetailPage: React.FC = () => {
           </p>
           <button
             onClick={openAddModal}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
           >
             <Plus size={20} />
             Thêm thẻ đầu tiên
@@ -337,7 +337,7 @@ const DeckDetailPage: React.FC = () => {
                 <textarea
                   value={cardFront}
                   onChange={(e) => setCardFront(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-dark-700 dark:text-white"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 dark:bg-dark-700 dark:text-white"
                   placeholder="VD: What is the capital of France?"
                   rows={3}
                   required
@@ -351,7 +351,7 @@ const DeckDetailPage: React.FC = () => {
                 <textarea
                   value={cardBack}
                   onChange={(e) => setCardBack(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-dark-700 dark:text-white"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 dark:bg-dark-700 dark:text-white"
                   placeholder="VD: Paris"
                   rows={3}
                   required
@@ -366,7 +366,7 @@ const DeckDetailPage: React.FC = () => {
                   type="text"
                   value={cardHint}
                   onChange={(e) => setCardHint(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-dark-700 dark:text-white"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 dark:bg-dark-700 dark:text-white"
                   placeholder="VD: Thủ đô của Pháp"
                 />
               </div>
@@ -378,7 +378,7 @@ const DeckDetailPage: React.FC = () => {
                 <textarea
                   value={cardExplanation}
                   onChange={(e) => setCardExplanation(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-dark-700 dark:text-white"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 dark:bg-dark-700 dark:text-white"
                   placeholder="Giải thích thêm về câu trả lời"
                   rows={2}
                 />
@@ -387,7 +387,7 @@ const DeckDetailPage: React.FC = () => {
               <div className="flex gap-3">
                 <button
                   type="submit"
-                  className="flex-1 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
+                  className="flex-1 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-medium"
                 >
                   {editingCard ? 'Cập nhật' : 'Thêm thẻ'}
                 </button>

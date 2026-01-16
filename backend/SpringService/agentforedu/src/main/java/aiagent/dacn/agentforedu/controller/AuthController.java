@@ -58,4 +58,19 @@ public class AuthController {
         userService.changePassword(request, user);
         return ResponseEntity.ok(Map.of("message", "Đổi mật khẩu thành công"));
     }
+    
+    @PutMapping("/avatar")
+    @Operation(summary = "Cập nhật avatar", security = @SecurityRequirement(name = "bearerAuth"))
+    public ResponseEntity<UserResponse> updateAvatar(
+            @RequestBody Map<String, String> request,
+            @AuthenticationPrincipal User user) {
+        String avatarUrl = request.get("avatarUrl");
+        String avatarDriveId = request.get("avatarDriveId");
+        
+        if (avatarUrl == null || avatarUrl.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        
+        return ResponseEntity.ok(userService.updateAvatar(user, avatarUrl, avatarDriveId));
+    }
 }

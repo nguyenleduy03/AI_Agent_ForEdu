@@ -20,5 +20,13 @@ public class QuizResponse {
     private QuizDifficulty difficulty;
     private Long createdBy;
     private LocalDateTime createdAt;
+    private LocalDateTime deadline; // Hạn làm bài
+    private Integer timeLimitMinutes; // Thời gian làm bài (phút)
+    private Integer maxAttempts; // Số lần làm bài tối đa
+    private Boolean shuffleQuestions; // Xáo trộn câu hỏi
+    private Boolean shuffleOptions; // Xáo trộn đáp án
+    private Boolean isExpired; // Quiz đã hết hạn chưa
+    private Integer attemptCount; // Số lần đã làm (cho sinh viên)
+    private Boolean canAttempt; // Còn được làm không
     private List<QuizQuestionResponse> questions;
 }

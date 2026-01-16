@@ -202,7 +202,7 @@ const CourseStudentsPage: React.FC = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-blue-600" />
+                        <Clock className="w-4 h-4 text-green-600" />
                         <span className="text-sm text-gray-900">
                           {formatTime(student.totalTimeSpent)}
                         </span>

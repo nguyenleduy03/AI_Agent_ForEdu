@@ -112,7 +112,7 @@ const CourseDetailPage = () => {
         >
           <Link 
             to="/courses" 
-            className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium hover:gap-3 transition-all"
+            className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-medium hover:gap-3 transition-all"
           >
             <ArrowLeft className="w-5 h-5" />
             Back to Courses
@@ -125,7 +125,7 @@ const CourseDetailPage = () => {
           animate={{ opacity: 1, y: 0 }}
           className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden mb-8"
         >
-          <div className="relative bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 p-8 md:p-12">
+          <div className="relative bg-gradient-to-br from-green-600 via-emerald-600 to-teal-600 p-8 md:p-12">
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32" />
             <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" />
             
@@ -185,17 +185,17 @@ const CourseDetailPage = () => {
           </div>
 
           {/* Progress Bar */}
-          <div className="px-8 md:px-12 py-6 bg-gradient-to-r from-blue-50 to-purple-50 border-t border-gray-100">
+          <div className="px-8 md:px-12 py-6 bg-gradient-to-r from-green-50 to-emerald-50 border-t border-gray-100">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-semibold text-gray-700">Your Progress</span>
-              <span className="text-sm font-bold text-blue-600">{progress}%</span>
+              <span className="text-sm font-bold text-green-600">{progress}%</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
               <motion.div 
                 initial={{ width: 0 }}
                 animate={{ width: `${progress}%` }}
                 transition={{ duration: 1, delay: 0.3 }}
-                className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
+                className="h-full bg-gradient-to-r from-green-500 to-emerald-500 rounded-full"
               />
             </div>
           </div>
@@ -218,7 +218,7 @@ const CourseDetailPage = () => {
                   </Link>
                   <Link 
                     to={`/teacher/courses/${courseId}`}
-                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                   >
                     <Award className="w-4 h-4" />
                     Báo cáo & Thống kê
@@ -237,9 +237,9 @@ const CourseDetailPage = () => {
 
           {/* Student Actions - Show unenroll button for enrolled students */}
           {user?.role === 'STUDENT' && course?.isEnrolled && !course?.isCreator && (
-            <div className="px-8 md:px-12 py-4 bg-gradient-to-r from-blue-50 to-purple-50 border-t border-gray-100">
+            <div className="px-8 md:px-12 py-4 bg-gradient-to-r from-green-50 to-emerald-50 border-t border-gray-100">
               <div className="flex flex-wrap items-center justify-between gap-4">
-                <div className="flex items-center gap-2 text-blue-700">
+                <div className="flex items-center gap-2 text-green-700">
                   <CheckCircle className="w-5 h-5" />
                   <span className="font-semibold">Bạn đã đăng ký khóa học này</span>
                 </div>
@@ -275,7 +275,7 @@ const CourseDetailPage = () => {
             {(user?.role === 'TEACHER' || user?.role === 'ADMIN') && (
               <Link 
                 to={`/courses/${courseId}/lessons/create`}
-                className="flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all"
+                className="flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all"
               >
                 <Plus className="w-5 h-5" />
                 <span className="hidden md:inline">Add Lesson</span>
@@ -295,10 +295,10 @@ const CourseDetailPage = () => {
                 >
                   <Link 
                     to={`/lessons/${lesson.id}`} 
-                    className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl hover:border-blue-200 transition-all flex items-center gap-6 group"
+                    className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl hover:border-green-200 transition-all flex items-center gap-6 group"
                   >
                     <div className="relative flex-shrink-0">
-                      <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 text-white rounded-xl flex items-center justify-center font-bold text-2xl shadow-lg group-hover:scale-110 transition-transform">
+                      <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 text-white rounded-xl flex items-center justify-center font-bold text-2xl shadow-lg group-hover:scale-110 transition-transform">
                         {index + 1}
                       </div>
                       {lessonProgressMap[lesson.id]?.isCompleted && (
@@ -309,7 +309,7 @@ const CourseDetailPage = () => {
                     </div>
                     
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-xl font-bold mb-2 group-hover:text-blue-600 transition-colors">
+                      <h3 className="text-xl font-bold mb-2 group-hover:text-green-600 transition-colors">
                         {lesson.title}
                       </h3>
                       <p className="text-gray-600 line-clamp-2 mb-3">
@@ -328,7 +328,7 @@ const CourseDetailPage = () => {
                             <span>Đã hoàn thành</span>
                           </span>
                         ) : lessonProgressMap[lesson.id] ? (
-                          <span className="flex items-center gap-1.5 text-blue-600 font-medium">
+                          <span className="flex items-center gap-1.5 text-green-600 font-medium">
                             <Target className="w-4 h-4" />
                             <span>{lessonProgressMap[lesson.id].progressPercentage}%</span>
                           </span>
@@ -342,7 +342,7 @@ const CourseDetailPage = () => {
                     </div>
                     
                     <div className="flex-shrink-0">
-                      <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all">
+                      <div className="w-12 h-12 bg-green-100 text-green-600 rounded-xl flex items-center justify-center group-hover:bg-green-600 group-hover:text-white transition-all">
                         <Play className="w-6 h-6" />
                       </div>
                     </div>
@@ -365,7 +365,7 @@ const CourseDetailPage = () => {
               {(user?.role === 'TEACHER' || user?.role === 'ADMIN') && (
                 <Link 
                   to={`/courses/${courseId}/lessons/create`}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all"
                 >
                   <Plus className="w-5 h-5" />
                   Create First Lesson

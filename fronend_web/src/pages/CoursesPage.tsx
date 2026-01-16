@@ -104,7 +104,7 @@ const CoursesPage = () => {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-3xl p-8 md:p-12 mb-8 overflow-hidden"
+          className="relative bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 rounded-3xl p-8 md:p-12 mb-8 overflow-hidden"
         >
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" />
@@ -146,7 +146,7 @@ const CoursesPage = () => {
               onClick={() => setActiveTab('all')}
               className={`px-6 py-2 rounded-lg font-medium transition-all ${
                 activeTab === 'all'
-                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md'
+                  ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-md'
                   : 'text-gray-600 hover:bg-gray-100'
               }`}
             >
@@ -159,7 +159,7 @@ const CoursesPage = () => {
               onClick={() => setActiveTab('my')}
               className={`px-6 py-2 rounded-lg font-medium transition-all ${
                 activeTab === 'my'
-                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md'
+                  ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-md'
                   : 'text-gray-600 hover:bg-gray-100'
               }`}
             >
@@ -184,7 +184,7 @@ const CoursesPage = () => {
               <input
                 type="text"
                 placeholder="Search courses by title or description..."
-                className="w-full pl-12 pr-4 py-4 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all text-gray-800 placeholder-gray-400"
+                className="w-full pl-12 pr-4 py-4 bg-white border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all text-gray-800 placeholder-gray-400"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -195,7 +195,7 @@ const CoursesPage = () => {
                 onClick={() => setViewMode('grid')}
                 className={`p-3 rounded-xl border-2 transition-all ${
                   viewMode === 'grid'
-                    ? 'bg-blue-50 border-blue-500 text-blue-600'
+                    ? 'bg-green-50 border-green-500 text-green-600'
                     : 'bg-white border-gray-200 text-gray-400 hover:border-gray-300'
                 }`}
               >
@@ -205,7 +205,7 @@ const CoursesPage = () => {
                 onClick={() => setViewMode('list')}
                 className={`p-3 rounded-xl border-2 transition-all ${
                   viewMode === 'list'
-                    ? 'bg-blue-50 border-blue-500 text-blue-600'
+                    ? 'bg-green-50 border-green-500 text-green-600'
                     : 'bg-white border-gray-200 text-gray-400 hover:border-gray-300'
                 }`}
               >
@@ -217,7 +217,7 @@ const CoursesPage = () => {
           {/* Stats Bar */}
           <div className="flex items-center gap-6 mt-6 text-sm text-gray-600">
             <div className="flex items-center gap-2">
-              <BookOpen className="w-4 h-4 text-blue-500" />
+              <BookOpen className="w-4 h-4 text-green-500" />
               <span><strong>{displayCourses.length}</strong> {activeTab === 'all' ? 'courses found' : isTeacher ? 'khóa học của tôi' : 'khóa đã đăng ký'}</span>
             </div>
             <div className="flex items-center gap-2">
@@ -252,7 +252,7 @@ const CoursesPage = () => {
                   className="bg-white rounded-2xl overflow-hidden shadow-lg border border-gray-100 hover:shadow-2xl transition-all duration-300 flex flex-col"
                 >
                   {/* Course Thumbnail */}
-                  <div className="relative h-48 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center group">
+                  <div className="relative h-48 bg-gradient-to-br from-green-500 via-emerald-500 to-teal-500 flex items-center justify-center group">
                     <BookOpen className="w-16 h-16 text-white opacity-80 group-hover:scale-110 transition-transform" />
                     <div className="absolute top-4 right-4 flex gap-2">
                       {course.isPublic ? (
@@ -279,7 +279,7 @@ const CoursesPage = () => {
                   {/* Course Content */}
                   <div className="p-6 flex-1 flex flex-col">
                     <Link to={`/courses/${course.id}`} className="mb-3">
-                      <h3 className="text-xl font-bold mb-2 hover:text-blue-600 transition-colors line-clamp-2">
+                      <h3 className="text-xl font-bold mb-2 hover:text-green-600 transition-colors line-clamp-2">
                         {course.title}
                       </h3>
                     </Link>
@@ -288,7 +288,7 @@ const CoursesPage = () => {
                     {/* Course Meta */}
                     <div className="flex items-center justify-between text-sm text-gray-500 mb-4 pb-4 border-b border-gray-100">
                       <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                        <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
                           {(course.creatorName || 'T').charAt(0).toUpperCase()}
                         </div>
                         <span className="font-medium">{course.creatorName || 'Teacher'}</span>
@@ -304,7 +304,7 @@ const CoursesPage = () => {
                       <div className="flex gap-2">
                         <button
                           onClick={() => navigate(`/courses/${course.id}`)}
-                          className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-semibold transition-all hover:shadow-lg"
+                          className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-semibold transition-all hover:shadow-lg"
                         >
                           <PlayCircle className="w-4 h-4" />
                           Quản lý
@@ -330,7 +330,7 @@ const CoursesPage = () => {
                     ) : activeTab === 'my' ? (
                       <Link
                         to={`/courses/${course.id}`}
-                        className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-semibold text-center transition-all hover:shadow-lg flex items-center justify-center gap-2"
+                        className="w-full py-3 px-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-semibold text-center transition-all hover:shadow-lg flex items-center justify-center gap-2"
                       >
                         <PlayCircle className="w-4 h-4" />
                         Học ngay
@@ -339,7 +339,7 @@ const CoursesPage = () => {
                       <button
                         onClick={() => handleEnroll(course)}
                         disabled={enrollingCourseId === course.id}
-                        className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-semibold transition-all hover:shadow-lg disabled:opacity-50 flex items-center justify-center gap-2"
+                        className="w-full py-3 px-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-semibold transition-all hover:shadow-lg disabled:opacity-50 flex items-center justify-center gap-2"
                       >
                         {enrollingCourseId === course.id ? (
                           <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -372,7 +372,7 @@ const CoursesPage = () => {
                 >
                   <div className="flex items-center gap-6">
                     <div className="relative flex-shrink-0">
-                      <div className="w-32 h-32 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+                      <div className="w-32 h-32 bg-gradient-to-br from-green-500 via-emerald-500 to-teal-500 rounded-xl flex items-center justify-center">
                         <BookOpen className="w-12 h-12 text-white" />
                       </div>
                       {course.isEnrolled && (
@@ -385,7 +385,7 @@ const CoursesPage = () => {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between mb-3">
                         <Link to={`/courses/${course.id}`}>
-                          <h3 className="text-2xl font-bold hover:text-blue-600 transition-colors mb-2">
+                          <h3 className="text-2xl font-bold hover:text-green-600 transition-colors mb-2">
                             {course.title}
                           </h3>
                         </Link>
@@ -406,7 +406,7 @@ const CoursesPage = () => {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4 text-sm">
                           <div className="flex items-center gap-2 text-gray-600">
-                            <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                            <div className="w-6 h-6 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
                               {(course.creatorName || 'T').charAt(0).toUpperCase()}
                             </div>
                             <span className="font-medium">{course.creatorName || 'Teacher'}</span>
@@ -421,7 +421,7 @@ const CoursesPage = () => {
                           <div className="flex gap-2">
                             <button
                               onClick={() => navigate(`/courses/${course.id}`)}
-                              className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg font-semibold transition-all hover:shadow-lg flex items-center gap-2"
+                              className="px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg font-semibold transition-all hover:shadow-lg flex items-center gap-2"
                             >
                               <PlayCircle className="w-4 h-4" />
                               Quản lý
@@ -447,7 +447,7 @@ const CoursesPage = () => {
                         ) : activeTab === 'my' ? (
                           <Link
                             to={`/courses/${course.id}`}
-                            className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg font-semibold transition-all hover:shadow-lg flex items-center gap-2"
+                            className="px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg font-semibold transition-all hover:shadow-lg flex items-center gap-2"
                           >
                             <PlayCircle className="w-4 h-4" />
                             Học ngay
@@ -456,7 +456,7 @@ const CoursesPage = () => {
                           <button
                             onClick={() => handleEnroll(course)}
                             disabled={enrollingCourseId === course.id}
-                            className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg font-semibold transition-all hover:shadow-lg disabled:opacity-50 flex items-center gap-2"
+                            className="px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg font-semibold transition-all hover:shadow-lg disabled:opacity-50 flex items-center gap-2"
                           >
                             {enrollingCourseId === course.id ? (
                               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -504,7 +504,7 @@ const CoursesPage = () => {
             {activeTab === 'my' && isTeacher ? (
               <Link
                 to="/courses/create"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all"
               >
                 <Plus className="w-5 h-5" />
                 Tạo khóa học
@@ -512,14 +512,14 @@ const CoursesPage = () => {
             ) : activeTab === 'my' ? (
               <button
                 onClick={() => setActiveTab('all')}
-                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all"
+                className="px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all"
               >
                 Khám phá khóa học
               </button>
             ) : (
               <button
                 onClick={() => setSearchQuery('')}
-                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all"
+                className="px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all"
               >
                 Clear Search
               </button>

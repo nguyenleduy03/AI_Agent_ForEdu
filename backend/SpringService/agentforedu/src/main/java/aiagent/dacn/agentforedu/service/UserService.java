@@ -46,6 +46,14 @@ public class UserService {
     }
     
     @Transactional
+    public UserResponse updateAvatar(User user, String avatarUrl, String avatarDriveId) {
+        user.setAvatarUrl(avatarUrl);
+        user.setAvatarDriveId(avatarDriveId);
+        User updated = userRepository.save(user);
+        return toResponse(updated);
+    }
+    
+    @Transactional
     public void changePassword(ChangePasswordRequest request, User user) {
         if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
             throw new RuntimeException("Mật khẩu cũ không đúng");
@@ -76,6 +84,19 @@ public class UserService {
             throw new RuntimeException("Không tìm thấy người dùng");
         }
         userRepository.deleteById(id);
+    }
+    
+    @Transactional
+    public UserResponse updateUserRole(Long id, String role) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
+        try {
+            user.setRole(aiagent.dacn.agentforedu.entity.Role.valueOf(role.toUpperCase()));
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Role không hợp lệ: " + role);
+        }
+        User updated = userRepository.save(user);
+        return toResponse(updated);
     }
     
     private UserResponse toResponse(User user) {

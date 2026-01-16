@@ -151,7 +151,7 @@ export const EmailDraftOverlay = ({ draft, userId, onClose }: EmailDraftOverlayP
                 <div className="text-4xl">📧</div>
                 <div>
                   <h2 className="text-2xl font-bold">Email Draft</h2>
-                  <p className="text-sm text-blue-100">Chỉnh sửa và gửi email</p>
+                  <p className="text-sm text-green-100">Chỉnh sửa và gửi email</p>
                 </div>
               </div>
             </div>
@@ -178,7 +178,7 @@ export const EmailDraftOverlay = ({ draft, userId, onClose }: EmailDraftOverlayP
                   value={to}
                   onChange={(e) => setTo(e.target.value)}
                   className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg 
-                           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                           focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent
                            transition-all text-lg"
                   placeholder="email@example.com"
                   required
@@ -196,7 +196,7 @@ export const EmailDraftOverlay = ({ draft, userId, onClose }: EmailDraftOverlayP
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                   className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg 
-                           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                           focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent
                            transition-all text-lg"
                   placeholder="Tiêu đề email"
                   required
@@ -214,7 +214,7 @@ export const EmailDraftOverlay = ({ draft, userId, onClose }: EmailDraftOverlayP
                   onChange={(e) => setBody(e.target.value)}
                   rows={12}
                   className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg 
-                           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                           focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent
                            transition-all text-lg resize-none"
                   placeholder="Nội dung email..."
                   required
@@ -223,8 +223,8 @@ export const EmailDraftOverlay = ({ draft, userId, onClose }: EmailDraftOverlayP
               </div>
 
               {/* Info */}
-              <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
-                <p className="text-sm text-blue-800">
+              <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded">
+                <p className="text-sm text-green-800">
                   💡 <strong>Mẹo:</strong> Bạn có thể chỉnh sửa mọi trường trước khi gửi. 
                   Nhấn <kbd className="px-2 py-1 bg-white rounded border text-xs">Esc</kbd> để đóng.
                 </p>

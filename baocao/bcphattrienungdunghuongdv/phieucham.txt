@@ -1,0 +1,53 @@
+TRƯỜNG KỸ THUẬT & CÔNG NGHỆ
+KHOA CÔNG NGHỆ THÔNG TIN	PHIẾU CHẤM BÁO CÁO
+HỘI ĐỒNG THI HỌC KỲ
+Tên đề tài:	MÔN THI: Phát Triển Ứng Dụng Hướng Dịch Vụ
+Lớp: 
+Nhóm sinh viên thực hiện
+Họ tên SV 1:	MSSV	
+Họ tên SV 2:	MSSV	
+Họ tên SV 3:	MSSV	
+Tiêu chí	Thang điểm	Điểm chấm
+		SV1	SV2	SV3
+ 1 Hình thức quyển báo cáo
+1. Định dạng văn bản đúng quy định (font, size, khổ giấy, canh lề, văn bản, định dạng đoạn,....)
+2. Có mục lục, danh mục hình, bảng (nếu có), danh mục từ viết tắt (nếu có), danh mục tài liệu tham khảo.	1.0			
+2 Bố cục/Mở đầu
+1. Đặt vấn đề (lý do chọn đề tài): rõ ràng, dẫn nhập có liên quan trực tiếp đến đề tài
+2. Mục tiêu nghiên cứu: cụ thể, có khả năng thực hiện được.
+3. Phương pháp nghiên cứu: cụ thể, rõ ràng, công cụ/thiết bị thực hiện phù hợp với nội dung đề tài
+4. Đối tượng và phạm vi nghiên cứu: Đúng đối tượng và phạm vi nghiên cứu	1.0			
+3 Nội dung
+3.1. Cơ sở lý thuyết
+1. Trình bày tổng quan các kiến thức chung có sử dụng trong đề tài
+2. Trình bày cơ sở lý thuyết chuyên môn có liên quan đến đề tài; hoặc lịch sử hình thành và phát triển của ngôn ngữ/công nghệ/công cụ đã tìm hiểu
+3. Trình bày lý thuyết về nghiệp vụ liên quan đến đề tài
+4. Trình bày các công trình nghiên cứu liên quan hoặc so sánh với các công nghệ cùng lĩnh vực tìm hiểu	1.0			
+3.2 Giải pháp thực hiện
+1. Mô tả bài toán cho ứng dụng minh họa rõ ràng, cụ thể
+2. Xác định rõ yêu cầu, mô tả từng chức năng
+3. Đề xuất mô hình dữ liệu phù hợp với mô tả và yêu cầu bài toán
+4. Đề xuất mô hình xử lý phù hợp với mô tả và yêu cầu bài toán	2.0			
+3.3 Thực nghiệm/Cài đặt/ Kết quả
+1. Thiết kế giao diện với màu sắc hài hòa
+3. Giao diện chức năng phù hợp với yêu cầu bài toán
+4. Xây dựng đầy đủ các dạng API tương ứng (CRUD)
+5. Có ít nhất 10 (URL API)
+6. Triển khai với Docker.
+7. Cấu trúc JSON phù hợp.
+8. Quản lý lỗi (Error Handling): Xử lý các mã trạng thái (404, 500, 401...) mượt mà.	3.5			
+3.4 Kết luận và hướng phát triển	0.5			
+3.5 Báo cáo
+1.	Tác phong báo cáo: tự tin, giọng nói to, rõ
+2.	Lập luận logic, khoa học, đủ nội dung
+3.	Tương tác tốt với người nghe (cử chỉ, thái độ cầu thị học hỏi)
+4.	Trả lời rõ ràng, thỏa đáng các câu hỏi trọng tâm	0.5			
+4 Mức đóng góp cho đề tài	0.5			
+Tổng điểm	10			
+
+Tổng điểm: 
+SV1: Bằng số:	Bằng chữ:	
+SV2: Bằng số:	Bằng chữ:	
+SV3: Bằng số:	Bằng chữ	
+									Ngày …. tháng…. năm 2026
+        Cán bộ chấm báo cáo
